@@ -11,6 +11,14 @@ using FirebaseAdminAuth = FirebaseAdmin.Auth.FirebaseAuth;
 
 namespace Alabaster.Controllers
 {
+    // === Helper class to store user data (optional but cleaner) ===
+    public class FirebaseUser
+    {
+        public string Email { get; set; }
+        public string Name { get; set; }
+    }
+    // ==============================================================
+
     [Route("Auth")]
     public class AuthController : Controller
     {
@@ -29,7 +37,7 @@ namespace Alabaster.Controllers
 
         // ---------------- Registration ----------------
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(string email, string password)
+        public async Task<IActionResult> Register(string name, string email, string password) // <<-- ADDED 'name'
         {
             try
             {
@@ -46,6 +54,15 @@ namespace Alabaster.Controllers
                 }
 
                 var result = await _authService.Register(email, password);
+                string uid = result.User.LocalId;
+                
+                // === NEW: Save user name to Realtime Database ===
+                var userProfile = new FirebaseUser { Email = email, Name = name };
+                await _dbClient
+                    .Child("users") // Create a 'users' node
+                    .Child(uid)     // Use the Firebase UID as the key
+                    .PutAsync(userProfile);
+                // ===============================================
 
                 TempData["Success"] = "Registration successful! Please login to continue.";
                 return RedirectToAction("Login"); // Redirect to login page
@@ -66,14 +83,21 @@ namespace Alabaster.Controllers
             try
             {
                 var result = await _authService.Login(email, password);
-
-                // No email verification check
-
                 string uid = result.User.LocalId;
+
+                // === NEW: Retrieve user name from Realtime Database ===
+                var userProfile = await _dbClient
+                    .Child("users")
+                    .Child(uid)
+                    .OnceSingleAsync<FirebaseUser>();
+
+                string userName = userProfile?.Name ?? email; // Default to email if name isn't found
+                // =====================================================
 
                 HttpContext.Session.SetString("FirebaseToken", result.FirebaseToken);
                 HttpContext.Session.SetString("UserEmail", email);
                 HttpContext.Session.SetString("UserId", uid);
+                HttpContext.Session.SetString("UserName", userName); // <<-- STORING NAME IN SESSION
 
                 var isAdmin = await _dbClient
                     .Child("admins")
@@ -138,10 +162,22 @@ namespace Alabaster.Controllers
 
                 string uid = decodedToken.Uid;
                 string email = decodedToken.Claims.ContainsKey("email") ? decodedToken.Claims["email"].ToString() : null;
+                // === NEW: Extract name from Google Claims ===
+                string name = decodedToken.Claims.ContainsKey("name") ? decodedToken.Claims["name"].ToString() : email;
+                // ============================================
+
+                // === OPTIONAL: Store/Update Google User Data in DB ===
+                var userProfile = new FirebaseUser { Email = email, Name = name };
+                await _dbClient
+                    .Child("users") 
+                    .Child(uid)     
+                    .PatchAsync(userProfile); // Use Patch to avoid overwriting other potential fields
+                // =====================================================
 
                 HttpContext.Session.SetString("FirebaseToken", idToken);
                 HttpContext.Session.SetString("UserEmail", email ?? "");
                 HttpContext.Session.SetString("UserId", uid);
+                HttpContext.Session.SetString("UserName", name ?? email ?? "User"); // <<-- STORING NAME IN SESSION
 
                 var isAdmin = await _dbClient
                     .Child("admins")

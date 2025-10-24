@@ -1,0 +1,59 @@
+name: .NET CI (ASP.NET MVC)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show repo top-level (debug)
+        run: |
+          Write-Host "PWD: $PWD"
+          dir -Force
+
+      - name: Find solution file
+        id: find_sln
+        shell: pwsh
+        run: |
+          $sln = Get-ChildItem -Path . -Recurse -Filter *.sln -File | Select-Object -First 1
+          if (-not $sln) { Write-Error "No .sln file found in repo." }
+          Write-Host "Found solution: $($sln.FullName)"
+          # Set output for other steps
+          echo "slnpath=$($sln.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8
+
+      - name: Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/*.csproj') }}-${{ runner.os }}
+          restore-keys: |
+            nuget-${{ runner.os }}
+
+      - name: Restore dependencies
+        run: dotnet restore "${{ steps.find_sln.outputs.slnpath }}"
+
+      - name: Build (Release)
+        run: dotnet build "${{ steps.find_sln.outputs.slnpath }}" --configuration Release --no-restore
+
+      - name: Run unit tests (TRX)
+        run: dotnet test "${{ steps.find_sln.outputs.slnpath }}" --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/TestResults/*.trx'
