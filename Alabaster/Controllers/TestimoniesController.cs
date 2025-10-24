@@ -57,51 +57,45 @@ namespace Alabaster.Controllers
 
         // ===== HANDLE FORM SUBMISSION =====
         [HttpPost]
-        public async Task<IActionResult> Create(Testimony model, IFormFile ImageUpload, string NameOption, string CustomName)
-        {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("FirebaseToken")))
-            {
-                TempData["Error"] = "You must be logged in to submit a testimony.";
-                return RedirectToAction("Login", "Auth");
-            }
+public async Task<IActionResult> Create(Testimony model, IFormFile ImageUpload)
+{
+    if (string.IsNullOrEmpty(HttpContext.Session.GetString("FirebaseToken")))
+    {
+        TempData["Error"] = "You must be logged in to submit a testimony.";
+        return RedirectToAction("Login", "Auth");
+    }
 
-            if (string.IsNullOrEmpty(model.Title) || string.IsNullOrEmpty(model.Description))
-            {
-                ModelState.AddModelError("", "Title and Description are required.");
-                return View(model);
-            }
+    if (string.IsNullOrEmpty(model.Title) || string.IsNullOrEmpty(model.Description) || string.IsNullOrEmpty(model.CreatedBy))
+    {
+        ModelState.AddModelError("", "Please fill in all required fields.");
+        return View(model);
+    }
 
-            if (NameOption == "Custom" && string.IsNullOrEmpty(CustomName))
-            {
-                ModelState.AddModelError("", "Please enter your name or choose Anonymous.");
-                return View(model);
-            }
+    if (ImageUpload != null && ImageUpload.Length > 0)
+    {
+        using var ms = new MemoryStream();
+        await ImageUpload.CopyToAsync(ms);
+        model.ImageBase64 = Convert.ToBase64String(ms.ToArray());
+    }
+    else
+    {
+        model.ImageBase64 = "";
+    }
 
-            if (ImageUpload != null && ImageUpload.Length > 0)
-            {
-                using var ms = new MemoryStream();
-                await ImageUpload.CopyToAsync(ms);
-                model.ImageBase64 = Convert.ToBase64String(ms.ToArray());
-            }
-            else
-            {
-                model.ImageBase64 = "";
-            }
+    model.CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+    model.IsApproved = false; // Pending approval
 
-            model.CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-            model.CreatedBy = NameOption == "Custom" ? CustomName : "Anonymous";
-            model.IsApproved = false; // ✅ Default: Pending approval
+    var json = JsonConvert.SerializeObject(model);
+    var content = new StringContent(json, Encoding.UTF8, "application/json");
+    var response = await _httpClient.PostAsync($"{firebaseUrl}/testimonies.json", content);
 
-            var json = JsonConvert.SerializeObject(model);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{firebaseUrl}/testimonies.json", content);
+    if (response.IsSuccessStatusCode)
+        return RedirectToAction("Index");
 
-            if (response.IsSuccessStatusCode)
-                return RedirectToAction("Index");
+    ModelState.AddModelError("", "Failed to submit testimony. Please try again.");
+    return View(model);
+}
 
-            ModelState.AddModelError("", "Failed to submit testimony. Please try again.");
-            return View(model);
-        }
 
         // ===== ADMIN VIEW: PENDING TESTIMONIES =====
         public async Task<IActionResult> Admin()

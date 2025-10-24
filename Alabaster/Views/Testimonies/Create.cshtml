@@ -14,13 +14,11 @@ html, body {
 }
 
 body {
-    /* Updated background image */
     background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
     overflow-x: hidden;
     position: relative;
 }
 
-/* Updated cinematic page overlay */
 body::before {
     content: "";
     position: fixed;
@@ -29,7 +27,7 @@ body::before {
     z-index: 0;
 }
 
-/* ===== PAGE CONTAINER ===== */
+/* ===== CONTAINER ===== */
 .create-page-container {
     display: flex;
     align-items: center;
@@ -43,7 +41,7 @@ body::before {
     animation: fadeInUp 1.2s ease-out forwards;
 }
 
-/* ===== FORM CARD ===== */
+/* ===== CARD ===== */
 .create-testimony-form {
     width: 100%;
     max-width: 660px;
@@ -54,7 +52,6 @@ body::before {
     box-shadow: 0 0 40px rgba(255,215,0,0.3);
     border: 1px solid rgba(255,215,0,0.15);
     position: relative;
-    overflow: hidden;
     transform: scale(1.1);
     transform-origin: top center;
 }
@@ -75,14 +72,11 @@ body::before {
     text-align: center;
     font-size: 2.4rem;
     font-weight: 900;
-    letter-spacing: 1px;
     margin-bottom: 2rem;
     text-transform: uppercase;
     background: linear-gradient(90deg, #FFD700, #fff, #FFD700);
     -webkit-background-clip: text;
-    background-clip: text;
     color: transparent;
-    background-size: 200% auto;
     animation: shimmer 4s linear infinite;
     text-shadow: 0 0 25px rgba(255,255,255,0.4);
 }
@@ -93,9 +87,6 @@ body::before {
     animation: fadeIn 1s ease both;
 }
 
-.form-group:nth-child(odd) { animation-delay: 0.3s; }
-.form-group:nth-child(even) { animation-delay: 0.6s; }
-
 label {
     display: block;
     font-weight: 600;
@@ -104,7 +95,7 @@ label {
     font-size: 1rem;
 }
 
-.form-group input[type="text"],
+.form-group input,
 .form-group textarea,
 .form-group input[type="file"] {
     width: 100%;
@@ -122,44 +113,6 @@ label {
 .form-group textarea::placeholder {
     color: #FFD700;
     opacity: 0.7;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    border-color: #FFD700;
-    box-shadow: 0 0 10px rgba(255,215,0,0.4);
-}
-
-/* ===== RADIO BUTTONS ===== */
-.name-option-group {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
-}
-
-.name-option-group input[type="radio"] { display: none; }
-
-.name-option-group label {
-    flex: 1;
-    text-align: center;
-    padding: 0.7rem 0;
-    border-radius: 0.5rem;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,215,0,0.4);
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.name-option-group input[type="radio"]:checked + label {
-    background: linear-gradient(135deg, #FFD700, #FFB700);
-    color: #000;
-    box-shadow: 0 0 10px rgba(255,215,0,0.5);
-}
-
-#customNameField {
-    display: none;
-    margin-top: 1rem;
 }
 
 /* ===== SUBMIT BUTTON ===== */
@@ -190,43 +143,13 @@ label {
     0% { opacity: 0; transform: translateY(40px); }
     100% { opacity: 1; transform: translateY(0); }
 }
-
-@@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 @@keyframes shimmer {
     0% { background-position: 0% 50%; }
     100% { background-position: 200% 50%; }
 }
-
 @@keyframes lightSweep {
     0% { left: -75%; }
     100% { left: 125%; }
-}
-
-/* ===== FLOATING PARTICLES ===== */
-.sparkle {
-    position: fixed;
-    width: 3px;
-    height: 3px;
-    background: rgba(255,215,0,0.9);
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(255,215,0,0.8);
-    pointer-events: none;
-    animation: sparkleAnim linear infinite;
-    z-index: 1;
-}
-
-@@keyframes sparkleAnim {
-    0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    50% { transform: translateY(-25px) scale(1); opacity: 1; }
-    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
-}
-
-@@media (max-width: 768px) {
-    .create-testimony-form h2 { font-size: 1.8rem; }
 }
 </style>
 }
@@ -242,18 +165,8 @@ label {
             </div>
 
             <div class="form-group">
-                <label>Who should see your name?</label>
-                <div class="name-option-group">
-                    <input type="radio" id="anonymous" name="NameOption" value="Anonymous" checked />
-                    <label for="anonymous">Anonymous</label>
-                    <input type="radio" id="customName" name="NameOption" value="Custom" />
-                    <label for="customName">Use My Name</label>
-                </div>
-
-                <div class="form-group" id="customNameField">
-                    <label for="CustomName">Enter Your Name</label>
-                    <input id="CustomName" name="CustomName" type="text" placeholder="Your Name" />
-                </div>
+                <label for="Name">Your Name</label>
+                <input id="Name" name="CreatedBy" type="text" required placeholder="Enter your name" />
             </div>
 
             <div class="form-group">
@@ -262,40 +175,11 @@ label {
             </div>
 
             <div class="form-group">
-                <label for="Description">Description</label>
-                <textarea id="Description" name="Description" required placeholder="Write about your experience, transformation, or message..."></textarea>
+                <label for="Description">Your Testimony</label>
+                <textarea id="Description" name="Description" required placeholder="Share what the Lord has done for you"></textarea>
             </div>
 
             <button type="submit" class="btn-submit">Submit Testimony</button>
         </form>
     </div>
 </div>
-
-@section Scripts {
-<script>
-// Toggle name field visibility
-const anonymousRadio = document.getElementById("anonymous");
-const customRadio = document.getElementById("customName");
-const customField = document.getElementById("customNameField");
-
-function toggleNameField() {
-    customField.style.display = customRadio.checked ? "block" : "none";
-}
-
-anonymousRadio.addEventListener("change", toggleNameField);
-customRadio.addEventListener("change", toggleNameField);
-toggleNameField();
-
-// Floating sparkles
-function createSparkle() {
-    const sparkle = document.createElement('div');
-    sparkle.classList.add('sparkle');
-    sparkle.style.left = Math.random() * window.innerWidth + 'px';
-    sparkle.style.top = Math.random() * window.innerHeight + 'px';
-    sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
-    document.body.appendChild(sparkle);
-    setTimeout(() => sparkle.remove(), 4000);
-}
-setInterval(createSparkle, 150);
-</script>
-}

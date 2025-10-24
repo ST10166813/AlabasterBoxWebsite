@@ -276,33 +276,36 @@ setInterval(createSparkle, 200);
 }
 
 <div class="page-content">
-    <div class="hero">
-        <h1>✨ Testimonies ✨</h1>
-        <a asp-controller="Testimonies" asp-action="Create" class="hero-cta">Share Your Story</a>
-    </div>
+    <div class="hero">
+        <h1>✨ Testimonies ✨</h1>
+        <a asp-controller="Testimonies" asp-action="Create" class="hero-cta">Share Your Story</a>
+    </div>
 
-    <h2 class="section-title">Voices From Our Community</h2>
+    <h2 class="section-title">Voices From Our Community</h2>
 
-    <div class="testimony-grid">
-        @if (!Model.Any())
-        {
-            <div class="no-testimonies">✨ No testimonies yet. Be the first to inspire others! ✨</div>
-        }
-        else
-        {
-            foreach (var item in Model.OrderByDescending(t => t.CreatedAt))
-            {
-                <div class="testimony-card">
-                    <img src="@(string.IsNullOrEmpty(item.ImageBase64)
-                        ? Url.Content("~/Images/Default%20image.png")
-                        : $"data:image/jpeg;base64,{item.ImageBase64}")"
-                         alt="Testimony Image" />
-                    <h4>@item.Title</h4>
-                    <p>@item.Description</p>
-                    <small>By: @(string.IsNullOrEmpty(item.CreatedBy) ? "Anonymous" : item.CreatedBy)</small>
-                    <small>Date: @item.CreatedAt</small>
-                </div>
-            }
-        }
-    </div>
+    <div class="testimony-grid">
+        @if (!Model.Any())
+        {
+            <div class="no-testimonies">✨ No testimonies yet. Be the first to inspire others! ✨</div>
+        }
+        else
+        {
+            foreach (var item in Model.OrderByDescending(t => t.CreatedAt))
+            {
+                // === UPDATED RAZOR LOGIC: Determine class based on image presence ===
+                var cardClass = string.IsNullOrEmpty(item.ImageBase64) ? "testimony-card no-image" : "testimony-card";
+
+                <div class="@cardClass"> @* <-- Using the dynamic class here *@
+                   @if (!string.IsNullOrEmpty(item.ImageBase64))
+                    {
+                        <img src="data:image/jpeg;base64,@item.ImageBase64" alt="Testimony Image" />
+                    }
+                    <h4>@item.Title</h4>
+                    <p>@item.Description</p>
+                    <small>By: @(string.IsNullOrEmpty(item.CreatedBy) ? "Anonymous" : item.CreatedBy)</small>
+                    <small>Date: @item.CreatedAt</small>
+                </div>
+            }
+        }
+    </div>
 </div>
