@@ -354,8 +354,8 @@ C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabaster\obj\Debug\net9.0\ref\
 C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\appsettings.json
 C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\serviceAccountKey.json
-C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\Alabaster.staticwebassets.endpoints.json
 C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\Alabaster.staticwebassets.runtime.json
+C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\Alabaster.staticwebassets.endpoints.json
 C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\Alabaster.exe
 C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\Alabaster.deps.json
 C:\Users\niska\OneDrive\Documents\BCA3\Alabaster\alabasterBoxWebsite\alabaster\bin\Debug\net9.0\Alabaster.runtimeconfig.json
