@@ -205,7 +205,10 @@
                 {
                     <li class="nav-item d-flex align-items-center text-white me-2">
                         <i class="bi bi-person-circle"></i>
-                        <span class="ms-1 user-email">@Context.Session.GetString("UserEmail")</span>
+                        @{
+    var displayName = Context.Session.GetString("UserName") ?? "User";
+}
+<span class="ms-1 user-email">@displayName</span>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Auth" asp-action="Logout">
@@ -240,7 +243,6 @@
                 <a class="menu-item" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Home</a>
                 <a class="menu-item" asp-controller="AboutUs" asp-action="Index"><i class="bi bi-info-circle"></i> About Us</a>
                 <a class="menu-item" asp-controller="Events" asp-action="Index"><i class="bi bi-calendar-event"></i> Events</a>
-                <a class="menu-item" asp-controller="Events" asp-action="Past"><i class="bi bi-clock-history"></i> Past Events</a>
                 <a class="menu-item" asp-controller="Events" asp-action="Volunteer"><i class="bi bi-people"></i> Volunteer</a>
                 <a class="menu-item" asp-controller="Testimonies" asp-action="Index"><i class="bi bi-chat-quote"></i> Testimonies</a>
                 <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
