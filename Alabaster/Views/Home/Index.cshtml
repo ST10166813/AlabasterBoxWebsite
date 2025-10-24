@@ -1,0 +1,359 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Styles {
+<style>
+/* =============== GLOBAL =============== */
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* PAGE OVERLAY */
+.page-overlay {
+    padding: 80px 15px;
+    position: auto;
+    z-index: 1;
+}
+
+.page-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: -1;
+}
+
+/* ===== PARTICLES ===== */
+#particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 215, 0, 0.8);
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: float 12s linear infinite;
+}
+
+@@keyframes float {
+    0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-10vh) translateX(50vw) rotate(360deg); opacity: 0; }
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+    padding: 160px 20px 100px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(90deg, #FFD700, #FFAA00, #ffffff);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    animation: shimmer 5s linear infinite;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.hero p {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.hero-cta {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: linear-gradient(135deg, #FFD700, #FFAA00);
+    color: #000;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.hero-cta:hover {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 14px 35px rgba(255, 215, 0, 0.7);
+}
+
+/* ===== SECTIONS ===== */
+.section {
+    padding: 100px 20px;
+    text-align: center;
+    position: relative;
+}
+
+.section h2 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 40px;
+    color: #FFD700;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    text-transform: uppercase;
+}
+
+.section p {
+    font-size: 1.3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.7;
+    color: #eee;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+
+/* ===== MISSION & VISION CARDS ===== */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.card {
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px solid #FFD700;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 300px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #FFD700;
+}
+
+.card p {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 15px 50px rgba(255, 215, 0, 0.6);
+}
+
+/* ===== BUTTONS ===== */
+.section a.btn {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-decoration: none;
+    background: linear-gradient(135deg, #FFD700, #FFAA00);
+    color: #000;
+    box-shadow: 0 8px 20px rgba(255, 170, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.section a.btn:hover {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 14px 35px rgba(255, 170, 0, 0.7);
+}
+
+/* ===== SHIMMER ANIMATION ===== */
+@@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* ===== RESPONSIVE ===== */
+@@media (max-width: 992px) {
+    .hero h1 { font-size: 2.8rem; }
+    .hero p, .section p { font-size: 1.1rem; }
+    .section h2 { font-size: 2.2rem; }
+    .hero-cta { font-size: 1rem; padding: 10px 22px; }
+    .cards-container { flex-direction: column; align-items: center; }
+}
+
+@@media (max-width: 768px) {
+    .hero h1 { font-size: 2.2rem; }
+    .hero p, .section p { font-size: 1rem; }
+    .section h2 { font-size: 1.8rem; }
+    .hero-cta { font-size: 0.9rem; padding: 8px 18px; }
+}
+
+/* ===== SPARKLES ===== */
+.sparkle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(255, 215, 0, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+    pointer-events: none;
+    animation: sparkleAnim linear infinite;
+    z-index: 0;
+}
+
+@@keyframes sparkleAnim {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { transform: translateY(-25px) scale(1); opacity: 1; }
+    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+}
+</style>
+}
+
+<!-- ===== PARTICLES ===== -->
+<div id="particles"></div>
+
+<!-- ===== PAGE OVERLAY ===== -->
+<div class="page-overlay text-center">
+
+    <!-- ===== HERO ===== -->
+    <div class="hero">
+        <h1>Welcome to Alabaster Box</h1>
+        <p>Your place of worship, inspiration, and spreading the Good News through acts of love and service.</p>
+        <a href="/Donate" class="hero-cta">Support Our Ministry</a>
+    </div>
+
+    <!-- ===== ABOUT SECTION ===== -->
+    <div class="section" id="about">
+        <h2>About Alabaster Box</h2>
+        <p>
+            Alabaster Box Anointing Ministries is committed to inspiring, teaching, and guiding people to live in faith, love, and purpose. 
+            We create opportunities to worship, learn, volunteer, and share blessings with our community.
+        </p>
+        <a class="btn" asp-controller="AboutUs" asp-action="Index">Learn More</a>
+    </div>
+
+    <!-- ===== MISSION & VISION ===== -->
+    <div class="section" id="mission">
+        <h2>Our Mission & Vision</h2>
+        <div class="cards-container">
+            <div class="card">
+                <h3>Our Mission</h3>
+                <p>To bring the light of Christ into every life through teaching, community outreach, and acts of love.</p>
+            </div>
+            <div class="card">
+                <h3>Our Vision</h3>
+                <p>To create a community of faith, hope, and service where everyone can experience God's love daily.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== EVENTS / TEACHINGS ===== -->
+    <div class="section" id="events">
+        <h2>Join Our Events & Teachings</h2>
+        <p>We host worship services, volunteer events, and teaching sessions to help you grow spiritually and connect with others.</p>
+        <a href="/Events" class="btn">See Upcoming Events</a>
+    </div>
+</div>
+<!-- ===== youtube account text ===== -->
+<div class="section" id="events">
+    <h2>Join Our online Sermons </h2>
+    <p>
+        We host worship services, volunteer events and live teachings on our YouTube channel.
+        Subscribe to our channel to get notified when we go live and to watch past sermons, worship sessions,
+        and community outreach videos anytime.
+    </p>
+
+    <!-- Link to YouTube channel (opens in new tab) -->
+    <a class="btn" href="https://www.youtube.com/channel/UCFqkqWkSvJ_hm0m2whwGZWQ" target="_blank" rel="noopener noreferrer">
+        Watch on YouTube
+    </a>
+</div>
+
+
+<!-- ====== YOUTUBE PLAYER +===== -->
+<div class="player-section" style="padding: 40px 20px; text-align:center;">
+
+
+    <!-- Player area -->
+    @if (!string.IsNullOrEmpty((string?)ViewBag.YouTubeVideoId))
+    {
+        <div class="player-container" role="region" aria-label="Live / Latest video">
+            <div class="youtube-player" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:900px;margin:0 auto;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);">
+                <iframe id="ytIframe"
+                        src="https://www.youtube.com/embed/@(ViewBag.YouTubeVideoId)?rel=0"
+                        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            </div>
+                </div>
+    }
+    else
+    {
+        <div class="player-container" style="max-width:900px;margin:0 auto;">
+            <div style="padding:60px 20px; background:rgba(255,255,255,0.03); border:2px solid rgba(255,215,0,0.12); border-radius:12px;">
+                <p style="font-size:1.1rem; color:#fff; margin:0;">We couldn't find a video to display right now. Please check back during a live stream or visit our <a href="/Donate" style="color:#FFD700; font-weight:700;">Donate</a> page.</p>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+/* ===== PARTICLE EFFECT ===== */
+const particleContainer = document.getElementById('particles');
+
+function createParticle() {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    const size = Math.random() * 6 + 2;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = Math.random() * window.innerWidth + 'px';
+    particle.style.animationDuration = (5 + Math.random() * 10) + 's';
+    particle.style.background = `rgba(255,215,0,${Math.random() * 0.6 + 0.3})`;
+    particleContainer.appendChild(particle);
+
+    setTimeout(() => {
+        particle.remove();
+    }, 15000);
+}
+
+setInterval(createParticle, 150);
+
+/* ===== SPARKLES EFFECT ===== */
+function createSparkle() {
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+    sparkle.style.animationDuration = (5 + Math.random() * 5) + 's';
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 10000);
+}
+
+setInterval(createSparkle, 200);
+</script>
+}

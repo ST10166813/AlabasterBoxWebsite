@@ -1,0 +1,243 @@
+@model Alabaster.Models.Volunteer
+
+@{
+    ViewData["Title"] = "Volunteer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+<style>
+/* ===== GLOBAL BODY ===== */
+html, body {
+    margin: 0;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ===== BACKGROUND IMAGE ===== */
+body {
+    background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
+    background-color: #000;
+}
+
+/* ===== CINEMATIC OVERLAY ===== */
+.page-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: -1;
+}
+
+/* ===== VOLUNTEER CARD ===== */
+.volunteer-card {
+    width: 100%;
+    max-width: 660px;
+    margin: 80px auto;
+    padding: 2.5rem 2rem;
+    background: rgba(0, 0, 0, 0.55); /* darker background */
+    border-radius: 1.5rem;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 40px rgba(255,215,0,0.25); /* slightly softer glow */
+    border: 1px solid rgba(255,215,0,0.15); /* softer border */
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+
+/* GOLDEN LIGHT SWEEP */
+.volunteer-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,215,0,0.3), transparent);
+    animation: lightSweep 6s infinite linear;
+}
+
+/* CARD HEADER */
+.volunteer-card h2 {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #FFD700, #fff, #FFD700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shimmer 4s linear infinite;
+    text-shadow: 0 0 25px rgba(255,255,255,0.4);
+}
+
+/* FORM ELEMENTS */
+.form-group { margin-bottom: 1.5rem; }
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #FFD700;
+    font-size: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    outline: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+
+/* SUBMIT BUTTON */
+.btn-submit {
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 0.6rem;
+    color: #000;
+    background: linear-gradient(90deg, #FFD700, #FFB700, #FFD700);
+    background-size: 200% auto;
+    animation: shimmer 5s linear infinite;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+}
+
+.btn-submit:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255,215,0,0.6);
+}
+
+/* ANIMATIONS */
+@@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@@keyframes lightSweep {
+    0% { left: -75%; }
+    100% { left: 125%; }
+}
+
+/* SPARKLES */
+.sparkle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: rgba(255,215,0,0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255,215,0,0.8);
+    pointer-events: none;
+    animation: sparkleAnim linear infinite;
+    z-index: 1;
+}
+
+@@keyframes sparkleAnim {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { transform: translateY(-25px) scale(1); opacity: 1; }
+    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+}
+
+/* RESPONSIVE */
+@@media (max-width: 768px) {
+    .volunteer-card h2 { font-size: 1.8rem; }
+}
+</style>
+}
+
+<div class="page-overlay">
+    <div class="volunteer-card">
+        <h2>🙌 Volunteer for an Event 🙌</h2>
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert-success">@TempData["Message"]</div>
+        }
+
+        <form asp-action="Volunteer" method="post" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label>Select Event</label>
+                <select asp-for="EventId" class="form-control">
+                    <option value="">-- Select Event --</option>
+                    @foreach (var evt in (List<Alabaster.Models.UpcomingEvent>)ViewBag.Events)
+                    {
+                        <option value="@evt.Id" selected="@(Model.EventId == evt.Id)">
+                            @evt.Name (@evt.Date)
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="EventId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input asp-for="Phone" class="form-control" maxlength="10" pattern="\d{10}" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Notes / Allergies (optional)</label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Number of Volunteers</label>
+                <input asp-for="NumberOfVolunteers" type="number" class="form-control" min="1" value="1" />
+                <span asp-validation-for="NumberOfVolunteers" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+/* Floating sparkles */
+function createSparkle() {
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+    sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 4000);
+}
+setInterval(createSparkle, 150);
+</script>
+}

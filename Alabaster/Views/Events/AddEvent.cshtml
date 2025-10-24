@@ -1,0 +1,247 @@
+@model Alabaster.Models.UpcomingEvent
+
+@section Styles {
+<style>
+/* ===== BASE STYLING ===== */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    color: #fff;
+}
+
+body {
+    background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
+    background-color: #000;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* CINEMATIC OVERLAY */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 0;
+}
+
+/* ===== PAGE CONTAINER ===== */
+.event-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeInUp 1.2s ease-out forwards;
+}
+
+/* ===== FORM CARD ===== */
+.add-event-form {
+    width: 100%;
+    max-width: 660px;
+    padding: 2.5rem 2rem;
+    /* DARKER BACKGROUND */
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 1.5rem;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 40px rgba(255,215,0,0.3);
+    border: 1px solid rgba(255,215,0,0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* GOLDEN LIGHT SWEEP */
+.add-event-form::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,215,0,0.3), transparent);
+    animation: lightSweep 6s infinite linear;
+}
+
+/* ===== HEADER ===== */
+.add-event-form h2 {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #FFD700, #fff, #FFD700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shimmer 4s linear infinite;
+    text-shadow: 0 0 25px rgba(255,255,255,0.4);
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-group {
+    margin-bottom: 1.5rem;
+    animation: fadeIn 1s ease both;
+}
+
+.form-group:nth-child(odd) { animation-delay: 0.3s; }
+.form-group:nth-child(even) { animation-delay: 0.6s; }
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #FFD700;
+    font-size: 1rem;
+}
+
+.form-control, input[type="file"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    outline: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, input[type="file"]:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.btn-submit {
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 0.6rem;
+    color: #000;
+    background: linear-gradient(90deg, #FFD700, #FFB700, #FFD700);
+    background-size: 200% auto;
+    animation: shimmer 5s linear infinite;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+}
+
+.btn-submit:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255,215,0,0.6);
+}
+
+/* ===== ANIMATIONS ===== */
+@@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@@keyframes lightSweep {
+    0% { left: -75%; }
+    100% { left: 125%; }
+}
+
+/* ===== FLOATING PARTICLES ===== */
+.sparkle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: rgba(255,215,0,0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255,215,0,0.8);
+    pointer-events: none;
+    animation: sparkleAnim linear infinite;
+    z-index: 1;
+}
+
+@@keyframes sparkleAnim {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { transform: translateY(-25px) scale(1); opacity: 1; }
+    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+}
+
+@@media (max-width: 768px) {
+    .add-event-form h2 { font-size: 1.8rem; }
+}
+</style>
+}
+
+<div class="event-form-container">
+    <div class="add-event-form">
+        <h2>Add New Event</h2>
+
+        <form asp-action="AddEvent" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Event Name</label>
+                <input asp-for="Name" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea asp-for="Description" class="form-control" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input asp-for="Date" type="date" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Time</label>
+                <input asp-for="Time" type="time" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Choose Image</label>
+                <input type="file" id="imageFile" class="form-control" accept="image/*" />
+                <input type="hidden" asp-for="ImageUrl" id="ImageUrl" />
+            </div>
+
+            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Save Event</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // Convert image file to base64
+    document.getElementById("imageFile").addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = function () {
+                document.getElementById("ImageUrl").value = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Floating sparkles
+    function createSparkle() {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = Math.random() * window.innerWidth + 'px';
+        sparkle.style.top = Math.random() * window.innerHeight + 'px';
+        sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 4000);
+    }
+    setInterval(createSparkle, 150);
+</script>
+}

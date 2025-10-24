@@ -1,0 +1,149 @@
+@{
+    ViewData["Title"] = "Thank You";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+<style>
+/* ===== BASE STYLING ===== */
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* CINEMATIC OVERLAY LIKE EVENTS PAGES */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35); /* same opacity as events page */
+    z-index: 0;
+}
+
+/* ===== THANK YOU CARD ===== */
+.thank-you-card {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 40px 30px;
+    background: rgba(0, 0, 0, 0.55); /* darker, cinematic card */
+    border-radius: 20px;
+    backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255,215,0,0.25);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* GOLDEN SHIMMER HEADING */
+.thank-you-card h2 {
+    font-size: 2.4rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #FFD700, #fff, #FFD700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shimmer 4s linear infinite;
+    text-shadow: 0 0 25px rgba(255,255,255,0.4);
+}
+
+/* MESSAGE */
+.thank-you-card p {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* BUTTON */
+.btn-back {
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 35px;
+    border: none;
+    color: #000;
+    background: linear-gradient(90deg, #FFD700, #FFB700, #FFD700);
+    background-size: 200% auto;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,215,0,0.5);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    animation: shimmer 5s linear infinite;
+}
+
+.btn-back:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 10px 28px rgba(255,215,0,0.7);
+}
+
+/* ===== FLOATING PARTICLES ===== */
+.sparkle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: rgba(255,215,0,0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255,215,0,0.8);
+    pointer-events: none;
+    animation: sparkleAnim linear infinite;
+    z-index: 1;
+}
+
+/* ===== ANIMATIONS ===== */
+@@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@@keyframes sparkleAnim {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { transform: translateY(-25px) scale(1); opacity: 1; }
+    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+}
+
+/* ===== RESPONSIVE ===== */
+@@media (max-width: 768px) {
+    .thank-you-card {
+        margin: 60px 20px;
+        padding: 30px 20px;
+    }
+    .thank-you-card h2 { font-size: 1.8rem; }
+    .thank-you-card p { font-size: 1rem; }
+}
+</style>
+}
+
+<div class="thank-you-card">
+    <h2>Thank You for Volunteering!</h2>
+    <p>Your volunteer information has been successfully submitted.</p>
+    <a href="/Events" class="btn-back">Back to Events</a>
+</div>
+
+@section Scripts {
+<script>
+    // Floating sparkles
+    function createSparkle() {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = Math.random() * window.innerWidth + 'px';
+        sparkle.style.top = Math.random() * window.innerHeight + 'px';
+        sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 4000);
+    }
+    setInterval(createSparkle, 150);
+</script>
+}
