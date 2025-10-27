@@ -1,575 +1,988 @@
-﻿@* @{
-    ViewBag.Title = "Donate";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+@{
+    ViewData["Title"] = "Donate";
 }
 
 @section Styles {
-<style>
-html, body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #000000, #1a1a1a);
-    color: #fff;
-    min-height: 100vh;
-    overflow-x: hidden;
+    <style>
+        /* RESET */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* CINEMATIC OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 0;
+        }
+
+        /* PAGE LAYOUT */
+        .donate-hero {
+            position: relative;
+            background: url('../images/Donate.jpg') center center / cover no-repeat;
+            width: 100%;
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 2.8rem;
+            z-index: 1;
+        }
+
+            .donate-hero::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.45);
+                z-index: 1;
+                border-bottom: 1px solid rgba(255,215,0,0.06);
+            }
+
+            .donate-hero .hero-content {
+                position: relative;
+                z-index: 2;
+                padding: 2.2rem 1rem;
+                color: #fff;
+            }
+
+            .donate-hero h1 {
+                font-size: 3rem;
+                font-weight: 900;
+                margin-bottom: 0.5rem;
+                background: linear-gradient(90deg, #FFD700, #fff, #FFD700);
+                background-size: 200% auto;
+                color: transparent;
+                -webkit-background-clip: text;
+                background-clip: text;
+                text-shadow: 0 0 18px rgba(255,215,0,0.25);
+                animation: shimmer 6s linear infinite;
+            }
+
+            .donate-hero p {
+                font-size: 1.05rem;
+                color: #f4f4f4;
+                max-width: 900px;
+                margin: 0.6rem auto 1rem auto;
+                text-shadow: 0 1.6px 4.8px rgba(0,0,0,0.55);
+                line-height: 1.6;
+            }
+
+            .donate-hero .hero-cta {
+                display: inline-block;
+                margin-top: 0.9rem;
+                padding: 0.9rem 1.8rem;
+                font-size: 1rem;
+                color: #000;
+                background: linear-gradient(135deg, #FFD700, #FFAA00);
+                border-radius: 999px;
+                font-weight: 800;
+                box-shadow: 0 10px 28px rgba(255, 170, 0, 0.25);
+            }
+
+        @@keyframes shimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+
+        /* MAIN CARD */
+        .donate-section {
+            display: flex;
+            justify-content: center;
+            padding: 2.6rem 1.2rem 4rem 1.2rem;
+            z-index: 1;
+            position: relative;
+        }
+
+        .donate-card {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 2rem;
+            background: rgba(0,0,0,0.55);
+            border-radius: 1.35rem;
+            padding: 2.4rem;
+            border: 1px solid rgba(255,215,0,0.12);
+            backdrop-filter: blur(18px) saturate(160%);
+            box-shadow: 0 26px 60px rgba(0,0,0,0.55);
+            opacity: 0;
+            transform: translateY(26px);
+            transition: all 1s ease;
+        }
+
+            .donate-card.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        /* LEFT CONTENT */
+        .donate-content h2 {
+            font-size: 2.1rem;
+            font-weight: 900;
+            margin-bottom: 0.9rem;
+            color: #fff;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+        }
+
+        .donate-content p {
+            font-size: 1.05rem;
+            color: #f1f1f1;
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+
+        .donate-image {
+            width: 100%;
+            border-radius: 1rem;
+            object-fit: cover;
+            display: block;
+            margin: 1.15rem 0 0.75rem 0;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.45);
+        }
+
+        .donate-note {
+            font-size: 0.98rem;
+            color: #fff;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            padding: 0.9rem;
+            border-radius: 0.8rem;
+            border: 1px solid rgba(255,215,0,0.06);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+        }
+
+        /* RIGHT: DONATION OPTIONS */
+        .donate-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.35rem;
+        }
+
+        .option-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius: 1rem;
+            padding: 1.25rem;
+            border: 1px solid rgba(255,215,0,0.08);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+        }
+
+            .option-card h3 {
+                font-size: 1.25rem;
+                font-weight: 800;
+                margin-bottom: 0.6rem;
+                color: #FFD700;
+            }
+
+            .option-card p {
+                font-size: 0.98rem;
+                color: #eee;
+                line-height: 1.6;
+                margin-bottom: 0.7rem;
+            }
+
+        /* BANK DETAILS */
+        .bank-details {
+            background: rgba(0,0,0,0.35);
+            border-radius: 0.75rem;
+            padding: 0.9rem;
+            color: #fff;
+            border: 1px dashed rgba(255,215,0,0.12);
+        }
+
+        .bank-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.98rem;
+        }
+
+            .bank-line strong {
+                color: #ffd;
+                font-weight: 700;
+            }
+
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            border-radius: 999px;
+            background: rgba(255,215,0,0.95);
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(255,215,0,0.12);
+        }
+
+        .small-muted {
+            font-size: 0.85rem;
+            color: #ddd;
+            opacity: 0.9;
+        }
+
+        .address-block {
+            background: rgba(0,0,0,0.35);
+            border-radius: 0.75rem;
+            padding: 0.9rem;
+            color: #fff;
+            border: 1px dashed rgba(255,215,0,0.08);
+            font-size: 0.98rem;
+            line-height: 1.5;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            margin-top: 0.6rem;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.12));
+            color: #FFD700;
+            border: 1px solid rgba(255,215,0,0.12);
+            font-weight: 800;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .donation-footer {
+            margin-top: 1rem;
+            font-size: 0.92rem;
+            color: #ddd;
+        }
+
+        @@media (max-width: 992px) {
+            .donate-card {
+                grid-template-columns: 1fr;
+                text-align: left;
+                padding: 1.6rem;
+            }
+
+            .donate-hero h1 {
+                font-size: 2.4rem;
+            }
+
+            .donate-hero p {
+                font-size: 1rem;
+            }
+
+            .donate-card {
+                gap: 1rem;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .donate-hero h1 {
+                font-size: 2rem;
+            }
+
+            .donate-content h2 {
+                font-size: 1.6rem;
+            }
+
+            .bank-line {
+                font-size: 0.92rem;
+            }
+
+            .copy-btn {
+                padding: 6px 8px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ---------------- Payment panel  --------------*/
+        .pf-panel {
+            background: linear-gradient(180deg, rgba(10,10,10,0.95), rgba(6,6,6,0.9));
+            color: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,215,0,0.08);
+        }
+
+        .pf-field {
+            margin-bottom: 12px;
+        }
+
+        .pf-label {
+            font-size: 13px;
+            color: rgba(255, 215, 0, 0.9);
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .pf-input, .pf-select, .pf-btn-inline {
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,215,0,0.06);
+            background: rgba(255,255,255,0.03);
+            font-size: 15px;
+            color: #fff;
+            width: 100%;
+            outline: none;
+            transition: box-shadow .18s ease, border-color .18s ease, transform .06s ease;
+        }
+
+            .pf-input::placeholder {
+                color: rgba(255,255,255,0.45);
+            }
+
+            .pf-input:focus, .pf-select:focus {
+                box-shadow: 0 6px 28px rgba(255, 183, 26, 0.09), 0 0 0 4px rgba(255,215,0,0.06);
+                border-color: rgba(255,215,0,0.3);
+                transform: translateY(-1px);
+            }
+
+        .pf-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .pf-expiry {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pf-divider {
+            height: 1px;
+            background: rgba(255,215,0,0.04);
+            margin: 10px 0 14px;
+            border-radius: 2px;
+        }
+
+        /* preset buttons  */
+        .pf-btn-inline {
+            background: linear-gradient(90deg, rgba(255,215,0,0.12), rgba(255,215,0,0.06));
+            color: #FFD700;
+            border: 1px solid rgba(255,215,0,0.12);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 64px;
+            text-align: center;
+        }
+
+            .pf-btn-inline:hover {
+                filter: brightness(1.05);
+                transform: translateY(-1px);
+            }
+
+        .pf-footer {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pay-button {
+            background: linear-gradient(135deg, #FFD700, #FFAA00);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 999px;
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(255,170,0,0.12);
+            transition: transform .06s ease, box-shadow .12s ease;
+        }
+
+            .pay-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 40px rgba(255,170,0,0.18);
+            }
+
+            .pay-button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+        .change-method {
+            text-align: center;
+            color: #FFD700;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 6px;
+            font-weight: 700;
+        }
+
+        /* modal  */
+        .pf-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .pf-modal {
+            background: linear-gradient(180deg, rgba(8,8,8,0.98), rgba(10,10,10,0.98));
+            color: #fff;
+            border-radius: 12px;
+            width: 420px;
+            max-width: 94%;
+            padding: 18px;
+            box-shadow: 0 14px 60px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,215,0,0.08);
+        }
+
+        .modal-row {
+            margin-bottom: 12px;
+            color: #eaeaea;
+        }
+
+            .modal-row strong {
+                color: #ffd;
+            }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .btn-muted {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.04);
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+            .btn-muted:hover {
+                transform: translateY(-1px);
+            }
+
+        .modal-confirm {
+            background: linear-gradient(135deg,#FFD700,#FFAA00);
+            color: #000;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+            .modal-confirm:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+        /* ---- Custom select styling  ---- */
+        .pf-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: rgba(255,255,255,0.03);
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><path fill='%23FFD700' d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 14px;
+            padding-right: 40px;
+        }
+
+            .pf-select option {
+                background: #0b0b0b;
+                color: #fff;
+            }
+
+
+        .pf-invalid {
+            border-color: #ff4d4f !important;
+            box-shadow: 0 6px 28px rgba(255, 77, 79, 0.08) !important;
+        }
+
+        .pf-error-text {
+            color: #ffb3b3;
+            font-size: 12px;
+            margin-top: 6px;
+            margin-left: 2px;
+        }
+    </style>
 }
 
-.container {
-    max-width: 850px;
-    margin: 3rem auto;
-    padding: 2rem;
-    text-align: center;
-}
+<section class="donate-section" aria-labelledby="donate-heading">
+    <div class="donate-card" id="donate-card">
+        <!-- LEFT: Story / Mission & Payment -->
+        <div class="donate-content">
+            <h2 id="donate-heading">Your gift changes lives</h2>
 
-h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #FFD700;
-    margin-bottom: 2rem;
-}
+            @* TempData messages (errors / confirmations) *@
+            @if (TempData["PayfastError"] != null)
+            {
+                <div style="background:#7a1b1b;padding:10px;border-radius:6px;margin-bottom:12px;color:#fff;">
+                    @TempData["PayfastError"]
+                </div>
+            }
+            @if (TempData["PayfastMessage"] != null)
+            {
+                <div style="background:#1b5a1b;padding:10px;border-radius:6px;margin-bottom:12px;color:#fff;">
+                    @TempData["PayfastMessage"]
+                </div>
+            }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,215,0,0.3);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
+            <p>Alabaster Box Anointing Ministries depends on the faithful support of friends and family to run community feeding schemes, outreach programs, worship gatherings, and practical assistance for those in need. Every gift large or small helps share hope and practical care.</p>
 
-label {
-    font-weight: 600;
-    text-align: left;
-    color: #FFD700;
-}
+            <div class="donate-note" style="margin-top:1rem;">
+                <p class="small-muted">Please use the payment portal for any direct donations</p>
+            </div>
 
-input, select, textarea {
-    padding: 0.8rem;
-    border-radius: 10px;
-    border: 1px solid rgba(255,215,0,0.4);
-    background: rgba(0,0,0,0.35);
-    color: #fff;
-    outline: none;
-    font-size: 1rem;
-}
+            <div class="donate-note" style="margin-top:1rem;">
+                <p class="small-muted">Need a receipt or have questions about giving? Please visit our <a href="/Contact" style="color:#FFD700; font-weight:700;">Contact</a> page so our team can assist you.</p>
+            </div>
+            <div style="height:18px;"></div>
 
-textarea {
-    resize: none;
-    height: 100px;
-}
+            <!-- ====== PAYMENT PANEL  ====== -->
+            <div class="pf-panel" aria-label="Payment panel (UI only)">
 
-button {
-    background: #FFD700;
-    border: none;
-    border-radius: 999px;
-    color: #000;
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1rem;
-}
+                <div class="pf-field">
+                    <label class="pf-label" for="cardNameUI">Name on Card</label>
+                    <input id="cardNameUI" type="text" class="pf-input" placeholder="Name on card" autocomplete="cc-name" required />
+                </div>
 
-button:hover {
-    background: #e6c200;
-    transform: scale(1.03);
-}
+                <div class="pf-field">
+                    <label class="pf-label" for="cardNumberUI">Card Number</label>
+                    <input id="cardNumberUI" type="text" inputmode="numeric" maxlength="19" class="pf-input" placeholder="1234 5678 9012 3456" autocomplete="cc-number" required />
+                </div>
 
-.bank-details {
-    text-align: left;
-    background: rgba(255,255,255,0.08);
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    margin-top: 1rem;
-}
+                <div class="pf-row">
+                    <div style="flex:1;">
+                        <label class="pf-label">Expiry Date</label>
+                        <div class="pf-expiry">
+                            <select id="expMonthUI" class="pf-select" required>
+                                <option value="">Month</option>
+                                @for (int m = 1; m <= 12; m++)
+                                {
+                                    <option value="@m">@m.ToString("00")</option>
+                                }
+                            </select>
 
-.hidden {
-    display: none;
-}
+                            <select id="expYearUI" class="pf-select" required>
+                                <option value="">Year</option>
+                                @{
+                                    var year = DateTime.Now.Year;
+                                    for (var y = 0; y < 12; y++)
+                                    {
+                                        <option value="@(year + y)">@((year + y).ToString())</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-footer {
-    margin-top: 3rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #999;
-}
+                    <div style="width:140px;">
+                        <label class="pf-label" for="cvvUI">CVV</label>
+                        <input id="cvvUI" type="password" inputmode="numeric" maxlength="4" class="pf-input" placeholder="CVV" autocomplete="cc-csc" required />
+                    </div>
+                </div>
 
-/* ✅ Toast Notification */
-.toast {
-    visibility: hidden;
-    min-width: 300px;
-    background-color: #333;
-    color: white;
-    text-align: center;
-    border-radius: 12px;
-    padding: 15px;
-    position: fixed;
-    z-index: 999;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    font-size: 1rem;
-    opacity: 0;
-    transition: opacity 0.5s, bottom 0.5s;
-}
-.toast.show {
-    visibility: visible;
-    opacity: 1;
-    bottom: 50px;
-}
-.toast.success { background-color: #28a745; }
-.toast.error { background-color: #dc3545; }
-</style>
-}
+                <div class="pf-field">
+                    <label class="pf-label" for="cardTypeUI">Straight/Budget</label>
+                    <select id="cardTypeUI" class="pf-select" required>
+                        <option value="">Select</option>
+                        <option value="straight">Straight</option>
+                        <option value="budget">Budget</option>
+                    </select>
+                    <div class="pf-help small-muted">South African issued cards only</div>
+                </div>
 
-<div class="container">
-    <h1>Support the Ministry</h1>
+                <div class="pf-divider" role="separator"></div>
 
-    <form id="donationForm">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" placeholder="Enter your full name" required>
+                <div class="pf-field">
+                    <label class="pf-label" for="pf_amount_ui">Amount (ZAR)</label>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <div style="display:flex; gap:6px;">
+                            <button type="button" class="preset-amt pf-btn-inline" data-amt="50">R50</button>
+                            <button type="button" class="preset-amt pf-btn-inline" data-amt="100">R100</button>
+                            <button type="button" class="preset-amt pf-btn-inline" data-amt="250">R250</button>
+                        </div>
 
-        <label for="email">Email (optional)</label>
-        <input type="email" id="email" placeholder="Enter your email">
 
-        <label for="donationType">Donation Type</label>
-        <select id="donationType" required>
-            <option value="" disabled selected>Choose donation type</option>
-            <option value="money">Money</option>
-            <option value="items">Physical Items</option>
-        </select>
+                        <input id="pf_amount_ui" type="number" step="0.50" min="1" value="100.00" class="pf-input" style="max-width:150px;" required />
+                    </div>
+                </div>
 
-        <!-- For Money Donations -->
-        <div id="moneyFields" class="hidden">
-            <label for="amount">Donation Amount (R)</label>
-            <input type="number" id="amount" placeholder="Enter amount">
+                <div class="pf-footer">
+                    <button type="button" id="pf_pay_open" class="pay-button">Pay R 100.00</button>
+                </div>
+            </div>
+            <!-- ====== END payment panel ====== -->
 
-            <div class="bank-details">
-                <p><strong>Bank:</strong> First National Bank (FNB)</p>
-                <p><strong>Account Name:</strong> Alabaster Box Anointing Ministries</p>
-                <p><strong>Account Number:</strong> 62123456789</p>
-                <p><strong>Branch Code:</strong> 250655</p>
-                <p><strong>Reference:</strong> Your Full Name / Purpose</p>
+            <div class="donation-footer" style="margin-top:1rem;">
+                <p class="small-muted">Thank you for partnering with us — we pray God multiplies every seed sown into abundant fruit.</p>
             </div>
         </div>
 
-        <!-- For Item Donations -->
-        <div id="itemFields" class="hidden">
-            <label for="description">Item Description</label>
-            <textarea id="description" placeholder="Describe your donation (e.g., 5 bags of clothes, canned food)"></textarea>
+        <!-- RIGHT: Donate Options -->
+        <div class="donate-options" id="donate-options">
+            <div class="option-card" aria-labelledby="monetary-title">
+                <h3 id="monetary-title">Monetary Donations / Bank Transfer</h3>
+                <p>If you would like to donate via eft in our own personal banking apps here are the donation details. After you transfer, please let us know via our Contact page so we can issue a receipt and say thank you.</p>
 
-            <p>
-                Drop-off Location:  
-                <strong>2 Garden Crescent, New Germany, Pinetown, 3601</strong><br>
-                <a href="https://www.google.com/maps/search/2+Garden+Crescent+New+Germany+Pinetown+3601"
-                   target="_blank" style="color:#FFD700;">View on Google Maps</a>
-            </p>
+                <div class="bank-details" role="region" aria-label="Banking details">
+                    <div class="bank-line"><span><strong>Bank:</strong> First National Bank</span></div>
+                    <div class="bank-line">
+                        <span><strong>Account Name:</strong> The Alabaster Box Anointing Ministries</span>
+                        <button class="copy-btn" data-copy="The Alabaster Box Anointing Ministries" title="Copy account name">Copy</button>
+                    </div>
+                    <div class="bank-line">
+                        <span><strong>Account Number:</strong> 62787787880</span>
+                        <button class="copy-btn" data-copy="62787787880" title="Copy account number">Copy</button>
+                    </div>
+                    <div class="bank-line">
+                        <span><strong>Branch Code:</strong> 250655</span>
+                        <button class="copy-btn" data-copy="250655" title="Copy branch code">Copy</button>
+                    </div>
+                    <div class="bank-line"><span><strong>Account Type:</strong> Cheque account</span></div>
+                </div>
+
+                <p class="small-muted" style="margin-top:0.7rem;">Tip: Click <em>Copy</em> to quickly paste details into your internet banking or payments app.</p>
+            </div>
+
+            <div class="option-card" aria-labelledby="items-title">
+                <h3 id="items-title">Donations of Physical Items</h3>
+                <p>If you'd like to send clothing, food, supplies, or other physical items, please post, courier or drop then off them to the address below. Pack items securely and include a note with your contact details so we can acknowledge receipt, alos please contact us before you want to drop items off.</p>
+
+                <div class="address-block" role="region" aria-label="Postal address">
+                    <div class="address-lines">
+                        2 GARDEN CRESCENT<br />
+                        NEW GERMANY<br />
+                        PINETOWN<br />
+                        KWA-ZULU NATAL<br />
+                        3601
+                    </div>
+                </div>
+
+                <a class="btn-secondary" href="https://www.google.com/maps/search/2+Garden+Crescent+Pinetown+3601" target="_blank" rel="noopener noreferrer">Open in Maps</a>
+            </div>
         </div>
-
-        <button type="submit">Submit Donation</button>
-    </form>
-
-    <footer>
-        <p>“Give, and it will be given to you.” – Luke 6:38</p>
-    </footer>
-</div>
-
-<!-- ✅ Toast container -->
-<div id="toast" class="toast"></div>
-
-@section Scripts {
-<!-- ✅ Firebase Setup -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBEjxaEf_S9x9NZhmJrWwHLDdZvoyDajDg",
-  authDomain: "alabaster-8cfcd.firebaseapp.com",
-  databaseURL: "https://alabaster-8cfcd-default-rtdb.firebaseio.com",
-  projectId: "alabaster-8cfcd",
-  storageBucket: "alabaster-8cfcd.firebasestorage.app",
-  messagingSenderId: "1014314025942",
-  appId: "1:1014314025942:web:fedff22641b2b8bd219a77",
-  measurementId: "G-27PZK6GB89"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// Toast helper function
-function showToast(message, type = "success") {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.className = `toast show ${type}`;
-    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-}
-
-// Handle donation type toggle
-const donationType = document.getElementById("donationType");
-const moneyFields = document.getElementById("moneyFields");
-const itemFields = document.getElementById("itemFields");
-
-donationType.addEventListener("change", () => {
-    if (donationType.value === "money") {
-        moneyFields.classList.remove("hidden");
-        itemFields.classList.add("hidden");
-    } else if (donationType.value === "items") {
-        moneyFields.classList.add("hidden");
-        itemFields.classList.remove("hidden");
-    }
-});
-
-// Handle form submission
-document.getElementById("donationForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const type = donationType.value;
-    const amount = document.getElementById("amount").value;
-    const description = document.getElementById("description").value;
-    const date = new Date().toLocaleString();
-
-    const donationData = {
-        name,
-        email,
-        type,
-        amount: type === "money" ? amount : "",
-        description: type === "items" ? description : "",
-        date
-    };
-
-    try {
-        await db.ref("Donations").push(donationData);
-        showToast("🙏 Thank you! Your donation was recorded successfully.", "success");
-        document.getElementById("donationForm").reset();
-        moneyFields.classList.add("hidden");
-        itemFields.classList.add("hidden");
-    } catch (error) {
-        console.error(error);
-        showToast("⚠️ Error submitting donation. Please try again.", "error");
-    }
-});
-</script>
-} *@
-
-@{
-    ViewData["Title"] = "Donate";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
-
-@section Styles {
-<style>
-:root{
-  --bg:#08090c; --ink:#f2f2f2; --muted:#cfcfd6;
-  --glass-1: rgba(18,18,22,.55); --glass-2: rgba(18,18,22,.35); --glass-brd: rgba(255,255,255,.14);
-  --gold:#FFD700; --gold-ink:#181818; --shadow:0 24px 60px rgba(0,0,0,.55);
-}
-
-/* Base */
-html, body{ margin:0; font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
-  color:var(--ink); min-height:100vh; overflow-x:hidden;
-  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed; }
-
-/* Title */
-.hero-title{ text-align:center; padding: clamp(100px, 12vh, 160px) 20px 50px; position:relative; z-index:1; }
-.hero-title h1{
-  font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight:900; text-transform:uppercase; letter-spacing:.12em;
-  background: linear-gradient(90deg, var(--gold), #fff 45%, var(--gold));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 34px rgba(255,255,255,.32);
-  background-size:200% auto; animation: shimmer 7s linear infinite;
-}
-.hero-title p{ font-size:1.05rem; color:#e6e6ef; opacity:.92; max-width:980px; margin:10px auto 0; }
-@@keyframes shimmer{ from{background-position:0% 50%} to{background-position:200% 50%} }
-
-/* Page */
-.page-wrap{ position:relative; padding: 40px 18px 60px; }
-
-/* Form card */
-.form-card{
-  width:min(1200px, 96vw); margin:0 auto; padding: clamp(18px, 2.2vw, 28px);
-  border-radius:22px; border:1px solid var(--glass-brd);
-  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
-  backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: var(--shadow); opacity:0; transform: translateY(18px);
-  transition: opacity .6s ease, transform .6s ease;
-}
-.form-card.visible{ opacity:1; transform:none; }
-
-h2.section-title{
-  margin:0 0 2px 0; text-align:center; font-size: clamp(1.4rem, 2.2vw, 2rem); font-weight:900;
-  background: linear-gradient(90deg, var(--gold), #ffffff 45%, var(--gold));
-  -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 18px rgba(255,255,255,.18);
-}
-.subtitle{ text-align:center; margin-top:6px; color:#dcdce5; opacity:.9; font-size:.98rem; }
-
-/* trust chips */
-.trust-row{ display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin:10px 0 4px; }
-.trust-chip{ font-size:.72rem; font-weight:900; letter-spacing:.08em; color:#F29A2E; text-transform:uppercase;
-  padding:.35rem .7rem; border-radius:999px; background: rgba(242,154,46,.1); border:1px solid rgba(242,154,46,.35); }
-
-/* divider */
-.hr{ height:1px; margin:14px 0 12px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); border:0; }
-
-/* Form grid */
-.form-grid{ display:grid; gap:16px; grid-template-columns: 1fr 1fr; }
-@@media (max-width:860px){ .form-grid{ grid-template-columns:1fr; } }
-.col-span-2{ grid-column:1 / -1; }
-label{ font-weight:800; font-size:.94rem; color:#efefef; }
-
-/* Inputs */
-.input-wrap{
-  position:relative; display:flex; align-items:center; gap:10px;
-  border:1px solid rgba(255,255,255,.14);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  border-radius:14px; padding:10px 12px; transition: border-color .25s, box-shadow .25s, background .25s;
-}
-.input-wrap:focus-within{
-  border-color: rgba(255,215,0,.55)!important;
-  box-shadow: 0 0 0 6px rgba(255,215,0,.10)!important;
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
-}
-.input-icon{ font-size:1.05rem; opacity:.9; }
-.form-control, select.form-control{ flex:1; border:0; outline:0; background:transparent!important; color:var(--bg)!important; font-size:1rem; padding:10px 6px; caret-color: var(--gold); }
-textarea.form-control{ resize:vertical; min-height:110px; }
-.form-control:focus{ outline:none!important; box-shadow:none!important; }
-
-/* Select caret */
-.select-wrap{ position:relative; }
-.select-wrap .caret{ position:absolute; right:12px; pointer-events:none; opacity:.9; }
-
-/* File input */
-.file-wrap{ position:relative; display:flex; align-items:center; gap:10px; }
-input[type="file"].file-control{ flex:1; border:0; outline:0; background:transparent; padding:0; color:#ddd; }
-input[type="file"].file-control::-webkit-file-upload-button,
-input[type="file"].file-control::file-selector-button{
-  border:1px solid rgba(255,215,0,.45);
-  background: linear-gradient(135deg, rgba(255,215,0,.12), rgba(255,215,0,.20));
-  color:#FFD700; font-weight:800; border-radius:999px; padding:.5rem 1rem; margin-right:.6rem; cursor:pointer;
-}
-
-/* Hints */
-.small-muted{ font-size:.88rem; color:#ddd; opacity:.9; }
-
-/* Bank details (money only) */
-.bank-details{ background: rgba(0,0,0,.35); border:1px dashed rgba(255,215,0,.18); border-radius:12px; padding:.95rem; color:#fff; margin-top:.6rem; }
-.bank-line{ display:flex; justify-content:space-between; align-items:center; gap:.8rem; font-size:1rem; margin:.45rem 0; }
-.bank-line strong{ color:#ffd; font-weight:800; }
-.copy-btn{ display:inline-flex; align-items:center; gap:.45rem; padding:.45rem .75rem; border-radius:999px; font-weight:800; font-size:.9rem; background: rgba(255,215,0,.95); color:#000; border:none; cursor:pointer; box-shadow:0 8px 20px rgba(255,215,0,.18); }
-
-/* Actions */
-.actions{ margin-top:16px; display:grid; gap:12px; }
-.btn-primary{
-  display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
-  color: var(--gold-ink); border:1px solid rgba(255,215,0,.5);
-  border-radius:12px; font-weight:900; font-size:1rem; padding:14px 16px; width:100%;
-  box-shadow:0 10px 26px rgba(255,215,0,.28); transition: transform .18s, box-shadow .18s, filter .18s;
-}
-.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
-.btn-alt{ display:inline-flex; align-items:center; justify-content:center; gap:12px; background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04)); color:#fff; border:1px solid rgba(255,255,255,.18); border-radius:12px; font-weight:800; font-size:.96rem; padding:12px 16px; width:auto; box-shadow:0 10px 24px rgba(0,0,0,.28); transition:.18s; text-decoration:none; }
-.btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
-.meta-note{ text-align:center; font-size:.9rem; color:var(--muted); }
-
-/* INFO: single column with ONLY location card */
-.info-wrap{ margin: clamp(40px, 6vh, 70px) auto 0; width:min(1100px, 96vw); display:grid; gap: clamp(16px, 2vw, 22px); grid-template-columns: 1fr; }
-.info-card{
-  border-radius:18px; border:1px solid var(--glass-brd);
-  background: linear-gradient(180deg, rgba(20,20,24,.55), rgba(20,20,24,.36));
-  backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%);
-  box-shadow: var(--shadow); padding: clamp(16px, 2vw, 22px);
-  opacity:0; transform: translateY(22px); transition: transform .7s cubic-bezier(.2,.65,.2,1), opacity .7s ease;
-}
-.info-card.inview{ opacity:1; transform:none; }
-.info-head{
-  display:flex; align-items:center; gap:.65rem; font-weight:900; letter-spacing:.3px;
-  background: linear-gradient(90deg, var(--gold), #ffffff 45%, var(--gold));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  background-size:200% auto; animation: shimmer 8s linear infinite; margin-bottom:.4rem;
-}
-.info-head i{ color:var(--gold); filter: drop-shadow(0 0 10px rgba(255,215,0,.25)); }
-.info-body{ opacity:.95; line-height:1.75; font-size:1rem; }
-.info-list{ list-style:none; margin:.5rem 0 0; padding:0; }
-.info-list li{ display:flex; gap:.55rem; align-items:flex-start; margin:.4rem 0; opacity:.96; }
-.info-list li i{ color:var(--gold); margin-top:.15rem; }
-.address-row{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.6rem; }
-.badge{ font-size:.85rem; letter-spacing:.2px; font-weight:700; padding:.4rem .7rem; border-radius:999px; border:1px solid rgba(255,215,0,.25); background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)); }
-.btn-row{ display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.6rem; align-items:center; }
-.copy-btn.slim{ padding:.4rem .7rem; }
-
-/* remove autofill blue */
-input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{
-  -webkit-box-shadow:0 0 0 1000px transparent inset !important; -webkit-text-fill-color: var(--ink) !important;
-}
-</style>
-}
-
-<section class="hero-title">
-  <h1>Donate Now</h1>
-  <p>Make a difference today. Your generosity fuels outreach, feeding schemes, and practical care in Jesus’ name.</p>
+    </div>
 </section>
 
-<div class="page-wrap">
-  <!-- Form (unchanged) -->
-  <div class="form-card" id="donateCard">
-    <h2 class="section-title">Donation Details</h2>
-    <div class="trust-row">
-      <span class="trust-chip">Secure</span><span class="trust-chip">Fast</span><span class="trust-chip">Trusted</span>
+<!--  posts to StartPayfast. -->
+<form id="pf_hidden_form" asp-controller="Donate" asp-action="StartPayfast" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="amount" id="pf_amount_hidden" value="100.00" />
+    <input type="hidden" name="donorName" id="pf_name_hidden" value="" />
+    <input type="hidden" name="reference" id="pf_reference_hidden" value="" />
+</form>
+
+<!-- CONFIRMATION MODAL -->
+<div class="pf-modal-backdrop" id="pf_modal" aria-hidden="true">
+    <div class="pf-modal" role="dialog" aria-modal="true" aria-labelledby="pf_modal_title">
+        <h3 id="pf_modal_title" style="margin-bottom:12px;color:#ffd;">Confirm Donation</h3>
+
+        <div class="modal-row">
+            <strong>Amount:</strong> <span id="modal_amount_text">R 100.00</span>
+        </div>
+
+        <div class="modal-row">
+            <strong>Name:</strong> <span id="modal_name_text">—</span>
+        </div>
+
+
+        <div class="modal-row">
+            <label for="modal_reference" style="display:block;margin-bottom:6px;color:#ffd;">Reference (optional)</label>
+            <input id="modal_reference" class="pf-input" placeholder="Reference" />
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="btn-muted" id="modal_cancel">Cancel</button>
+            <button type="button" id="modal_confirm" class="modal-confirm">Confirm &amp; Continue</button>
+        </div>
     </div>
-    <p class="subtitle">Fill in the form below to submit your donation information.</p>
-    <hr class="hr"/>
-
-    <form asp-controller="Donations" asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
-      <div class="form-grid">
-        <div class="col-span-2">
-          <label>Full Name</label>
-          <div class="input-wrap"><i class="bi bi-person input-icon"></i><input name="FullName" class="form-control" required placeholder="Enter your full legal name"/></div>
-          <div class="small-muted">Please enter your full legal name.</div>
-        </div>
-
-        <div class="col-span-2">
-          <label>Donation Type</label>
-          <div class="input-wrap select-wrap">
-            <i class="bi bi-box-seam input-icon"></i>
-            <select name="DonationType" id="DonationType" class="form-control" required>
-              <option value="" disabled selected>Select a type</option>
-              <option value="Money">Money (EFT)</option>
-              <option value="Food & Groceries">Food &amp; Groceries</option>
-              <option value="Clothing & Blankets">Clothing &amp; Blankets</option>
-              <option value="Hygiene Packs">Hygiene Packs</option>
-              <option value="Baby Supplies">Baby Supplies</option>
-              <option value="School Stationery">School Stationery</option>
-              <option value="Other Items">Other Items</option>
-            </select>
-            <span class="caret"><i class="bi bi-caret-down-fill"></i></span>
-          </div>
-        </div>
-
-        <div class="col-span-2" id="amountRow" style="display:none;">
-          <label>Donation Amount</label>
-          <div class="input-wrap"><i class="bi bi-cash-coin input-icon"></i><input name="Amount" type="number" step="0.01" min="0" class="form-control" placeholder="Enter amount (e.g., 500.00)"/></div>
-          <div class="small-muted">Only required for money donations.</div>
-        </div>
-
-        <div>
-          <label>Contact Details</label>
-          <div class="input-wrap"><i class="bi bi-telephone input-icon"></i><input name="Contact" class="form-control" placeholder="Phone, email, etc." required/></div>
-        </div>
-
-        <div>
-          <label>Date</label>
-          <div class="input-wrap"><i class="bi bi-calendar-event input-icon"></i><input name="Date" type="date" class="form-control" required/></div>
-        </div>
-
-        <div class="col-span-2">
-          <label>Notes (optional)</label>
-          <div class="input-wrap"><i class="bi bi-chat-square-text input-icon"></i><input name="Notes" class="form-control" placeholder="Any extra info (e.g., reference used)"/></div>
-        </div>
-
-        <div class="col-span-2">
-          <label>Proof of Payment (optional)</label>
-          <div class="input-wrap file-wrap"><i class="bi bi-paperclip input-icon"></i><input name="ProofFile" id="ProofFile" type="file" accept="image/*,.pdf" class="file-control"/></div>
-          <div class="small-muted">You can also email your proof later via the <a href="/Home/Contact">Contact</a> page.</div>
-        </div>
-
-        <div class="col-span-2" id="bankBlock" style="display:none;">
-          <div class="bank-details" role="region" aria-label="Banking details">
-            <div class="bank-line"><span><strong>Bank:</strong> First National Bank</span></div>
-            <div class="bank-line"><span><strong>Account Name:</strong> The Alabaster Box Anointing Ministries</span><button class="copy-btn" type="button" data-copy="The Alabaster Box Anointing Ministries"><i class="bi bi-clipboard"></i> Copy</button></div>
-            <div class="bank-line"><span><strong>Account Number:</strong> 62787787880</span><button class="copy-btn" type="button" data-copy="62787787880"><i class="bi bi-clipboard"></i> Copy</button></div>
-            <div class="bank-line"><span><strong>Branch Code:</strong> 250655</span><button class="copy-btn" type="button" data-copy="250655"><i class="bi bi-clipboard"></i> Copy</button></div>
-            <div class="bank-line"><span><strong>Account Type:</strong> Cheque account</span></div>
-            <div class="small-muted">Reference suggestion: <em>Your Name - Donation</em>. After transferring, please let us know via <a href="/Contact">Contact</a> so we can send a receipt.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="submit" class="btn-primary"><i class="bi bi-send"></i> Submit Donation</button>
-        <div class="meta-note">Your generosity fuels real impact. Thank you!</div>
-      </div>
-    </form>
-  </div>
-
-  <!-- ONLY the Location card below -->
-  <div class="info-wrap" aria-label="Drop-off / courier information">
-    <section class="info-card reveal" data-delay="120">
-      <div class="info-head"><i class="bi bi-truck"></i> Drop-off / Courier Items</div>
-      <div class="info-body">
-        <div class="address-row">
-          <span class="badge">Label boxes (e.g. “Hygiene x20”)</span>
-          <span class="badge">Include your contact details</span>
-          <span class="badge">Seal liquids in zip bags</span>
-        </div>
-        <ul class="info-list" style="margin-top:.4rem;">
-          <li><i class="bi bi-geo-alt"></i> 2 GARDEN CRESCENT, NEW GERMANY, PINETOWN, KWA-ZULU NATAL, 3601</li>
-          <li><i class="bi bi-clock-history"></i> Drop-offs during office hours (contact us for after-hours)</li>
-        </ul>
-        <div class="btn-row">
-          <button class="copy-btn slim" type="button" data-copy="2 GARDEN CRESCENT, NEW GERMANY, PINETOWN, KWA-ZULU NATAL, 3601"><i class="bi bi-clipboard"></i> Copy Address</button>
-          <a class="btn-alt" href="https://www.google.com/maps/search/2+Garden+Crescent+Pinetown+3601" target="_blank" rel="noopener">Open in Maps</a>
-        </div>
-      </div>
-    </section>
-  </div>
 </div>
 
 @section Scripts {
-<script>
-// Reveal form
-requestAnimationFrame(()=> document.getElementById('donateCard')?.classList.add('visible'));
+    <script>
 
-// Toggle Money fields + bank details
-const typeSel = document.getElementById('DonationType');
-const amountRow = document.getElementById('amountRow');
-const bankBlock = document.getElementById('bankBlock');
-function updateType(){
-  const isMoney = typeSel?.value === 'Money';
-  if(amountRow) amountRow.style.display = isMoney ? '' : 'none';
-  if(bankBlock) bankBlock.style.display = isMoney ? '' : 'none';
-}
-typeSel?.addEventListener('change', updateType); updateType();
+        // reveal donate card (animation)
+        const donateObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('#donate-card').forEach(el => donateObserver.observe(el));
 
-// Copy buttons
-function copyText(text, btn){
-  if(!navigator.clipboard){
-    const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta);
-    ta.select(); try{document.execCommand('copy')}catch(_){}
-    ta.remove(); flash(btn); return;
-  }
-  navigator.clipboard.writeText(text).then(()=>flash(btn));
-}
-function flash(btn){
-  if(!btn) return;
-  const prev=btn.innerHTML;
-  btn.innerHTML = '<i class="bi bi-check2"></i> Copied!'; btn.disabled = true;
-  setTimeout(()=>{ btn.innerHTML=prev; btn.disabled=false; }, 1200);
-}
-document.querySelectorAll('.copy-btn').forEach(b=>{
-  b.addEventListener('click', ()=> copyText(b.getAttribute('data-copy')||'', b));
-});
+        // Copy to clipboard for bank details
+        function handleCopy(text, btn) {
+            if (!navigator.clipboard) {
+                const ta = document.createElement('textarea');
+                ta.value = text; document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); } catch (e) { console.error('Copy failed', e); }
+                ta.remove(); showCopyFeedback(btn); return;
+            }
+            navigator.clipboard.writeText(text).then(() => showCopyFeedback(btn)).catch(err => console.error('Could not copy text: ', err));
+        }
+        function showCopyFeedback(btn) {
+            const original = btn.textContent; btn.textContent = 'Copied!'; btn.disabled = true;
+            setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1800);
+        }
+        document.querySelectorAll('.copy-btn').forEach(btn => btn.addEventListener('click', (e) => handleCopy(btn.getAttribute('data-copy'), btn)));
 
-// Scroll animation for the single card
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    const el = entry.target;
-    if(entry.isIntersecting){
-      const delay = parseInt(el.getAttribute('data-delay')||'0',10);
-      el.style.transitionDelay = (delay/1000)+'s';
-      el.classList.add('inview');
-    }else{
-      el.classList.remove('inview');
-    }
-  });
-},{ threshold:.2, rootMargin:'0px 0px -5% 0px' });
+        // UI controls
+        const pfAmountUI = document.getElementById('pf_amount_ui');
+        const pfPayOpen = document.getElementById('pf_pay_open');
+        const presetBtns = document.querySelectorAll('.preset-amt');
 
-document.querySelectorAll('.info-card.reveal').forEach(el=> io.observe(el));
-</script>
+        function formatCurrency(value){
+            const n = Number(value) || 0;
+            return n.toLocaleString('en-ZA',{ style:'currency', currency:'ZAR', minimumFractionDigits:2 });
+        }
+
+        function updatePayOpenText(){
+            if (!pfAmountUI || !pfPayOpen) return;
+            pfPayOpen.textContent = 'Pay ' + formatCurrency(pfAmountUI.value || '0');
+        }
+
+        presetBtns.forEach(b => b.addEventListener('click', () => {
+            pfAmountUI.value = parseFloat(b.getAttribute('data-amt')).toFixed(2);
+            updatePayOpenText();
+            presetBtns.forEach(x => x.style.opacity = '0.6');
+            b.style.opacity = '1';
+        }));
+
+        if (pfAmountUI) pfAmountUI.addEventListener('input', updatePayOpenText);
+        updatePayOpenText();
+
+        // modal elements
+        const modal = document.getElementById('pf_modal');
+        const modalAmountText = document.getElementById('modal_amount_text');
+        const modalNameText = document.getElementById('modal_name_text');
+
+        const modalRefInput = document.getElementById('modal_reference');
+
+        function openModal(){
+            modalAmountText.textContent = formatCurrency(pfAmountUI.value || '0');
+            const nameVal = document.getElementById('cardNameUI').value.trim() || '—';
+
+            modalNameText.textContent = nameVal;
+
+            modalRefInput.value = '';
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeModal(){ modal.style.display = 'none'; modal.setAttribute('aria-hidden', 'true'); }
+
+        // Validation helpers
+        function addError(el, msg) {
+            if (!el) return;
+            el.classList.add('pf-invalid');
+            el.setAttribute('aria-invalid', 'true');
+
+            let next = el.nextElementSibling;
+            if (!next || !next.classList || !next.classList.contains('pf-error-text')) {
+                const err = document.createElement('div');
+                err.className = 'pf-error-text';
+                err.textContent = msg || 'Required';
+                el.parentNode.insertBefore(err, el.nextSibling);
+            } else {
+                next.textContent = msg || 'Required';
+            }
+        }
+
+        function removeError(el) {
+            if (!el) return;
+            el.classList.remove('pf-invalid');
+            el.removeAttribute('aria-invalid');
+            let next = el.nextElementSibling;
+            if (next && next.classList && next.classList.contains('pf-error-text')) {
+                next.remove();
+            }
+        }
+
+        function validateCardNumber(value) {
+            const digits = (value || '').replace(/\D/g, '');
+            return digits.length >= 13 && digits.length <= 19;
+        }
+
+        function validateCVV(value) {
+            const digits = (value || '').replace(/\D/g, '');
+            return digits.length === 3 || digits.length === 4;
+        }
+
+        function validateExpiry(month, year) {
+            if (!month || !year) return false;
+            const m = parseInt(month, 10);
+            const y = parseInt(year, 10);
+            if (isNaN(m) || isNaN(y)) return false;
+
+            const expiry = new Date(y, m, 0, 23, 59, 59);
+            const now = new Date();
+
+            return expiry >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        }
+
+        function validateAllFields() {
+
+            let isValid = true;
+
+            const cardName = document.getElementById('cardNameUI');
+            const cardNumber = document.getElementById('cardNumberUI');
+            const expMonth = document.getElementById('expMonthUI');
+            const expYear = document.getElementById('expYearUI');
+            const cvv = document.getElementById('cvvUI');
+            const cardType = document.getElementById('cardTypeUI');
+            const amount = document.getElementById('pf_amount_ui');
+
+            // Name
+            if (!cardName || !cardName.value.trim()) {
+                addError(cardName, 'Enter the name on the card');
+                isValid = false;
+            } else {
+                removeError(cardName);
+            }
+
+            // Card number
+            if (!cardNumber || !validateCardNumber(cardNumber.value)) {
+                addError(cardNumber, 'Enter a valid card number');
+                isValid = false;
+            } else {
+                removeError(cardNumber);
+            }
+
+            // Expiry
+            if (!validateExpiry(expMonth.value, expYear.value)) {
+                addError(expMonth, 'Invalid expiry');
+                addError(expYear, 'Invalid expiry');
+                isValid = false;
+            } else {
+                removeError(expMonth);
+                removeError(expYear);
+            }
+
+            // CVV
+            if (!cvv || !validateCVV(cvv.value)) {
+                addError(cvv, 'Enter a valid CVV (3 or 4 digits)');
+                isValid = false;
+            } else {
+                removeError(cvv);
+            }
+
+            // Card type
+            if (!cardType || !cardType.value) {
+                addError(cardType, 'Select payment type');
+                isValid = false;
+            } else {
+                removeError(cardType);
+            }
+
+            // Amount
+            const amtVal = parseFloat((amount && amount.value) || '0');
+            if (!amount || isNaN(amtVal) || amtVal < 1) {
+                addError(amount, 'Enter an amount (min R1.00)');
+                isValid = false;
+            } else {
+                removeError(amount);
+            }
+
+            return isValid;
+        }
+
+
+        ['input','change'].forEach(evt => {
+            ['cardNameUI','cardNumberUI','expMonthUI','expYearUI','cvvUI','cardTypeUI','pf_amount_ui'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener(evt, () => {
+                    removeError(el);
+
+                    if (id === 'cardNumberUI') {
+                        let v = el.value.replace(/\D/g,'').slice(0,19);
+                        v = v.replace(/(.{4})/g,'$1 ').trim();
+                        el.value = v;
+                    }
+                });
+            });
+        });
+
+
+        if (pfPayOpen) {
+            pfPayOpen.addEventListener('click', (e) => {
+
+                e.preventDefault();
+                const ok = validateAllFields();
+                if (!ok) {
+
+                    const firstInvalid = document.querySelector('.pf-invalid');
+                    if (firstInvalid) firstInvalid.focus();
+
+                    pfPayOpen.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-4px)' }, { transform: 'translateY(0)' }], { duration: 260 });
+                    return;
+                }
+                openModal();
+            });
+        }
+
+        document.getElementById('modal_cancel').addEventListener('click', closeModal);
+
+
+        document.getElementById('modal_confirm').addEventListener('click', () => {
+            document.getElementById('pf_amount_hidden').value = parseFloat(pfAmountUI.value || '0').toFixed(2);
+            document.getElementById('pf_name_hidden').value = document.getElementById('cardNameUI').value.trim();
+                   document.getElementById('pf_reference_hidden').value = modalRefInput.value.trim();
+
+            const confirmBtn = document.getElementById('modal_confirm');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Redirecting…';
+
+            document.getElementById('pf_hidden_form').submit();
+        });
+
+
+        const changeBtn = document.getElementById('pf_change');
+        if (changeBtn) {
+            changeBtn.addEventListener('click', () => {
+                const bank = document.querySelector('.bank-details');
+                if (bank) bank.scrollIntoView({ behavior:'smooth', block:'center' });
+            });
+        }
+
+
+        const cardNumberUI = document.getElementById('cardNumberUI');
+        if (cardNumberUI) {
+            cardNumberUI.addEventListener('input', e => {
+                let v = e.target.value.replace(/\D/g,'').slice(0,19);
+                v = v.replace(/(.{4})/g,'$1 ').trim();
+                e.target.value = v;
+            });
+        }
+    </script>
 }
