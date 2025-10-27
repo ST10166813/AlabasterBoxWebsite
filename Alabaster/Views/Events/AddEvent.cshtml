@@ -246,7 +246,6 @@ label {
 </script>
 } *@
 
-
 @model Alabaster.Models.UpcomingEvent
 
 @{
@@ -287,7 +286,6 @@ html, body{
   position:relative;
   z-index:1;
 }
-
 .hero-title h1{
   font-size: clamp(2.4rem, 4vw, 3.6rem);
   font-weight:900; text-transform:uppercase; letter-spacing:2px;
@@ -375,6 +373,44 @@ label{ font-weight:700; font-size:.95rem; color:#efefef; }
 }
 textarea.form-control{ resize:vertical; min-height:110px; }
 
+/* ===== FILE INPUT: remove white OS box, gold button ===== */
+.input-wrap input[type="file"].form-control{
+  flex:1;
+  color:#ddd;
+  padding:0;            /* let the wrapper handle padding */
+  border:none;          /* kill default borders */
+  background:transparent;
+  font-size:.95rem;
+  cursor:pointer;
+}
+.input-wrap input[type="file"].form-control::file-selector-button{
+  background: rgba(255,215,0,0.15);
+  border: 1px solid rgba(255,215,0,0.35);
+  color: #FFD700;
+  border-radius: 8px;
+  padding: .45rem .9rem;
+  margin-right: .6rem;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.input-wrap input[type="file"].form-control::file-selector-button:hover{
+  background:#FFD700; color:#000; border-color:#FFD700;
+}
+/* Safari legacy */
+.input-wrap input[type="file"].form-control::-webkit-file-upload-button{
+  background: rgba(255,215,0,0.15);
+  border: 1px solid rgba(255,215,0,0.35);
+  color: #FFD700;
+  border-radius: 8px;
+  padding: .45rem .9rem;
+  margin-right: .6rem;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.input-wrap input[type="file"].form-control::-webkit-file-upload-button:hover{
+  background:#FFD700; color:#000; border-color:#FFD700;
+}
+
 /* ===== Buttons ===== */
 .actions{ margin-top:14px; display:grid; gap:12px; }
 .btn-primary{
@@ -401,10 +437,9 @@ textarea.form-control{ resize:vertical; min-height:110px; }
   text-decoration:none;
 }
 .btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
+
 .meta-note{ text-align:center; font-size:.9rem; color:var(--muted); }
-
 .hr-bottom{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 8px 0; }
-
 </style>
 }
 
@@ -476,8 +511,7 @@ textarea.form-control{ resize:vertical; min-height:110px; }
           <i class="bi bi-save2"></i> Save Event
         </button>
 
-                <div class="hr-bottom"></div>
-
+        <div class="hr-bottom"></div>
 
         <a class="btn-alt" href="@Url.Action("Index","Events")">
           <i class="bi bi-calendar2-week"></i> View All Events
@@ -489,15 +523,15 @@ textarea.form-control{ resize:vertical; min-height:110px; }
 
 @section Scripts {
 <script>
-  // Convert chosen image to base64 and store in hidden field
-  const fileInput = document.getElementById("imageFile");
-  const hiddenUrl = document.getElementById("ImageUrl");
-  fileInput?.addEventListener("change", (e) => {
-    const file = e.target.files?.[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => { hiddenUrl.value = reader.result; };
-    reader.readAsDataURL(file);
-  });
+// Convert chosen image to base64 and store in hidden field
+const fileInput = document.getElementById("imageFile");
+const hiddenUrl = document.getElementById("ImageUrl");
+fileInput?.addEventListener("change", (e) => {
+  const file = e.target.files?.[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onloadend = () => { hiddenUrl.value = reader.result; };
+  reader.readAsDataURL(file);
+});
 </script>
 }
