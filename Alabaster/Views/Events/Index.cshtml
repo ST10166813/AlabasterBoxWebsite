@@ -1,4 +1,4 @@
-@model List<Alabaster.Models.UpcomingEvent>
+@* @model List<Alabaster.Models.UpcomingEvent>
 
 @{
     ViewData["Title"] = "Upcoming Events";
@@ -341,4 +341,313 @@ setInterval(createSparkle, 200);
             </div>
         }
     </div>
+</div> *@
+
+
+@model List<Alabaster.Models.UpcomingEvent>
+
+@{
+    ViewData["Title"] = "Upcoming Events";
+}
+
+<style>
+/* ------------------ TOKENS (subtle black glass to match site) ------------------ */
+:root{
+  --glass-start: rgba(16,16,20,.55);
+  --glass-end:   rgba(16,16,20,.38);
+  --glass-border: rgba(255, 255, 255, 0.349);
+  --glass-shadow: 0 24px 60px rgba(0,0,0,.45);
+  --gold: #FFD700;
+}
+
+/* ------------------ RESET / GLOBAL (match About) ------------------ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif; /* same as About */
+  background: #08090c url('../images/cross7.png') center -10% / cover no-repeat fixed;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ------------------ CENTER-LOCKED SPLINE BACKGROUND ------------------ */
+/* A fixed layer that fills the viewport and centers the Spline regardless of scroll */
+.spline-stage-center{
+  position: fixed;
+  inset: 0;
+  z-index: 0;               /* behind content */
+  pointer-events: none;     /* don’t block clicks */
+  display: grid;
+  place-items: center;      /* keeps Spline dead-center at all times */
+}
+
+/* The Spline viewer itself; size is responsive but stays balanced */
+.spline-stage-center .spline-core{
+  width: min(72vmin, 960px);
+  height: min(72vmin, 960px);
+  opacity: 0;               /* fade in after load */
+  transition: opacity 900ms ease;
+  /* Tasteful tuning so it feels cohesive with your site colors */
+  filter: brightness(0.98) contrast(1.08) saturate(1.08);
+}
+
+/* Soft glow + vignette to keep text legible on bright frames */
+.spline-stage-center::after{
+  content:"";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(60vmin 60vmin at 50% 50%, rgba(255,215,0,.10), rgba(0,0,0,0) 40%),
+    radial-gradient(120vmax 120vmax at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.30) 100%);
+  opacity: .85;
+}
+
+/* Optional ambient backdrop (like About) */
+.events-aurora {
+  position: fixed; inset: -20vmax -10vmax -10vmax -10vmax; z-index: 0; pointer-events: none;
+  filter: blur(40px) saturate(120%);
+  background:
+    radial-gradient(40vmax 40vmax at 15% 20%, rgba(255,215,0,.13), transparent 60%),
+    radial-gradient(35vmax 35vmax at 85% 20%, rgba(0,0,0,.10), transparent 60%),
+    radial-gradient(45vmax 45vmax at 50% 80%, rgba(0,0,0,.08), transparent 60%);
+  opacity: .9;
+}
+.events-grain::before{
+  content:""; position: fixed; inset:0; z-index:0; pointer-events:none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><filter id="n"><feTurbulence baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.035"/></svg>');
+  mix-blend-mode: soft-light;
+}
+
+/* ------------------ WRAPPER (same spacing as About) ------------------ */
+.about-wrap {
+  position: relative; z-index: 1; /* content above BG layers */
+  display: grid; gap: clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.75rem, 4vw, 3.5rem) 1.25rem clamp(4rem, 7vw, 6rem);
+  max-width: 1400px;
+  margin-inline: auto;
+}
+
+/* ------------------ PAGE HEADING (match About, fix descender clipping) ------------------ */
+.page-head {
+  display: grid; gap: .6rem;
+  justify-items: center; text-align: center;
+}
+.page-head h1 {
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+
+  /* === Gradient like Prayer Admin Page === */
+  background: linear-gradient(90deg, #FFD700, #ffffff 45%, #0a0a08); /* gold → white → black */
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  /* Subtle motion shimmer effect */
+  animation: aboutShimmer 8s linear infinite;
+  text-shadow: 0 0 18px rgba(255,255,255,.18);
+}
+.page-head .tagline{
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  letter-spacing: .6px;
+  opacity: .95;
+}
+@@keyframes hshimmer { from{background-position:0% 50%} to{background-position:200% 50%} }
+
+/* ------------------ INTRO (match About’s hero intro vibe) ------------------ */
+.hero {
+  display: grid; gap: .9rem;
+  justify-items: center; text-align: center;
+}
+.hero p {
+  max-width: 920px; opacity: .92;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+}
+
+/* ------------------ GLASS PANEL (reused for cards) ------------------ */
+.panel {
+  border-radius: 22px;
+  border: 1px solid var(--glass-border);
+  background: linear-gradient(180deg, var(--glass-start), var(--glass-end));
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: var(--glass-shadow);
+}
+
+/* ------------------ EVENTS GRID (cohesive spacing like About’s sections) ------------------ */
+.events-grid {
+  display: grid; gap: clamp(1rem, 2vw, 1.4rem);
+  grid-template-columns: repeat(3, minmax(0,1fr));
+}
+@@media (max-width: 1100px){ .events-grid{ grid-template-columns: repeat(2, 1fr); } }
+@@media (max-width: 620px){  .events-grid{ grid-template-columns: 1fr; } }
+
+/* ------------------ EVENT CARD ------------------ */
+.event-card { overflow: hidden; transform: translateY(18px); opacity: 0;
+  transition: transform .6s ease, opacity .6s ease, box-shadow .3s ease; }
+.event-card.visible { transform: translateY(0); opacity: 1; }
+.event-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 28px 70px rgba(0,0,0,.55); }
+
+/* Image */
+.image-wrapper{ position:relative; width:100%; padding-top:60%; overflow:hidden; }
+.image-wrapper img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  filter: brightness(.98) contrast(1.06);
+  transition: transform .45s ease, filter .45s ease;
+}
+.event-card:hover img{ transform: scale(1.06); filter: brightness(1.03); }
+
+/* Body */
+.card-body{ padding: clamp(16px, 2vw, 22px); display:grid; gap:10px; text-align:center; }
+.card-title{
+  font-size: 1.55rem; font-weight:900; margin: 2px 0 6px;
+  color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,.35);
+}
+.meta{
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:-2px;
+}
+.badge-chip{
+  font-weight:700; font-size:.92rem; letter-spacing:.3px;
+  padding: 6px 10px; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+}
+.card-text{ font-size: 1.05rem; color:#f1f1f1; line-height:1.7; }
+.card-text strong{ color: var(--gold); }
+
+/* CTA */
+.btn-volunteer{
+  display:inline-block; width:100%; text-align:center; margin-top:8px;
+  border-radius: 999px; padding: 12px 0; font-weight:900; font-size:1.03rem; text-transform:uppercase;
+  background: linear-gradient(135deg, #ffb347, #ffcc33); color:#111; border:none;
+  box-shadow: 0 10px 26px rgba(255,200,0,.30);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn-volunteer:hover{ transform: translateY(-2px); box-shadow: 0 14px 38px rgba(255,200,0,.45); }
+
+/* ------------------ REVEAL EFFECT ------------------ */
+@@keyframes shimmer{ from{background-position:0% 50%} to{background-position:200% 50%} }
+
+/* Respect reduced motion */
+@@media (prefers-reduced-motion: reduce){
+  .spline-stage-center .spline-core{ transition: none; opacity: 1; }
+}
+</style>
+
+@section Scripts {
+<!-- Load the requested Spline viewer (v1.10.85) once -->
+<script type="module" src="https://unpkg.com/@@splinetool/viewer@1.10.85/build/spline-viewer.js"></script>
+
+<script>
+/* Reveal on enter (cards) */
+const io = new IntersectionObserver((entries, obs) => {
+  entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+},{ threshold:.2 });
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.event-card').forEach(c => io.observe(c));
+
+  /* Fade-in the center Spline when it signals loaded */
+  const core = document.querySelector('.spline-stage-center .spline-core');
+  if (!core) return;
+  const show = () => core.style.opacity = '1';
+  core.addEventListener('load', show, { once: true });
+  core.addEventListener('scene-load', show, { once: true });
+  setTimeout(show, 2500); // fallback reveal
+});
+</script>
+}
+
+<!-- === BACKGROUND LAYERS (order matters for nice blending) === -->
+<!-- 1) CENTER-LOCKED SPLINE (stays centered while scrolling) -->
+<div class="spline-stage-center">
+  <spline-viewer
+    class="spline-core"
+    url="https://prod.spline.design/HkjyoqELfBbcjYsN/scene.splinecode">
+  </spline-viewer>
+</div>
+
+<!-- 2) Ambient aurora & 3) Grain on top (adds luxe texture and readability) -->
+<div class="events-aurora"></div>
+<div class="events-grain"></div>
+
+<!-- === CONTENT === -->
+<div class="about-wrap"><!-- reuse same wrapper name for cohesion -->
+  <!-- PAGE HEADING -->
+  <header class="page-head" aria-labelledby="events-heading">
+    <h1 id="events-heading">Upcoming Events</h1>
+    <div class="tagline">Community • Kindness • Love • Selflessness</div>
+  </header>
+
+  <!-- INTRO -->
+  <section class="hero" aria-label="Introduction">
+    <p>
+      We are a Christ-centred community devoted to spreading hope, healing, and purpose. 
+      Through worship nights, outreaches, prayer gatherings, and community service, 
+      we create spaces where people can encounter God and experience transformation. 
+    </p>
+  </section>
+
+  <!-- EVENTS GRID -->
+  @if (Model != null && Model.Any())
+  {
+    <section aria-label="Upcoming events" class="events-grid">
+      @foreach (var evt in Model)
+      {
+        <article class="panel event-card">
+          @if (!string.IsNullOrEmpty(evt.ImageUrl))
+          {
+            <div class="image-wrapper">
+              <img src="@evt.ImageUrl" alt="@evt.Name" />
+            </div>
+          }
+          <div class="card-body">
+            <h3 class="card-title">@evt.Name</h3>
+
+            <div class="meta">
+              <span class="badge-chip">
+                @(DateTime.TryParse(evt.Date, out var dt) ? dt.ToString("MMMM dd, yyyy") : evt.Date)
+              </span>
+              @if (!string.IsNullOrWhiteSpace(evt.Time))
+              {
+                <span class="badge-chip">@evt.Time</span>
+              }
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(evt.Description))
+            {
+              <p class="card-text">@evt.Description</p>
+            }
+
+            <a
+              href="@(Context.Session.GetString("UserId") != null
+                    ? Url.Action("Volunteer", "Events", new { eventId = evt.Id })
+                    : Url.Action("Login", "Auth"))"
+              class="btn-volunteer">Volunteer</a>
+
+            @if (Context.Session.GetString("IsAdmin") == "true")
+            {
+              <form asp-action="DeleteEvent" method="post" style="display:inline;">
+                <input type="hidden" name="eventId" value="@evt.Id" />
+                <button type="submit" class="btn btn-danger btn-sm mt-2"
+                        onclick="return confirm('Are you sure you want to delete this event?');">
+                  🗑 Delete
+                </button>
+              </form>
+            }
+          </div>
+        </article>
+      }
+    </section>
+  }
+  else
+  {
+    <section class="panel" style="padding:18px; text-align:center;">
+      No upcoming events available at the moment.
+    </section>
+  }
 </div>

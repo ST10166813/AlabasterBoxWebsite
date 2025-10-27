@@ -1,4 +1,4 @@
-﻿@{
+﻿@* @{
     ViewBag.Title = "Share Your Testimony";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -182,4 +182,248 @@ label {
             <button type="submit" class="btn-submit">Submit Testimony</button>
         </form>
     </div>
+</div> *@
+@model Alabaster.Models.Testimony
+
+@{
+    ViewBag.Title = "Share Your Testimony";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+
+@section Styles {
+<style>
+:root{
+  --bg:#08090c;
+  --ink:#f2f2f2;
+  --muted:#cfcfd6;
+  --glass-1: rgba(18,18,22,.55);
+  --glass-2: rgba(18,18,22,.35);
+  --glass-brd: rgba(255,255,255,.14);
+  --gold:#FFD700;
+  --gold-ink:#181818;
+  --shadow:0 24px 60px rgba(0,0,0,.55);
+}
+
+/* ===== Base ===== */
+html, body{
+  margin:0;
+  font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
+}
+
+/* ===== Title Section (like About Us) ===== */
+.hero-title{
+  text-align:center;
+  padding: clamp(100px, 12vh, 180px) 20px 60px;
+  position:relative;
+  z-index:1;
+}
+
+.hero-title h1{
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  background: linear-gradient(90deg, var(--gold), #fff, var(--gold));
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent;
+  text-shadow:0 0 35px rgba(255,255,255,.35);
+  background-size:200% auto;
+  animation: shimmer 6s linear infinite;
+}
+.hero-title p{
+  font-size:1.1rem;
+  color:#e4e4ec;
+  opacity:.9;
+  max-width:700px;
+  margin:10px auto 0;
+}
+
+@@keyframes shimmer{
+  0%{ background-position:0% 50%; }
+  100%{ background-position:200% 50%; }
+}
+
+/* ===== Page Wrapper ===== */
+.page-wrap{
+  position:relative;
+  padding: clamp(60px, 6vh, 100px) 18px 100px;
+}
+
+/* ===== Card ===== */
+.testimony-card{
+  width:min(1280px, 94vw);
+  margin:0 auto;
+  padding: clamp(18px, 2.2vw, 28px);
+  border-radius:22px;
+  border:1px solid var(--glass-brd);
+  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: var(--shadow);
+}
+
+/* ===== Header ===== */
+h2.page-title{
+  margin:0;
+  text-align:center;
+  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+  font-weight:900;
+  background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 18px rgba(255,255,255,.18);
+}
+.subtitle{
+  text-align:center; margin-top:6px; color:#dcdce5; opacity:.9;
+  font-size:.98rem;
+}
+
+/* Divider */
+.hr{
+  height:1px; margin: 18px 0 14px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+  border:0;
+}
+
+/* ===== Form ===== */
+.form-grid{
+  display:grid; gap:14px; grid-template-columns: 1fr;
+}
+@@media (min-width: 860px){
+  .form-grid{ grid-template-columns: 1fr 1fr; }
+  .col-span-2{ grid-column:1 / -1; }
+}
+
+label{ font-weight:700; font-size:.95rem; color:#efefef; }
+
+/* Input shell */
+.input-wrap{
+  position:relative; display:flex; align-items:center; gap:10px;
+  border:1px solid rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border-radius:14px; padding:10px 12px;
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.input-wrap:focus-within{
+  border-color: rgba(255,215,0,.55);
+  box-shadow: 0 0 0 6px rgba(255,215,0,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+}
+.input-icon{ font-size:1.05rem; opacity:.9; }
+
+.form-control{
+  flex:1; border:0; outline:0; background:transparent!important;
+  color:var(--ink)!important; font-size:.98rem; padding:8px 4px;
+  caret-color: var(--gold);
+}
+textarea.form-control{ resize:vertical; min-height:110px; }
+input[type="file"].form-control{ padding:0; }
+
+/* Alerts */
+.text-danger{ color:#ffc6c6; font-size:.85rem; }
+
+/* ===== Buttons ===== */
+.actions{ margin-top:14px; display:grid; gap:12px; }
+.btn-primary{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
+  color: var(--gold-ink);
+  border: 1px solid rgba(255,215,0,.5);
+  border-radius: 12px;
+  font-weight:900; font-size:.98rem;
+  padding:12px 16px; width:100%;
+  box-shadow:0 10px 26px rgba(255,215,0,.28);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
+
+.hr-bottom{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 8px 0; }
+
+/* Bottom button */
+.btn-alt{
+  display:inline-flex; align-items:center; justify-content:center; gap:12px;
+  background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  color:#fff; border:1px solid rgba(255,255,255,.18);
+  border-radius:12px; font-weight:800; font-size:.96rem;
+  padding:12px 16px; width:100%;
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  text-decoration:none;
+}
+.btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
+.meta-note{ text-align:center; font-size:.9rem; color:var(--muted); }
+</style>
+}
+
+<!-- ===== Title Section ===== -->
+<section class="hero-title">
+  <h1>Share Your Testimony</h1>
+  <p>We believe every story carries hope and faith — share yours and let it inspire others in their journey.</p>
+</section>
+
+<!-- ===== Form Section ===== -->
+<div class="page-wrap">
+  <div class="testimony-card">
+    <h2 class="page-title">Your Testimony Details</h2>
+    <p class="subtitle">Please fill in the information below to submit your testimony.</p>
+
+    <hr class="hr"/>
+
+    <form asp-controller="Testimonies" asp-action="Create" method="post" enctype="multipart/form-data">
+      <div class="form-grid">
+        <!-- Title -->
+        <div class="col-span-2">
+          <label>Title</label>
+          <div class="input-wrap">
+            <i class="bi bi-type input-icon"></i>
+            <input id="Title" name="Title" type="text" class="form-control" required placeholder="Give your testimony a title"/>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div class="col-span-2">
+          <label>Your Name</label>
+          <div class="input-wrap">
+            <i class="bi bi-person input-icon"></i>
+            <input id="Name" name="CreatedBy" type="text" class="form-control" required placeholder="Enter your name"/>
+          </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="col-span-2">
+          <label>Upload Image (optional)</label>
+          <div class="input-wrap">
+            <i class="bi bi-image input-icon"></i>
+            <input id="ImageUpload" name="ImageUpload" type="file" accept="image/*" class="form-control"/>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="col-span-2">
+          <label>Your Testimony</label>
+          <div class="input-wrap">
+            <i class="bi bi-chat-quote input-icon"></i>
+            <textarea id="Description" name="Description" class="form-control" required placeholder="Share what the Lord has done for you"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn-primary">
+          <i class="bi bi-send-fill"></i> Submit Testimony
+        </button>
+
+        <div class="hr-bottom"></div>
+
+        <a class="btn-alt" href="@Url.Action("Index","Testimonies")">
+          <i class="bi bi-journal-text"></i> View All Testimonies
+        </a>
+      </div>
+    </form>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-@model IEnumerable<Alabaster.Models.PrayerRequest>
+@* @model IEnumerable<Alabaster.Models.PrayerRequest>
 @{
     ViewData["Title"] = "All Prayer Requests";
 }
@@ -231,5 +231,284 @@ table tbody tr:hover {
         setTimeout(() => sparkle.remove(), 4000);
     }
     setInterval(createSparkle, 150);
+</script>
+} *@
+
+
+@model IEnumerable<Alabaster.Models.PrayerRequest>
+@{
+    ViewData["Title"] = "All Prayer Requests";
+}
+
+@section Styles {
+<style>
+:root{
+  --gold:#FFD700;
+  --ink:#fff;
+  --muted:#cfcfd6;
+  --glass-1: rgba(51, 51, 51, 0.65);
+  --glass-2: rgba(103, 103, 106, 0.45);
+  --glass-brd: rgba(84, 83, 83, 0.41);
+  --shadow: 0 28px 70px rgba(0,0,0,.55);
+}
+
+/* ===== Page background (cohesive with site) ===== */
+html, body{
+  height:100%;
+  margin:0;
+  font-family:'Poppins','Segoe UI',sans-serif;
+  color:var(--ink);
+  background:#000 url('../images/cross7.png') center -10% / cover no-repeat fixed;
+  overflow-x:hidden;
+  position:relative;
+}
+/* subtle film for readability (lighter than before) */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background: radial-gradient(55vmax 55vmax at 15% 20%, rgba(255,215,0,.07), transparent 60%),
+              linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.32) 55%, rgba(0,0,0,.42));
+}
+
+/* ===== Page container ===== */
+.page-wrap{
+  position:relative; z-index:1;
+  padding: clamp(3rem, 6vw, 4.5rem) 1.25rem clamp(4rem, 6vw, 5rem);
+  max-width: 1400px;
+  margin: 0 auto;
+  display:grid; gap: clamp(1.2rem, 2vw, 1.8rem);
+}
+
+/* ===== Page header (matches About/Auth style) ===== */
+.page-head{
+  display:grid; gap:.75rem;
+  justify-items:center; text-align:center;
+}
+.page-title{
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 900; line-height:1.12;
+  background: linear-gradient(90deg, var(--gold), #ffffff 45%, var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  background-size: 200% auto;
+  text-shadow: 0 0 18px rgba(255,255,255,.18);
+  animation: titleShimmer 8s linear infinite;
+}
+.page-tagline{
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  letter-spacing:.4px; opacity:.95;
+}
+.page-intro{
+  max-width: 900px; text-align:center; margin-top:.25rem; opacity:.92;
+  font-size: clamp(.98rem, 1.4vw, 1.05rem); line-height:1.7;
+}
+
+/* shimmer */
+@@keyframes titleShimmer{ from{background-position:0% 50%} to{background-position:200% 50%} }
+
+/* ===== Data panel (glassy) ===== */
+.panel{
+  border-radius: 22px;
+  border: 1px solid var(--glass-brd);
+  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: var(--shadow);
+  padding: clamp(1rem, 2.2vw, 1.6rem);
+}
+
+/* ===== Table wrapper (full width, roomy) ===== */
+.table-wrap{
+  overflow:auto;   /* scrolling is fine */
+  border-radius: 16px;
+}
+
+/* ===== Table ===== */
+.table{
+  width:100%;
+  border-collapse: separate;
+  border-spacing:0;
+  min-width: 900px; /* allow horizontal scroll on very narrow screens */
+  font-size: .98rem;
+  color: var(--ink);
+}
+
+/* sticky header with glassy gold */
+.table thead th{
+  position: sticky; top: 0; z-index: 2;
+  background: linear-gradient(180deg, rgba(213, 188, 43, 0.9), rgba(169, 161, 120, 0.536));
+  color:#111; text-transform: uppercase; letter-spacing:.5px;
+  font-weight: 900;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0,0,0,.25);   
+}
+.table thead th:first-child{ border-top-left-radius: 12px; }
+.table thead th:last-child{ border-top-right-radius: 12px; }
+
+.table tbody td{
+  padding: 16px 18px;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+}
+
+/* zebra + hover */
+.table tbody tr:nth-child(even) td{ background: rgba(255,255,255,.035); }
+.table tbody tr:hover td{
+  background: rgba(255,215,0,.10);
+}
+
+/* Request cell content spacing */
+.request-cell p{ margin-bottom: .6rem; line-height:1.65; }
+
+/* Admin response block (glassy success) */
+.response-block{
+  margin-top:.6rem; padding:.8rem 1rem;
+  border-left: 4px solid #34d399; /* emerald */
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(52,211,153,.12), rgba(52,211,153,.06));
+  color:#d7ffe9;
+  font-size:.95rem;
+}
+
+/* Form styling inside table (cohesive with dark theme) */
+.form-control{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.16);
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: .95rem;
+  resize: vertical;
+}
+.form-control:focus{
+  outline:none; box-shadow:none;
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255,255,255,.10);
+}
+.btn-warning{
+  background: linear-gradient(135deg, #FFD700, #FFB700, #FFD700);
+  color:#181818; border: 1px solid rgba(255,215,0,.5);
+  font-weight: 800; border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow: 0 8px 22px rgba(255,215,0,.28);
+}
+.btn-warning:hover{ filter:saturate(1.05); transform: translateY(-1px); }
+
+/* Empty state */
+.empty{
+  text-align:center; color: var(--gold);
+  font-weight:800; font-size: 1.15rem;
+  padding: 1.2rem 0;
+}
+
+/* Sparkles (kept subtle) */
+.sparkle{
+  position:fixed; width:3px; height:3px; border-radius:50%;
+  background: rgba(255,215,0,.9); box-shadow:0 0 8px rgba(255,215,0,.75);
+  pointer-events:none; z-index:1; animation: sparkleAnim linear infinite;
+}
+@@keyframes sparkleAnim{
+  0%{ transform: translateY(0) scale(.5); opacity:0 }
+  50%{ transform: translateY(-25px) scale(1); opacity:1 }
+  100%{ transform: translateY(-50px) scale(.5); opacity:0 }
+}
+
+/* Responsive tweaks */
+@@media (max-width: 900px){
+  .page-title{ font-size: clamp(2rem, 6vw, 2.6rem); }
+}
+</style>
+}
+
+<div class="page-wrap">
+  <!-- Page header -->
+  <header class="page-head" aria-labelledby="prayer-heading">
+    <h1 id="prayer-heading" class="page-title">PRAYER REQUESTS</h1>
+    <div class="page-tagline">Community • Faith • Care • Intercession</div>
+    <p class="page-intro">
+      Thank you for sharing your heart. Our team reviews each request and responds in love.
+      Below is a live list for admins to read and reply.
+    </p>
+  </header>
+
+  <!-- Data panel -->
+  <section class="panel" aria-label="All prayer requests">
+    @if (!Model.Any())
+    {
+      <div class="empty">No prayer requests yet.</div>
+    }
+    else
+    {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="min-width:160px;">Name</th>
+              <th style="min-width:220px;">Email</th>
+              <th style="min-width:520px;">Request &amp; Response</th>
+              <th style="min-width:220px;">Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+          @foreach (var prayer in Model)
+          {
+            <tr>
+              <td>@prayer.Name</td>
+              <td>@prayer.UserEmail</td>
+              <td class="request-cell">
+                <p>@prayer.Request</p>
+
+                @if (!string.IsNullOrEmpty(prayer.Response))
+                {
+                  <div class="response-block">
+                    <strong>Admin Responsed</strong>
+                    <p style="margin:.45rem 0 .25rem;">@prayer.Response</p>
+                    <small><i>
+                      Responded @prayer.RespondedAt?.ToLocalTime().ToString("MMMM dd, yyyy HH:mm")
+                    </i></small>
+                  </div>
+                }
+                else
+                {
+                  <form asp-action="RespondToPrayer" method="post" class="mt-2">
+                    <input type="hidden" name="id" value="@prayer.Id" />
+                    <textarea name="response" class="form-control" rows="2" placeholder="Write your response..." required></textarea>
+                    <button type="submit" class="btn btn-warning btn-sm mt-2">Send Response</button>
+                  </form>
+                }
+              </td>
+              <td>@prayer.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy HH:mm")</td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</div>
+
+@section Scripts {
+<script>
+/* Floating sparkles (subtle) */
+function createSparkle(){
+  const s=document.createElement('div');
+  s.className='sparkle';
+  s.style.left = Math.random()*window.innerWidth + 'px';
+  s.style.top  = Math.random()*window.innerHeight + 'px';
+  s.style.animationDuration = (2 + Math.random()*3) + 's';
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(), 4000);
+}
+setInterval(createSparkle, 180);
+
+/* Reveal rows softly as they enter */
+const io = new IntersectionObserver((es)=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.style.transition='opacity .5s ease, transform .5s ease';
+                       e.target.style.opacity=1; e.target.style.transform='none'; }
+}), {threshold:.12});
+document.querySelectorAll('.table tbody tr').forEach(r=>{
+  r.style.opacity=.001; r.style.transform='translateY(12px)';
+  io.observe(r);
+});
 </script>
 }

@@ -1,4 +1,4 @@
-@model IEnumerable<Alabaster.Models.Testimony>
+@* @model IEnumerable<Alabaster.Models.Testimony>
 @{
     ViewBag.Title = "Pending Testimonies";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -236,4 +236,263 @@ setInterval(createSparkle, 200);
             </table>
         </div>
     }
+</div> *@
+
+@model IEnumerable<Alabaster.Models.Testimony>
+@{
+    ViewBag.Title = "Pending Testimonies";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+<style>
+:root{
+  --gold: #FFD700;
+  --ink: #fff;
+  --muted: #cfcfd6;
+ --glass-1: rgba(51, 51, 51, 0.65);
+  --glass-2: rgba(103, 103, 106, 0.45);
+  --glass-brd: rgba(84, 83, 83, 0.41);
+  --shadow: 0 25px 70px rgba(0,0,0,.55);
+}
+
+/* ===== Global background (NO tint) ===== */
+html, body{
+  height:100%;
+  margin:0;
+  font-family:'Poppins','Segoe UI',sans-serif;
+  color:var(--ink);
+  background:#08090c url('../images/cross7.png') center -10% / cover no-repeat fixed;
+  overflow-x:hidden; position:relative;
+}
+body::before{ content:""; display:none; }
+
+/* ===== Container ===== */
+.page-content{
+  position:relative; z-index:1;
+  max-width:1400px; margin-inline:auto;
+  padding: clamp(2.5rem, 6vw, 5rem) 1.25rem clamp(3rem, 7vw, 5rem);
+}
+
+/* ===== Index/Testimonies-like heading ===== */
+.page-head{
+  display:grid; gap:.6rem; justify-items:center; text-align:center;
+  margin-bottom: clamp(1.6rem, 3.2vw, 2.2rem);
+}
+.page-head h1{
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  font-weight: 900; line-height:1.12; padding-bottom:6px;
+  background: linear-gradient(90deg, var(--gold), #ffffff 45%, var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  animation: hshimmer 8s linear infinite;
+  letter-spacing: .3px;
+  text-shadow: 0 0 18px rgba(255,255,255,.18);
+}
+.tagline{
+  /* dot-separated words like index page */
+  font-size: clamp(.95rem, 1.6vw, 1.15rem);
+  letter-spacing: .6px; opacity:9.95; text-transform:uppercase;
+  color: var(--ink);
+}
+
+/* short intro line */
+.head-desc{
+  max-width: 920px; opacity:.92; text-align:center;
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  margin: .6rem auto 0;
+}
+
+@@keyframes hshimmer { from{background-position:0% 50%} to{background-position:200% 50%} }
+
+/* ===== Section title box  ===== */
+.section-title{
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 900; text-align:center; margin: 1.8rem auto 2.2rem;
+  padding: .9rem 1.6rem; text-transform: uppercase;
+  /* gold glass frame + shimmer text */
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.15), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(240, 240, 235, 0.6);
+  border-radius: 18px;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.35), 0 0 55px rgba(255, 215, 0, 0.25);
+  backdrop-filter: blur(10px);
+
+  background-image: linear-gradient(90deg, var(--ink), #ffffff 45%, var(--ink));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  background-size: 200% auto; animation: sectionShimmer 6s linear infinite;
+  letter-spacing: 1px; transition: transform .25s ease, box-shadow .25s ease;
+}
+.section-title:hover{
+  transform:scale(1.05);
+  box-shadow: 0 0 40px rgba(255,215,0,.5), 0 0 90px rgba(255,215,0,.35);
+}
+@@keyframes sectionShimmer { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+
+/* ===== Glass panel + table ===== */
+.glass-panel{
+  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+  border:1px solid var(--glass-brd);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  padding: clamp(1rem, 2.2vw, 1.75rem);
+  backdrop-filter: blur(10px);
+}
+.table-wrap{
+  overflow:auto; border-radius:16px;
+  background: rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.08);
+}
+table{ width:100%; border-collapse:collapse; min-width:900px; color:var(--ink); }
+thead th{
+  font-weight:900; text-transform:uppercase; font-size:.95rem; letter-spacing:.06em;
+  background: linear-gradient(180deg, rgba(213, 188, 43, 0.9), rgba(169, 161, 120, 0.536));
+  color:#111; text-transform: uppercase; letter-spacing:.5px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+  padding:1rem .9rem; position:sticky; top:0; z-index:1; backdrop-filter:blur(6px);
+}
+tbody td{
+  padding:.9rem .9rem; font-size:.98rem; vertical-align:top;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+tbody tr:hover{ background:rgba(255,255,255,.03); }
+
+/* images */
+.table-img{
+  display:inline-block; border-radius:12px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+
+/* buttons */
+.actions{ display:flex; gap:.6rem; flex-wrap:wrap; }
+.btn{
+  padding:.65rem 1.1rem; border:none; border-radius:12px;
+  font-weight:800; font-size:.95rem; cursor:pointer;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.btn:active{ transform: translateY(1px) scale(.99); }
+.btn-approve{
+  color:#0b1b13; background:linear-gradient(180deg,rgba(0, 255, 128, 0.281),rgba(0, 200, 83, 0.314));
+  box-shadow:0 10px 24px rgba(0,255,127,.25);
+}
+.btn-approve:hover{ box-shadow:0 16px 36px rgba(0, 255, 128, 0.093); }
+.btn-reject{
+  color:#fff; background:linear-gradient(180deg,rgba(255, 68, 68, 0.342),rgba(204, 0, 0, 0.222));
+  box-shadow:0 10px 24px rgba(255,68,68,.25);
+}
+.btn-reject:hover{ box-shadow:0 16px 36px rgba(255,68,68,.35); }
+
+/* ===== Empty state styled like “Voices From Our Community” ===== */
+.empty-wrap{
+  margin-top: 2.2rem;
+  display:grid; gap: .8rem; justify-items:center; text-align:center;
+}
+.empty-wrap .section-title{ margin: 0 auto .6rem; }
+.empty-wrap p{
+  color: rgba(255,255,255,.9);
+  max-width: 760px; line-height:1.65; font-size:1.02rem; margin:0 auto;
+}
+
+/* subtle sparkles */
+.sparkle{
+  position:fixed; width:3px; height:3px; background: rgba(255,215,0,0.9);
+  border-radius:50%; pointer-events:none; z-index:0; animation: sparkleAnim linear infinite;
+}
+@@keyframes sparkleAnim{ 0%{transform:translateY(0) scale(.5);opacity:0;} 50%{transform:translateY(-25px) scale(1);opacity:1;} 100%{transform:translateY(-50px) scale(.5);opacity:0;} }
+
+/* responsive */
+@@media (max-width:768px){
+  .btn{ padding:.55rem .9rem; font-size:.9rem; }
+}
+</style>
+}
+
+@section Scripts {
+<script>
+// optional sparkles
+function createSparkle(){
+  const s=document.createElement('div');
+  s.className='sparkle';
+  s.style.left=Math.random()*window.innerWidth+'px';
+  s.style.top=Math.random()*window.innerHeight+'px';
+  s.style.width=s.style.height=(Math.random()*3+2)+'px';
+  s.style.animationDuration=(5+Math.random()*5)+'s';
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),10000);
+}
+setInterval(createSparkle, 300);
+</script>
+}
+
+<div class="page-content">
+
+  <!-- ===== Heading & Admin Subheading (matches Index/Testimonies style) ===== -->
+  <header class="page-head" aria-labelledby="pt-head">
+    <h1 id="pt-head">PENDING TESTIMONIES</h1>
+    <div class="tagline">Admin • Review • Approval • Community</div>
+    <p class="head-desc">Review submitted testimonies, approve to publish, or reject with care. Your decisions shape the stories we share.</p>
+  </header>
+
+  @if (!Model.Any())
+  {
+    <!-- ===== Empty state styled like “Voices From Our Community” ===== -->
+    <section class="empty-wrap" aria-live="polite">
+      <h2 class="section-title">Pending Testimonies</h2>
+      <p>There are no testimonies awaiting review right now. Check back soon — new voices are on the way.</p>
+    </section>
+  }
+  else
+  {
+    <!-- ===== Section title box (like index page) ===== -->
+    <h2 class="section-title">Admin Review Queue</h2>
+
+    <div class="glass-panel">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Created By</th>
+              <th>Submitted At</th>
+              <th>Image</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var item in Model)
+            {
+              <tr>
+                <td>@item.Title</td>
+                <td>@item.Description</td>
+                <td>@(string.IsNullOrEmpty(item.CreatedBy) ? "Anonymous" : item.CreatedBy)</td>
+                <td>@item.CreatedAt</td>
+                <td>
+                  <span class="table-img">
+                    <img src="@(string.IsNullOrEmpty(item.ImageBase64)
+                      ? Url.Content("~/Images/Default%20image.png")
+                      : $"data:image/jpeg;base64,{item.ImageBase64}")"
+                      width="96" height="72" loading="lazy" />
+                  </span>
+                </td>
+                <td>
+                  <div class="actions">
+                    <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                      <button type="submit" class="btn btn-approve">Approve</button>
+                    </form>
+                    <form asp-action="Reject" asp-route-id="@item.Id" method="post" style="display:inline;">
+                      <button type="submit" class="btn btn-reject">Reject</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
 </div>

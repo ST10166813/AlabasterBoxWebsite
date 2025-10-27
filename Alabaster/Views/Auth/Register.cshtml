@@ -1,4 +1,4 @@
-@{
+@* @{
     ViewData["Title"] = "Register";
 }
 
@@ -205,12 +205,10 @@ hr {
             }
 
             <form method="post">
-              @* === NEW NAME FIELD === *@
                 <div class="mb-3">
                     <label for="name" class="form-label">Full Name</label>
                     <input type="text" name="name" id="name" class="form-control" placeholder="Enter your full name" required />
                 </div>
-                @* ====================== *@
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required />
@@ -274,5 +272,301 @@ hr {
             else { alert("Google Login failed: " + data.error); }
         } catch (err) { alert("Google Sign-In Error: " + err.message); }
     });
+</script>
+} *@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+<style>
+:root{
+  --nav-h: 72px;
+  --gold: #FFD700;
+  --ink: #fff;
+  --muted: #cfcfd6;
+  --glass: rgba(255,255,255,.08);
+  --glass-brd: rgba(255,255,255,.15);
+  --card-bg: rgba(18,18,18,.65);
+  --shadow: 0 25px 70px rgba(0,0,0,.55);
+}
+
+/* ===== BACKGROUND ===== */
+html, body{
+  height: 100%;
+  overflow: hidden;
+}
+body{
+  font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+  color: var(--ink);
+  margin: 0;
+  background: #08090c url('../images/login3.png') center / cover no-repeat fixed;
+  position: relative;
+}
+body::before{
+  content:""; position: fixed; inset:0; z-index:0; pointer-events:none;
+  background: rgba(0,0,0,.45);
+}
+
+/* ===== STAGE ===== */
+.stage{
+  position: relative; 
+  z-index: 1;
+  margin-top: clamp(0px, 1vh, 10px);
+  min-height: calc(100dvh - 40px);
+  display: grid;
+  place-items: start center;
+  padding: 20px;
+}
+
+/* ===== CARD ===== */
+.auth-container{
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  width: min(1200px, 96vw);
+  min-height: clamp(640px, 60vh, 680px);
+  background: var(--card-bg);
+  border: 1px solid var(--glass-brd);
+  border-radius: 22px;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  align-self: start;
+  margin-top: 40px;
+}
+
+/* ===== FORM SIDE ===== */
+.auth-form{
+  padding: clamp(22px, 3.4vw, 42px);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: clamp(12px, 1.6vw, 18px);
+}
+.auth-title{
+  font-size: clamp(1.8rem, 2.4vw, 2.2rem);
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+  background: linear-gradient(90deg, var(--gold), #ffffff 45%, #cfcfcf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+/* ===== INPUTS ===== */
+.form-group{ margin-bottom: 16px; }
+label{ display:block; font-weight:700; font-size:.95rem; margin-bottom:8px; }
+.input-wrap{
+  position: relative; display:flex; align-items:center;
+  border:1px solid var(--glass-brd);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border-radius: 14px; padding: 12px 14px;
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.input-wrap i{ margin-right: 10px; opacity:.9; font-size:1.05rem; }
+.input-wrap:focus-within{
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(255,215,0,.12), inset 0 0 12px 2px rgba(255,215,0,.18);
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+}
+input{
+  flex:1; border:0; outline:0; background: transparent;
+  color: var(--ink); font-size: 1rem; padding: 8px 4px; caret-color: var(--gold);
+}
+input::placeholder{ color: var(--muted); }
+input:focus{ outline: none; box-shadow: none; }
+
+/* remove blue outline */
+input:focus, button:focus, .btn:focus { outline:none!important; box-shadow:none!important; border-color:transparent!important; }
+
+/* eye icon for password */
+.toggle-pass{
+  border:none; background:transparent; color:#eee;
+  font-size:1.1rem; cursor:pointer; margin-left:8px;
+  transition:color .25s ease;
+}
+.toggle-pass:hover{ color:var(--gold); }
+
+/* ===== PASSWORD NOTE ===== */
+small.text-muted {
+  color: #d1d1d1 !important;
+  font-size: 0.85rem;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, #FFD700, #FFB700, #FFD700);
+  color:#181818; border: 1px solid rgba(255,215,0,.5);
+  border-radius: 12px; font-weight:900; font-size:1rem;
+  line-height:1.25; padding-block:12px; padding-inline:16px; width:100%;
+  box-shadow: 0 10px 26px rgba(255,215,0,.28);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
+
+.btn-google{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, #db4437, #e85549);
+  color:#fff; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px; font-weight:800; font-size:.96rem;
+  line-height:1.25; padding-block:12px; padding-inline:16px; width:100%;
+  box-shadow: 0 10px 24px rgba(219,68,55,.35);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.btn-google:hover{ transform: translateY(-1px); box-shadow: 0 16px 36px rgba(219,68,55,.5); }
+
+/* ===== HR DIVIDER ===== */
+.hr{
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,.35), transparent);
+  margin: 18px 0 14px;
+  border: none;
+  width: 100%;
+  opacity: 0.9;
+  box-shadow: 0 0 10px rgba(255,215,0,.15);
+}
+
+/* ===== LINKS ===== */
+.meta{ text-align:center; font-size:.9rem; color:#d8d8df; margin-top:10px; }
+.meta a{ color: var(--gold); font-weight:700; text-decoration:none; }
+.meta a:hover{ text-decoration: underline; }
+
+/* ===== RIGHT LOGO ===== */
+.brand-panel{
+  position: relative;
+  border-left: 1px solid var(--glass-brd);
+  background:
+    radial-gradient(90% 80% at 70% 30%, rgba(255,215,0,.18), transparent 70%),
+    linear-gradient(180deg, rgba(240,230,180,0.18), rgba(240,230,180,0.05));
+  display:grid; place-items:center;
+}
+.brand-panel::after{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(circle at 50% 40%,rgba(255, 217, 0, 0.053), rgba(0,0,0,0) 60%);
+  mix-blend-mode: screen;
+  pointer-events:none;
+}
+.brand-figure{
+  width: min(440px, 70%);
+  aspect-ratio: 1;
+  background: url('@Url.Content("~/Images/whitelogo.png")') center/contain no-repeat;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.45));
+  opacity: 1;
+}
+
+/* ===== RESPONSIVE ===== */
+@@media (max-width: 920px){
+  .auth-container{ grid-template-columns: 1fr; width: min(860px, 94vw); }
+  .brand-panel{ display:none; }
+}
+</style>
+
+<div class="stage">
+  <div class="auth-container">
+    <!-- LEFT: FORM -->
+    <div class="auth-form">
+      <h1 class="auth-title">Create Your Account</h1>
+
+      @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+      {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+      }
+
+      <form method="post" novalidate>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <div class="input-wrap">
+            <i class="bi bi-person"></i>
+            <input type="text" id="name" name="name" placeholder="Enter your full name" autocomplete="name" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-wrap">
+            <i class="bi bi-envelope"></i>
+            <input type="email" id="email" name="email" placeholder="you@example.com" inputmode="email" autocomplete="email" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <i class="bi bi-shield-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Create a strong password" autocomplete="new-password" required />
+            <button type="button" class="toggle-pass" aria-label="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <small class="text-muted">Password must include uppercase, lowercase, number, and special character.</small>
+        </div>
+
+        <button type="submit" class="btn-primary">Register</button>
+        <div class="meta">Already have an account? <a href="/Auth/Login">Login</a></div>
+
+        <!-- GOLD DIVIDER -->
+        <div class="hr"></div>
+
+        <button id="google-signin-btn" class="btn-google" type="button">
+          <i class="bi bi-google"></i> Sign in with Google
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: BRAND -->
+    <aside class="brand-panel">
+      <div class="brand-figure" role="img" aria-label="Brand logo"></div>
+    </aside>
+  </div>
+</div>
+
+@section Scripts {
+<script>
+  const passInput = document.getElementById('password');
+  const toggleBtn = document.querySelector('.toggle-pass');
+  toggleBtn?.addEventListener('click', () => {
+    const isHidden = passInput.type === 'password';
+    passInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.innerHTML = isHidden ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+  });
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  const firebaseConfig = {
+      apiKey: "AIzaSyBEjxaEf_S9x9NZhmJrWwHLDdZvoyDajDg",
+      authDomain: "alabaster-8cfcd.firebaseapp.com",
+      projectId: "alabaster-8cfcd",
+      storageBucket: "alabaster-8cfcd.appspot.com",
+      messagingSenderId: "1014314025942",
+      appId: "1:1014314025942:web:fedff22641b2b8bd219a77"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+
+  document.getElementById("google-signin-btn").addEventListener("click", async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+      const resp = await fetch("/Auth/GoogleLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(idToken)
+      });
+      const data = await resp.json();
+      if (data.success) window.location.href = "/Home/Index";
+      else alert("Google Login failed: " + data.error);
+    } catch (err) {
+      alert("Google Sign-In Error: " + err.message);
+    }
+  });
 </script>
 }

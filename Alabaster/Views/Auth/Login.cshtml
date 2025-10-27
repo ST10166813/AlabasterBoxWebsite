@@ -1,4 +1,4 @@
-@{
+@* @{
     ViewData["Title"] = "Login";
 }
 
@@ -290,6 +290,751 @@ hr {
             if (data.success) { window.location.href = "/Home/Index"; }
             else { alert("Google Login failed: " + data.error); }
         } catch (err) { alert("Google Sign-In Error: " + err.message); }
+    });
+</script>
+} *@
+@* @{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+
+<style>
+:root{
+  --bg: #08090c;
+  --ink: #f2f2f2;
+  --muted: #cfcfd6;
+  --glass-1: rgba(18,18,22,.55);
+  --glass-2: rgba(18,18,22,.35);
+  --glass-brd: rgba(255,255,255,.14);
+  --gold: #FFD700;
+  --gold-ink: #181818;
+  --shadow: 0 24px 60px rgba(0,0,0,.55);
+}
+
+/* ===== Full-viewport; no scroll ===== */
+html, body{
+  font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+  height: 100dvh;
+  overflow: hidden; /* no page scroll */
+  color: var(--ink);
+  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
+}
+
+/* film + grain */
+body::before{
+  content:"";
+  position: fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(55vmax 55vmax at 15% 20%, rgba(255,215,0,.08), transparent 60%),
+    radial-gradient(60vmax 60vmax at 85% 30%, rgba(0,0,0,.20), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.35) 55%, rgba(0,0,0,.45));
+}
+body::after{
+  content:""; position: fixed; inset:0; z-index:0; pointer-events:none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" viewBox="0 0 130 130"><filter id="n"><feTurbulence baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.03"/></svg>');
+}
+
+/* ===== Stage: center horizontally, higher vertically (proportional) ===== */
+.main-wrapper{
+  position: relative; z-index:1;
+  height: 100dvh; width: 100vw;
+  display:grid;
+  place-items: start center;              /* top + centered */
+  padding: clamp(8px, 2.5vw, 18px) 2vw 0; /* small top padding, side gutters */
+  animation: fadeIn .6s ease forwards;
+}
+@@keyframes fadeIn{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
+
+/* ===== Auth card: near full-width, proportional height =====
+   - Width: capped for proportion but uses most of the site width
+   - Height: clamped to avoid squishing or towering
+*/
+.auth-container{
+  display:grid;
+  grid-template-columns: 1.08fr .92fr;
+  width: min(1200px, 92vw);               /* proportional max width */
+  height: clamp(540px, 78dvh, 760px);     /* proportional height (no scroll) */
+  border-radius: 22px;
+  border: 1px solid var(--glass-brd);
+  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: var(--shadow);
+  overflow: clip;                          /* prevent inner scrollbars */
+}z
+
+/* left: form; right: brand */
+.auth-form{
+  padding: clamp(18px, 3vw, 32px) clamp(16px, 2.2vw, 28px);
+  display:grid; gap: clamp(10px, 1.2vw, 16px);
+  align-content:start;
+  min-width: 0;
+}
+.brand-panel{
+  position: relative;
+  background:
+    radial-gradient(80% 70% at 70% 30%, rgba(255,215,0,.14), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  border-left: 1px solid var(--glass-brd);
+  display:grid; place-items:center;
+  padding: clamp(16px, 2.4vw, 24px);
+  min-width: 0;
+}
+.brand-panel::after{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(40% 35% at 50% 50%, rgba(207, 200, 145, 0.08), transparent 80%);
+  mix-blend-mode: screen;
+}
+.brand-figure{
+  width: min(360px, 62%);                 /* proportionate to card */
+  aspect-ratio: 1;
+  background: url('@Url.Content("~/Images/ablogo.png")') center/contain no-repeat;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.45));
+  opacity:.95;
+}
+
+/* headings */
+.auth-kicker{
+  font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+  font-size:.78rem; color: #b9b9c4;
+}
+.auth-title{
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 900; line-height:1.15;
+  background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow: 0 0 18px rgba(255,255,255,.18);
+  margin-top: 2px;
+}
+
+/* form */
+form{ display:grid; gap: 12px; margin-top: 4px; }
+.form-row{ display:grid; gap:8px; min-width: 0; }
+label.form-label{ font-weight:700; font-size:.95rem; color:#efefef; }
+
+.input-wrap{
+  position: relative; display:flex; align-items:center;
+  border:1px solid rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border-radius: 14px; padding: 10px 12px;
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.input-wrap:focus-within{
+  border-color: rgba(255,215,0,.55);
+  box-shadow: 0 0 0 6px rgba(255,215,0,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+}
+.input-icon{ font-size: 1.05rem; margin-right: 10px; opacity:.9; }
+input.form-control{
+  flex:1; border:0; outline:0; background: transparent !important; color: var(--ink) !important;
+  font-size: .98rem; padding: 8px 4px; caret-color: var(--gold);
+}
+input::placeholder{ color:#bdbdc5; opacity:.85; }
+
+/* autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+  -webkit-text-fill-color: var(--ink);
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
+  caret-color: var(--gold);
+}
+
+/* toggle */
+.toggle-pass{ border:0; outline:0; background: transparent; color:#e7e7ee; font-size:1.05rem; cursor:pointer; padding:6px; border-radius:8px; }
+.toggle-pass:hover{ color: var(--gold); }
+
+/* helper */
+.help-line{ font-size:.82rem; color: #c7c7d1; display:flex; align-items:center; gap:6px; }
+
+/* buttons */
+.btn-primary{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
+  color: var(--gold-ink);
+  border: 1px solid rgba(255,215,0,.5);
+  border-radius: 12px;
+  font-weight:900; font-size: .98rem;
+  line-height: 1.25; padding-block: 12px; padding-inline: 16px;
+  box-shadow: 0 10px 26px rgba(255,215,0,.28);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  width:100%;
+}
+.btn-primary .btn-text{ padding-bottom: 1px; }
+.btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
+.btn-primary:disabled{ opacity:.65; cursor:not-allowed; }
+
+.btn-google{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, #db4437, #e85549);
+  color:#fff; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px; font-weight:800; font-size:.96rem;
+  line-height: 1.25; padding-block: 12px; padding-inline: 16px; width:100%;
+  box-shadow: 0 10px 24px rgba(219,68,55,.35);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.btn-google:hover{ transform: translateY(-1px); box-shadow: 0 16px 36px rgba(219,68,55,.5); }
+
+/* links + divider */
+.meta-links{ display:grid; gap:6px; justify-items:center; text-align:center; margin-top: 6px; font-size:.9rem; color: var(--muted); }
+.meta-links a{ color:#d9d9e4; font-weight:700; text-decoration:none; }
+.meta-links a:hover{ color:#ffffff; text-decoration: underline; }
+.hr{ height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 12px 0 8px; }
+
+/* alerts */
+.alert{ font-size:.85rem; padding: 10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.16); background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)); animation: fadeInAlert .4s ease both; }
+.alert-success{ color:#b6ffb7; border-color: rgba(0,255,0,.25);}
+.alert-danger{ color:#ffc6c6; border-color: rgba(255,0,0,.25);}
+@@keyframes fadeInAlert{ from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none} }
+
+/* compact heights: keep proportional without scrolling */
+@@media (max-height: 680px){
+  .auth-container{ height: clamp(520px, 86dvh, 720px); }
+}
+@@media (max-height: 600px){
+  .auth-container{ height: clamp(500px, 88dvh, 680px); }
+}
+
+/* narrow screens: stack, still centered, no scroll */
+@@media (max-width: 900px){
+  .auth-container{
+    grid-template-columns: 1fr;
+    width: min(860px, 94vw);
+    height: clamp(540px, 82dvh, 760px);
+  }
+  .brand-panel{ display:none; }
+  .auth-form{ padding: clamp(14px, 4vw, 24px) clamp(14px, 5vw, 28px); }
+}
+</style>
+
+<div class="main-wrapper">
+  <div class="auth-container">
+
+    <!-- LEFT: FORM -->
+    <div class="auth-form">
+      <div>
+        <div class="auth-kicker">Welcome back</div>
+        <h1 class="auth-title">Sign in to continue</h1>
+      </div>
+
+      @if (TempData["Success"] != null)
+      {
+        <div class="alert alert-success">@TempData["Success"]</div>
+      }
+
+      @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+      {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+      }
+
+      <form method="post" asp-action="Login" novalidate>
+        <!-- Email -->
+        <div class="form-row">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-wrap">
+            <i class="bi bi-envelope input-icon" aria-hidden="true"></i>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="form-control"
+              placeholder="you@example.com"
+              inputmode="email"
+              autocomplete="email"
+              required />
+            <span class="end-cap" aria-hidden="true"></span>
+          </div>
+          <div class="help-line">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <span><span class="hint-required">Use the email you registered with.</span></span>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-row">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-wrap">
+            <i class="bi bi-shield-lock input-icon" aria-hidden="true"></i>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              class="form-control"
+              placeholder="Your secure password"
+              autocomplete="current-password"
+              required />
+            <button type="button" class="toggle-pass" aria-label="Show password" title="Show/Hide password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <div class="help-line">
+            <i class="bi bi-key" aria-hidden="true"></i>
+            <span>Passwords are case-sensitive.</span>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary" id="login-submit">
+          <span class="btn-text">Sign in</span>
+          <span class="btn-spinner" style="display:none;"><i class="bi bi-arrow-repeat bi-spin"></i></span>
+        </button>
+
+        <div class="meta-links">
+          <a href="/Auth/ForgotPassword">Forgot Password?</a>
+          <div>Don’t have an account? <a href="/Auth/Register">Register</a></div>
+        </div>
+
+        <div class="hr" role="separator" aria-hidden="true"></div>
+
+        <!-- Google Sign-in -->
+        <button id="google-signin-btn" class="btn-google" type="button">
+          <i class="bi bi-google"></i> Sign in with Google
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: BRAND -->
+    <aside class="brand-panel">
+      <div class="brand-figure" role="img" aria-label="Brand logo"></div>
+    </aside>
+
+  </div>
+</div>
+
+@section Scripts {
+<script type="module">
+  /* show/hide password + loading state (UI only) */
+  const passInput = document.getElementById('password');
+  const toggleBtn = document.querySelector('.toggle-pass');
+  toggleBtn?.addEventListener('click', () => {
+    const isHidden = passInput.type === 'password';
+    passInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    toggleBtn.innerHTML = isHidden ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+  });
+
+  const submitBtn = document.getElementById('login-submit');
+  const form = document.querySelector('form[asp-action="Login"]');
+  form?.addEventListener('submit', () => {
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-text').style.display = 'none';
+    submitBtn.querySelector('.btn-spinner').style.display = 'inline-flex';
+  });
+</script>
+
+<!-- Firebase Google sign-in (unchanged logic) -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBEjxaEf_S9x9NZhmJrWwHLDdZvoyDajDg",
+        authDomain: "alabaster-8cfcd.firebaseapp.com",
+        projectId: "alabaster-8cfcd",
+        storageBucket: "alabaster-8cfcd.appspot.com",
+        messagingSenderId: "1014314025942",
+        appId: "1:1014314025942:web:fedff22641b2b8bd219a77"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    document.getElementById("google-signin-btn").addEventListener("click", async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const idToken = await result.user.getIdToken();
+
+            const resp = await fetch("/Auth/GoogleLogin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(idToken)
+            });
+
+            const data = await resp.json();
+            if (data.success) { window.location.href = "/Home/Index"; }
+            else { alert("Google Login failed: " + data.error); }
+        } catch (err) { alert("Google Sign-In Error: " + err.message); }
+    });
+</script>
+} *@
+
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+
+<style>
+:root{
+  --bg: #08090c;
+  --ink: #f2f2f2;
+  --muted: #cfcfd6;
+  --glass-1: rgba(18,18,22,.55);
+  --glass-2: rgba(18,18,22,.35);
+  --glass-brd: rgba(255,255,255,.14);
+  --gold: #FFD700;
+  --gold-ink: #181818;
+  --shadow: 0 24px 60px rgba(0,0,0,.55);
+}
+
+/* ===== Full-viewport; no scroll ===== */
+html, body{
+  font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
+}
+
+/* film + grain */
+body::before{
+  content:"";
+  position: fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(55vmax 55vmax at 15% 20%, rgba(255,215,0,.08), transparent 60%),
+    radial-gradient(60vmax 60vmax at 85% 30%, rgba(0,0,0,.20), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.35) 55%, rgba(0,0,0,.45));
+}
+body::after{
+  content:""; position: fixed; inset:0; z-index:0; pointer-events:none;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" viewBox="0 0 130 130"><filter id="n"><feTurbulence baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.03"/></svg>');
+}
+
+/* ===== Stage ===== */
+.main-wrapper{
+  position: relative; z-index:1;
+  height: 100dvh; width: 100vw;
+  display:grid;
+  place-items: start center;
+  padding: clamp(8px, 2.5vw, 18px) 2vw 0;
+  animation: fadeIn .6s ease forwards;
+}
+@@keyframes fadeIn{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
+
+/* ===== Auth Card ===== */
+.auth-container{
+  display:grid;
+  grid-template-columns: 1.08fr .92fr;
+  width: min(1200px, 92vw);
+  height: clamp(540px, 78dvh, 760px);
+  border-radius: 22px;
+  border: 1px solid var(--glass-brd);
+  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: var(--shadow);
+  overflow: clip;
+}
+
+/* ===== Left (Form) ===== */
+.auth-form{
+  padding: clamp(18px, 3vw, 32px) clamp(16px, 2.2vw, 28px);
+  display:grid; gap: clamp(10px, 1.2vw, 16px);
+  align-content:start;
+  min-width: 0;
+}
+
+/* ===== Right (Brand Panel) ===== */
+.brand-panel{
+  position: relative;
+  background:
+    radial-gradient(80% 70% at 70% 30%, rgba(255,215,0,.14), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  border-left: 1px solid var(--glass-brd);
+  display:grid; place-items:center;
+  padding: clamp(16px, 2.4vw, 24px);
+  min-width: 0;
+}
+.brand-panel::after{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(40% 35% at 50% 50%, rgba(207, 200, 145, 0.08), transparent 80%);
+  mix-blend-mode: screen;
+}
+.brand-figure{
+  width: min(360px, 62%);
+  aspect-ratio: 1;
+  background: url('@Url.Content("~/Images/whitelogo.png")') center/contain no-repeat;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.45));
+  opacity:.95;
+}
+
+/* ===== Headings ===== */
+.auth-kicker{
+  font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+  font-size:.78rem; color: #b9b9c4;
+}
+.auth-title{
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 900; line-height:1.15;
+  background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow: 0 0 18px rgba(255,255,255,.18);
+  margin-top: 4px;
+}
+
+/* ===== Form ===== */
+form{ display:grid; gap: 12px; margin-top: 4px; }
+.form-row{ display:grid; gap:8px; min-width: 0; }
+label.form-label{ font-weight:700; font-size:.95rem; color:#efefef; }
+
+.input-wrap{
+  position: relative; display:flex; align-items:center;
+  border:1px solid rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border-radius: 14px; padding: 10px 12px;
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.input-wrap:focus-within{
+  border-color: rgba(255,215,0,.55);
+  box-shadow: 0 0 0 6px rgba(255,215,0,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+}
+.input-icon{ font-size: 1.05rem; margin-right: 10px; opacity:.9; }
+
+input.form-control{
+  flex:1; border:0; outline:0; background: transparent !important;
+  color: var(--ink) !important; font-size: .98rem; padding: 8px 4px;
+  caret-color: var(--gold);
+}
+input::placeholder{ color:#bdbdc5; opacity:.85; }
+
+/* ===== Remove all default blue glow/outlines ===== */
+input.form-control:focus,
+input:focus,
+.form-control:focus,
+textarea:focus,
+select:focus,
+button:focus,
+button:focus-visible,
+.btn:focus,
+.btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+/* ===== Autofill ===== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+  -webkit-text-fill-color: var(--ink);
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
+  caret-color: var(--gold);
+}
+
+/* ===== Toggle Password ===== */
+.toggle-pass{
+  border:0; outline:0; background: transparent;
+  color:#e7e7ee; font-size:1.05rem;
+  cursor:pointer; padding:6px; border-radius:8px;
+}
+.toggle-pass:hover{ color: var(--gold); }
+.toggle-pass:focus{
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ===== Helper text ===== */
+.help-line{ font-size:.82rem; color: #c7c7d1; display:flex; align-items:center; gap:6px; }
+
+/* ===== Buttons ===== */
+.btn-primary{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
+  color: var(--gold-ink);
+  border: 1px solid rgba(255,215,0,.5);
+  border-radius: 12px;
+  font-weight:900; font-size: .98rem;
+  line-height: 1.25; padding-block: 12px; padding-inline: 16px;
+  box-shadow: 0 10px 26px rgba(255,215,0,.28);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  width:100%;
+}
+.btn-primary .btn-text{ padding-bottom: 1px; }
+.btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
+.btn-primary:disabled{ opacity:.65; cursor:not-allowed; }
+
+.btn-google{
+  display:inline-flex; align-items:center; justify-content:center; gap:15px;
+  background: linear-gradient(135deg, #db4437, #e85549);
+  color:#fff; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px; font-weight:800; font-size:.96rem;
+  line-height: 1.25; padding-block: 12px; padding-inline: 16px; width:100%;
+  box-shadow: 0 10px 24px rgba(219,68,55,.35);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.btn-google:hover{ transform: translateY(-1px); box-shadow: 0 16px 36px rgba(219,68,55,.5); }
+
+/* ===== Links ===== */
+.meta-links{
+  display:grid; gap:6px; justify-items:center; text-align:center;
+  margin-top: 6px; font-size:.9rem; color: var(--muted);
+}
+.meta-links a{ color:#d9d9e4; font-weight:700; text-decoration:none; }
+.meta-links a:hover{ color:#ffffff; text-decoration: underline; }
+.hr{ height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 12px 0 8px; }
+
+/* ===== Alerts ===== */
+.alert{ font-size:.85rem; padding: 10px 12px; border-radius:10px;
+  border:1px solid rgba(255,255,255,.16);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  animation: fadeInAlert .4s ease both;
+}
+.alert-success{ color:#b6ffb7; border-color: rgba(0,255,0,.25);}
+.alert-danger{ color:#ffc6c6; border-color: rgba(255,0,0,.25);}
+@@keyframes fadeInAlert{ from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none} }
+
+/* ===== Responsive ===== */
+@@media (max-width: 900px){
+  .auth-container{
+    grid-template-columns: 1fr;
+    width: min(860px, 94vw);
+    height: clamp(540px, 82dvh, 760px);
+  }
+  .brand-panel{ display:none; }
+  .auth-form{ padding: clamp(14px, 4vw, 24px) clamp(14px, 5vw, 28px); }
+}
+</style>
+
+<div class="main-wrapper">
+  <div class="auth-container">
+
+    <!-- LEFT: FORM -->
+    <div class="auth-form">
+      <div>
+        <div class="auth-kicker">Welcome back</div>
+        <h1 class="auth-title">Sign in to continue</h1>
+      </div>
+
+      @if (TempData["Success"] != null)
+      {
+        <div class="alert alert-success">@TempData["Success"]</div>
+      }
+
+      @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+      {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+      }
+
+      <form method="post" asp-action="Login" novalidate>
+        <!-- Email -->
+        <div class="form-row">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-wrap">
+            <i class="bi bi-envelope input-icon"></i>
+            <input type="email" name="email" id="email" class="form-control"
+                   placeholder="you@example.com" inputmode="email" autocomplete="email" required />
+          </div>
+          <div class="help-line">
+            <i class="bi bi-info-circle"></i><span>Use the email you registered with.</span>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-row">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-wrap">
+            <i class="bi bi-shield-lock input-icon"></i>
+            <input type="password" name="password" id="password" class="form-control"
+                   placeholder="Your secure password" autocomplete="current-password" required />
+            <button type="button" class="toggle-pass" aria-label="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <div class="help-line">
+            <i class="bi bi-key"></i><span>Passwords are case-sensitive.</span>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary" id="login-submit">
+          <span class="btn-text">Sign in</span>
+          <span class="btn-spinner" style="display:none;"><i class="bi bi-arrow-repeat bi-spin"></i></span>
+        </button>
+
+        <div class="meta-links">
+          <a href="/Auth/ForgotPassword">Forgot Password?</a>
+          <div>Don’t have an account? <a href="/Auth/Register">Register</a></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <button id="google-signin-btn" class="btn-google" type="button">
+          <i class="bi bi-google"></i> Sign in with Google
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: BRAND -->
+    <aside class="brand-panel">
+      <div class="brand-figure"></div>
+    </aside>
+
+  </div>
+</div>
+
+@section Scripts {
+<script type="module">
+  const passInput = document.getElementById('password');
+  const toggleBtn = document.querySelector('.toggle-pass');
+  toggleBtn?.addEventListener('click', () => {
+    const isHidden = passInput.type === 'password';
+    passInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.innerHTML = isHidden ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+  });
+
+  const submitBtn = document.getElementById('login-submit');
+  const form = document.querySelector('form[asp-action="Login"]');
+  form?.addEventListener('submit', () => {
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-text').style.display = 'none';
+    submitBtn.querySelector('.btn-spinner').style.display = 'inline-flex';
+  });
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBEjxaEf_S9x9NZhmJrWwHLDdZvoyDajDg",
+        authDomain: "alabaster-8cfcd.firebaseapp.com",
+        projectId: "alabaster-8cfcd",
+        storageBucket: "alabaster-8cfcd.appspot.com",
+        messagingSenderId: "1014314025942",
+        appId: "1:1014314025942:web:fedff22641b2b8bd219a77"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    document.getElementById("google-signin-btn").addEventListener("click", async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const idToken = await result.user.getIdToken();
+            const resp = await fetch("/Auth/GoogleLogin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(idToken)
+            });
+
+            const data = await resp.json();
+            if (data.success) window.location.href = "/Home/Index";
+            else alert("Google Login failed: " + data.error);
+        } catch (err) {
+            alert("Google Sign-In Error: " + err.message);
+        }
     });
 </script>
 }
