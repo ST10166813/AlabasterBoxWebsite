@@ -72,10 +72,21 @@ namespace Alabaster.Controllers
         [HttpGet]
         public async Task<IActionResult> Volunteer(string eventId = null)
         {
-            if (HttpContext.Session.GetString("UserId") == null)
+            var userId = HttpContext.Session.GetString("UserId");
+            var isAdmin = HttpContext.Session.GetString("IsAdmin");
+
+            // Require login
+            if (userId == null)
             {
                 TempData["ErrorMessage"] = "You must log in to volunteer.";
                 return RedirectToAction("Login", "Auth");
+            }
+
+            // Restrict admins
+            if (isAdmin == "true")
+            {
+                TempData["ErrorMessage"] = "Admins cannot volunteer for events.";
+                return RedirectToAction("Index");
             }
 
             var events = await _firebase.Child("Events").OnceAsync<UpcomingEvent>();
@@ -107,10 +118,21 @@ namespace Alabaster.Controllers
         [HttpPost]
         public async Task<IActionResult> Volunteer(Volunteer model)
         {
-            if (HttpContext.Session.GetString("UserId") == null)
+            var userId = HttpContext.Session.GetString("UserId");
+            var isAdmin = HttpContext.Session.GetString("IsAdmin");
+
+            // Require login
+            if (userId == null)
             {
                 TempData["ErrorMessage"] = "You must log in to volunteer.";
                 return RedirectToAction("Login", "Auth");
+            }
+
+            // Restrict admins
+            if (isAdmin == "true")
+            {
+                TempData["ErrorMessage"] = "Admins cannot volunteer for events.";
+                return RedirectToAction("Index");
             }
 
             var allEvents = await _firebase.Child("Events").OnceAsync<UpcomingEvent>();
@@ -126,8 +148,8 @@ namespace Alabaster.Controllers
             if (string.IsNullOrEmpty(model.EventId))
                 ModelState.AddModelError("EventId", "Please select an event.");
 
-
-            if (!string.IsNullOrEmpty(model.Phone) && !System.Text.RegularExpressions.Regex.IsMatch(model.Phone, @"^\d{10}$"))
+            if (!string.IsNullOrEmpty(model.Phone) &&
+                !System.Text.RegularExpressions.Regex.IsMatch(model.Phone, @"^\d{10}$"))
                 ModelState.AddModelError("Phone", "Phone number must be exactly 10 digits.");
 
             if (!ModelState.IsValid)
