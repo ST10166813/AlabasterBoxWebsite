@@ -5015,23 +5015,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kamil\\.nuget\\packages\\": {},
+    "C:\\Users\\niska\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kamil\\OneDrive\\Desktop\\AlabasterBoxWebsite\\Alabaster\\Alabaster.csproj",
+      "projectUniqueName": "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\Alabaster.csproj",
       "projectName": "Alabaster",
-      "projectPath": "C:\\Users\\kamil\\OneDrive\\Desktop\\AlabasterBoxWebsite\\Alabaster\\Alabaster.csproj",
-      "packagesPath": "C:\\Users\\kamil\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kamil\\OneDrive\\Desktop\\AlabasterBoxWebsite\\Alabaster\\obj\\",
+      "projectPath": "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\Alabaster.csproj",
+      "packagesPath": "C:\\Users\\niska\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\kamil\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\niska\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
