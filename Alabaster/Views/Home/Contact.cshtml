@@ -1,0 +1,178 @@
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<style>
+:root {
+  --glass-start: rgba(16,16,20,.55);
+  --glass-end: rgba(16,16,20,.38);
+  --glass-border: rgba(255, 255, 255, 0.349);
+  --glass-shadow: 0 24px 60px rgba(0,0,0,.45);
+  --gold: #FFD700;
+}
+
+* { box-sizing: border-box; margin:0; padding:0; }
+html,body {
+  font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#08090c url('../images/cross7.png') center -10% / cover no-repeat fixed;
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+a { color:inherit; text-decoration:none; }
+
+/* Background layers */
+.spline-stage-center {
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  display:grid; place-items:center;
+}
+.spline-stage-center .spline-core {
+  width:min(72vmin,960px); height:min(72vmin,960px);
+  opacity:0; transition:opacity 900ms ease;
+  filter:brightness(0.98) contrast(1.08) saturate(1.08);
+}
+.spline-stage-center::after {
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(60vmin 60vmin at 50% 50%, rgba(255,215,0,.10), rgba(0,0,0,0) 40%),
+    radial-gradient(120vmax 120vmax at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.30) 100%);
+  opacity:.85;
+}
+.events-aurora {
+  position:fixed; inset:-20vmax -10vmax -10vmax -10vmax; z-index:0; pointer-events:none;
+  filter:blur(40px) saturate(120%);
+  background:
+    radial-gradient(40vmax 40vmax at 15% 20%, rgba(255,215,0,.13), transparent 60%),
+    radial-gradient(35vmax 35vmax at 85% 20%, rgba(0,0,0,.10), transparent 60%),
+    radial-gradient(45vmax 45vmax at 50% 80%, rgba(0,0,0,.08), transparent 60%);
+  opacity:.9;
+}
+.events-grain::before {
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><filter id="n"><feTurbulence baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.035"/></svg>');
+  mix-blend-mode:soft-light;
+}
+
+/* Wrapper */
+.about-wrap {
+  position:relative; z-index:1;
+  display:grid; gap:clamp(2rem,4vw,3rem);
+  padding:clamp(1.75rem,4vw,3.5rem) 1.25rem clamp(4rem,7vw,6rem);
+  max-width:900px; margin-inline:auto;
+}
+
+/* Page Heading */
+.page-head {
+  display:grid; gap:.6rem; justify-items:center; text-align:center;
+}
+.page-head h1 {
+  font-size:clamp(2.4rem,5.6vw,4.4rem); font-weight:900; line-height:1.05;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,#FFD700,#ffffff 45%,#0a0a08);
+  background-size:200% auto;
+  color:transparent; -webkit-background-clip:text; background-clip:text;
+  animation:contactShimmer 8s linear infinite;
+  text-shadow:0 0 18px rgba(255,255,255,.18);
+}
+@@keyframes contactShimmer { from{background-position:0% 50%} to{background-position:200% 50%} }
+.page-head .tagline {
+  font-size:clamp(1rem,1.6vw,1.2rem); letter-spacing:.6px; opacity:.95;
+}
+
+/* Info Panel */
+.panel {
+  border-radius:22px; border:1px solid var(--glass-border);
+  background:linear-gradient(180deg,var(--glass-start),var(--glass-end));
+  backdrop-filter:blur(14px) saturate(150%);
+  box-shadow:var(--glass-shadow);
+  padding:2rem;
+}
+
+.contact-info {
+  display:grid; gap:1.5rem;
+}
+.info-block {
+  background:rgba(255,255,255,.05);
+  border-radius:14px; padding:16px 18px;
+  border:1px solid rgba(255,255,255,.08);
+}
+.info-block h3 {
+  font-size:1.2rem; font-weight:800; color:var(--gold);
+  margin-bottom:6px;
+}
+.info-block p { opacity:.9; line-height:1.6; }
+
+.social-links {
+  display:flex; gap:1rem; margin-top:.8rem;
+}
+.social-links a {
+  width:38px; height:38px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.15);
+  transition:all .2s ease;
+}
+.social-links a:hover {
+  background:var(--gold); color:#111; transform:translateY(-2px);
+}
+</style>
+
+@section Scripts {
+<script type="module" src="https://unpkg.com/@@splinetool/viewer@1.10.85/build/spline-viewer.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+  const core=document.querySelector('.spline-stage-center .spline-core');
+  const show=()=>core.style.opacity='1';
+  if(core){
+    core.addEventListener('load',show,{once:true});
+    core.addEventListener('scene-load',show,{once:true});
+    setTimeout(show,2500);
+  }
+});
+</script>
+}
+
+<!-- Background layers -->
+<div class="spline-stage-center">
+  <spline-viewer
+    class="spline-core"
+    url="https://prod.spline.design/HkjyoqELfBbcjYsN/scene.splinecode">
+  </spline-viewer>
+</div>
+<div class="events-aurora"></div>
+<div class="events-grain"></div>
+
+<!-- Content -->
+<div class="about-wrap">
+  <header class="page-head" aria-labelledby="contact-heading">
+    <h1 id="contact-heading">Contact Us</h1>
+    <div class="tagline">We’d Love to Hear from You</div>
+  </header>
+
+  <section class="panel contact-info">
+    <div class="info-block">
+      <h3>Our Location</h3>
+      <p>123 Faith Avenue<br>Johannesburg, South Africa</p>
+    </div>
+    <div class="info-block">
+      <h3>Phone / WhatsApp</h3>
+      <p>+27 82 555 4444</p>
+    </div>
+    <div class="info-block">
+      <h3>Email</h3>
+      <p>support@alabaster.org.za<br>info@alabaster.org.za</p>
+    </div>
+    <div class="info-block">
+      <h3>Follow Us</h3>
+      <div class="social-links">
+        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
