@@ -301,10 +301,7 @@ html, body{
 @@keyframes shimmer{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 
 /* ===== Page Section ===== */
-.page-wrap{
-  position:relative;
-  padding: clamp(40px, 5vh, 70px) 18px 90px;
-}
+.page-wrap{ position:relative; padding: clamp(40px, 5vh, 70px) 18px 90px; }
 
 /* ===== Event Card ===== */
 .event-card{
@@ -321,17 +318,14 @@ html, body{
 
 /* ===== Card Header ===== */
 h2.page-title{
-  margin:0;
-  text-align:center;
+  margin:0; text-align:center;
   font-size: clamp(1.6rem, 2.2vw, 2.1rem);
   font-weight:900;
   background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 18px rgba(255,255,255,.18);
 }
-.subtitle{
-  text-align:center; margin-top:4px; color:#dcdce5; opacity:.9; font-size:.98rem;
-}
+.subtitle{ text-align:center; margin-top:4px; color:#dcdce5; opacity:.9; font-size:.98rem; }
 
 /* Divider */
 .hr{
@@ -341,15 +335,10 @@ h2.page-title{
 }
 
 /* ===== Form Layout ===== */
-.form-grid{
-  display:grid; gap:14px; grid-template-columns: 1fr;
-}
-@@media (min-width: 860px){
-  .form-grid{ grid-template-columns: 1fr 1fr; }
-  .col-span-2{ grid-column:1 / -1; }
-}
+.form-grid{ display:grid; gap:14px; grid-template-columns: 1fr; }
+@@media (min-width:860px){ .form-grid{ grid-template-columns:1fr 1fr; } .col-span-2{ grid-column:1 / -1; } }
 
-/* Input/Labels */
+/* Inputs */
 label{ font-weight:700; font-size:.95rem; color:#efefef; }
 
 .input-wrap{
@@ -360,58 +349,80 @@ label{ font-weight:700; font-size:.95rem; color:#efefef; }
   transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
 }
 .input-wrap:focus-within{
-  border-color: rgba(255,215,0,.55);
-  box-shadow: 0 0 0 6px rgba(255,215,0,.10);
+  border-color: rgba(255,215,0,.70);
+  box-shadow:
+    0 0 0 6px rgba(255,215,0,.12),
+    0 8px 26px rgba(0,0,0,.28),
+    inset 0 0 22px rgba(255,215,0,.12);
   background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
 }
 .input-icon{ font-size:1.05rem; opacity:.9; }
 
-.form-control{
-  flex:1; border:0; outline:0; background:transparent!important;
-  color:var(--ink)!important; font-size:.98rem; padding:8px 4px;
+/* Remove blue/white focus */
+.form-control,
+.form-control:focus,
+input.form-control,
+textarea.form-control{
+  flex:1;
+  background:transparent !important;
+  color:var(--ink) !important;
+  border:0 !important;
+  outline:none !important;
+  box-shadow:none !important;
+  font-size:.98rem; padding:8px 4px;
   caret-color: var(--gold);
 }
-textarea.form-control{ resize:vertical; min-height:110px; }
+::placeholder{ color: rgba(236,236,246,.75); }
 
-/* ===== FILE INPUT: remove white OS box, gold button ===== */
-.input-wrap input[type="file"].form-control{
-  flex:1;
-  color:#ddd;
-  padding:0;            /* let the wrapper handle padding */
-  border:none;          /* kill default borders */
-  background:transparent;
-  font-size:.95rem;
-  cursor:pointer;
-}
-.input-wrap input[type="file"].form-control::file-selector-button{
-  background: rgba(255,215,0,0.15);
-  border: 1px solid rgba(255,215,0,0.35);
-  color: #FFD700;
-  border-radius: 8px;
-  padding: .45rem .9rem;
-  margin-right: .6rem;
-  cursor: pointer;
-  transition: all .2s ease;
-}
-.input-wrap input[type="file"].form-control::file-selector-button:hover{
-  background:#FFD700; color:#000; border-color:#FFD700;
-}
-/* Safari legacy */
-.input-wrap input[type="file"].form-control::-webkit-file-upload-button{
-  background: rgba(255,215,0,0.15);
-  border: 1px solid rgba(255,215,0,0.35);
-  color: #FFD700;
-  border-radius: 8px;
-  padding: .45rem .9rem;
-  margin-right: .6rem;
-  cursor: pointer;
-  transition: all .2s ease;
-}
-.input-wrap input[type="file"].form-control::-webkit-file-upload-button:hover{
-  background:#FFD700; color:#000; border-color:#FFD700;
+/* Autofill */
+input:-webkit-autofill,
+textarea:-webkit-autofill{
+  -webkit-text-fill-color: var(--ink) !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  transition: background-color 99999s ease-in-out 0s;
 }
 
-/* ===== Buttons ===== */
+/* Date/Time pickers */
+input[type="date"].form-control,
+input[type="time"].form-control{ color-scheme: dark; }
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator{ filter: invert(1) brightness(1.2); opacity: .85; }
+
+/* ===== Custom file field (matches other screens) ===== */
+.file-wrap{ position:relative; display:flex; align-items:center; gap:12px; }
+.file-native{
+  position:absolute; inset:0; opacity:0; cursor:pointer; /* full-area click */
+}
+.file-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:.55rem 1rem;
+  border-radius:10px;
+  background:linear-gradient(135deg, rgba(255,215,0,.18), rgba(255,215,0,.08));
+  border:1px solid rgba(255,215,0,.45);
+  color:#FFD700; font-weight:800; letter-spacing:.2px;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 20px rgba(0,0,0,.28);
+}
+.file-btn:hover{
+  transform: translateY(-1px);
+  background:#FFD700; color:#000; border-color:#FFD700;
+  box-shadow: 0 16px 32px rgba(255,215,0,.32);
+}
+.file-name{
+  flex:1; min-width:0; /* ellipsis */
+  color:#e9e9f2; opacity:.9; font-size:.95rem;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* Optional preview image */
+.file-preview{
+  display:none; margin-top:10px; max-height:140px;
+  border-radius:12px; border:1px solid var(--glass-brd);
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  width:auto;
+}
+
+/* Buttons */
 .actions{ margin-top:14px; display:grid; gap:12px; }
 .btn-primary{
   display:inline-flex; align-items:center; justify-content:center; gap:10px;
@@ -438,7 +449,6 @@ textarea.form-control{ resize:vertical; min-height:110px; }
 }
 .btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
 
-.meta-note{ text-align:center; font-size:.9rem; color:var(--muted); }
 .hr-bottom{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 8px 0; }
 </style>
 }
@@ -495,20 +505,33 @@ textarea.form-control{ resize:vertical; min-height:110px; }
           </div>
         </div>
 
-        <!-- Image -->
+        <!-- Image (custom file control) -->
         <div class="col-span-2">
-          <label>Choose Image</label>
-          <div class="input-wrap">
+          <label>Event Poster</label>
+          <div class="input-wrap file-wrap">
             <i class="bi bi-image input-icon"></i>
-            <input type="file" id="imageFile" class="form-control" accept="image/*"/>
+
+            <!-- Invisible native input covering the whole wrap -->
+            <input type="file" id="imageFile" class="file-native" accept="image/*"/>
+
+            <!-- Visible custom controls -->
+            <button type="button" class="file-btn">
+              <i></i> Choose File
+            </button>
+            <span id="fileName" class="file-name">No file chosen</span>
           </div>
+
+          <!-- Hidden URL for base64 -->
           <input type="hidden" asp-for="ImageUrl" id="ImageUrl"/>
+
+          <!-- Optional preview -->
+          <img id="posterPreview" class="file-preview" alt="Poster preview"/>
         </div>
       </div>
 
       <div class="actions">
         <button type="submit" class="btn-primary">
-          <i class="bi bi-save2"></i> Save Event
+          <i></i> Save Event
         </button>
 
         <div class="hr-bottom"></div>
@@ -523,15 +546,34 @@ textarea.form-control{ resize:vertical; min-height:110px; }
 
 @section Scripts {
 <script>
-// Convert chosen image to base64 and store in hidden field
-const fileInput = document.getElementById("imageFile");
-const hiddenUrl = document.getElementById("ImageUrl");
-fileInput?.addEventListener("change", (e) => {
-  const file = e.target.files?.[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onloadend = () => { hiddenUrl.value = reader.result; };
-  reader.readAsDataURL(file);
-});
+  // Custom file field: show name, preview, and set hidden base64
+  const fileInput = document.getElementById("imageFile");
+  const fileNameEl = document.getElementById("fileName");
+  const hiddenUrl = document.getElementById("ImageUrl");
+  const previewImg = document.getElementById("posterPreview");
+
+  fileInput?.addEventListener("change", (e) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      fileNameEl.textContent = "No file chosen";
+      hiddenUrl.value = "";
+      if (previewImg){ previewImg.style.display = "none"; previewImg.src = ""; }
+      return;
+    }
+
+    // Show filename
+    fileNameEl.textContent = file.name;
+
+    // Read -> base64 + preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      hiddenUrl.value = reader.result;
+      if (previewImg){
+        previewImg.src = reader.result;
+        previewImg.style.display = "block";
+      }
+    };
+    reader.readAsDataURL(file);
+  });
 </script>
 }

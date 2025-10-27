@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\Alabaster.csproj": {}
+    "C:\\Users\\megzn\\Desktop\\AlabasterBoxWebsite\\Alabaster\\Alabaster.csproj": {}
   },
   "projects": {
-    "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\Alabaster.csproj": {
+    "C:\\Users\\megzn\\Desktop\\AlabasterBoxWebsite\\Alabaster\\Alabaster.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\Alabaster.csproj",
+        "projectUniqueName": "C:\\Users\\megzn\\Desktop\\AlabasterBoxWebsite\\Alabaster\\Alabaster.csproj",
         "projectName": "Alabaster",
-        "projectPath": "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\Alabaster.csproj",
-        "packagesPath": "C:\\Users\\niska\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\niska\\OneDrive\\Documents\\BCA3\\Alabaster\\alabasterBoxWebsite\\alabaster\\obj\\",
+        "projectPath": "C:\\Users\\megzn\\Desktop\\AlabasterBoxWebsite\\Alabaster\\Alabaster.csproj",
+        "packagesPath": "C:\\Users\\megzn\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\megzn\\Desktop\\AlabasterBoxWebsite\\Alabaster\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\niska\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\megzn\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -95,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
