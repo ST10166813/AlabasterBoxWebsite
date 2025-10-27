@@ -285,12 +285,7 @@ html, body{
   position:relative;
   z-index:1;
 }
-.hero-title::before{
-  content:"";
-  position:absolute; inset:0; z-index:-1;
-  background: rgba(0,0,0,.42);
-  backdrop-filter: blur(3px);
-}
+
 .hero-title h1{
   font-size: clamp(2.4rem, 4vw, 3.6rem);
   font-weight:900; text-transform:uppercase; letter-spacing:2px;
@@ -458,14 +453,6 @@ textarea.form-control{ resize:vertical; min-height:130px; }
         </button>
 
         <div class="hr-bottom"></div>
-
-        <!-- Extra bottom action (keeps pages consistent) -->
-        <a class="btn-alt" href="@Url.Action("Index","Prayer")">
-          <i class="bi bi-journal-heart"></i> View Prayer Requests
-        </a>
-
-        <div class="meta-note">Need urgent support? <a href="@Url.Action("Contact","Home")" style="color:#fff; text-decoration:underline;">Contact our team</a></div>
-      </div>
     </form>
 
     @* Optional admin reply block, styled to match alerts *@

@@ -234,7 +234,6 @@ table tbody tr:hover {
 </script>
 } *@
 
-
 @model IEnumerable<Alabaster.Models.PrayerRequest>
 @{
     ViewData["Title"] = "All Prayer Requests";
@@ -252,7 +251,7 @@ table tbody tr:hover {
   --shadow: 0 28px 70px rgba(0,0,0,.55);
 }
 
-/* ===== Page background (cohesive with site) ===== */
+/* ===== Page background (no tint) ===== */
 html, body{
   height:100%;
   margin:0;
@@ -262,18 +261,12 @@ html, body{
   overflow-x:hidden;
   position:relative;
 }
-/* subtle film for readability (lighter than before) */
-body::before{
-  content:"";
-  position:fixed; inset:0; z-index:0; pointer-events:none;
-  background: radial-gradient(55vmax 55vmax at 15% 20%, rgba(255,215,0,.07), transparent 60%),
-              linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.32) 55%, rgba(0,0,0,.42));
-}
+/* (Removed the body::before overlay to eliminate tint) */
 
 /* ===== Page container ===== */
 .page-wrap{
   position:relative; z-index:1;
-  padding: clamp(3rem, 6vw, 4.5rem) 1.25rem clamp(4rem, 6vw, 5rem);
+  padding: clamp(1.2rem, 3vw, 2.2rem) 1.25rem clamp(4rem, 6vw, 5rem);
   max-width: 1400px;
   margin: 0 auto;
   display:grid; gap: clamp(1.2rem, 2vw, 1.8rem);
@@ -316,9 +309,9 @@ body::before{
   padding: clamp(1rem, 2.2vw, 1.6rem);
 }
 
-/* ===== Table wrapper (full width, roomy) ===== */
+/* ===== Table wrapper ===== */
 .table-wrap{
-  overflow:auto;   /* scrolling is fine */
+  overflow:auto;
   border-radius: 16px;
 }
 
@@ -327,7 +320,7 @@ body::before{
   width:100%;
   border-collapse: separate;
   border-spacing:0;
-  min-width: 900px; /* allow horizontal scroll on very narrow screens */
+  min-width: 900px;
   font-size: .98rem;
   color: var(--ink);
 }
@@ -335,11 +328,11 @@ body::before{
 /* sticky header with glassy gold */
 .table thead th{
   position: sticky; top: 0; z-index: 2;
-  background: linear-gradient(180deg, rgba(213, 188, 43, 0.9), rgba(169, 161, 120, 0.536));
+  background: linear-gradient(180deg, rgba(213,188,43,0.9), rgba(169,161,120,0.536));
   color:#111; text-transform: uppercase; letter-spacing:.5px;
   font-weight: 900;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(0,0,0,.25);   
+  border-bottom: 1px solid rgba(0,0,0,.25);
 }
 .table thead th:first-child{ border-top-left-radius: 12px; }
 .table thead th:last-child{ border-top-right-radius: 12px; }
@@ -353,9 +346,7 @@ body::before{
 
 /* zebra + hover */
 .table tbody tr:nth-child(even) td{ background: rgba(255,255,255,.035); }
-.table tbody tr:hover td{
-  background: rgba(255,215,0,.10);
-}
+.table tbody tr:hover td{ background: rgba(255,215,0,.10); }
 
 /* Request cell content spacing */
 .request-cell p{ margin-bottom: .6rem; line-height:1.65; }
@@ -363,14 +354,14 @@ body::before{
 /* Admin response block (glassy success) */
 .response-block{
   margin-top:.6rem; padding:.8rem 1rem;
-  border-left: 4px solid #34d399; /* emerald */
+  border-left: 4px solid #34d399;
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(52,211,153,.12), rgba(52,211,153,.06));
   color:#d7ffe9;
   font-size:.95rem;
 }
 
-/* Form styling inside table (cohesive with dark theme) */
+/* Form styling */
 .form-control{
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.16);

@@ -1,4 +1,4 @@
-@{
+@* @{
     ViewData["Title"] = "Thank You";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -145,5 +145,240 @@ body::before {
         setTimeout(() => sparkle.remove(), 4000);
     }
     setInterval(createSparkle, 150);
+</script>
+} *@
+
+@{
+    ViewData["Title"] = "Thank You";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+
+@section Styles {
+<style>
+:root{
+  --bg:#08090c;
+  --ink:#f8f8f8;
+  --muted:#cfcfd6;
+  --glass-1: rgba(16,16,20,.55);
+  --glass-2: rgba(16,16,20,.38);
+  --glass-brd: rgba(255,255,255,.22);
+  --shadow: 0 40px 90px rgba(0,0,0,.45);
+  --gold:#FFD700;
+  --gold-ink:#0b0b0b;
+}
+
+/* Base */
+html,body{
+  margin:0;
+  font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+  color:var(--ink);
+  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
+  min-height:100vh; overflow-x:hidden;
+}
+
+/* Ambient backdrops */
+.page-aurora{
+  position:fixed; inset:-20vmax -10vmax -10vmax -10vmax; pointer-events:none; z-index:0;
+  filter:blur(40px) saturate(120%);
+  background:
+    radial-gradient(40vmax 40vmax at 15% 20%, rgba(255,215,0,.13), transparent 60%),
+    radial-gradient(35vmax 35vmax at 85% 20%, rgba(0,114,255,.12), transparent 60%),
+    radial-gradient(45vmax 45vmax at 50% 80%, rgba(0,255,188,.10), transparent 60%);
+  opacity:.9;
+}
+.page-grain::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><filter id="n"><feTurbulence baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.035"/></svg>');
+  mix-blend-mode:soft-light;
+}
+
+/* Wrapper */
+.ty-wrap{
+  position:relative; z-index:1;
+  display:grid; place-items:center;
+  padding: clamp(70px, 12vh, 140px) 1.25rem 80px;
+}
+
+/* Card */
+.ty-card{
+  width:min(720px, 96vw);
+  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+  border:1px solid var(--glass-brd);
+  border-radius:26px;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: var(--shadow);
+  padding: clamp(22px, 3vw, 36px);
+  text-align:center;
+  opacity:0; transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.ty-card.visible{ opacity:1; transform: translateY(0); }
+
+/* Icon badge */
+.badge-okay{
+  width:74px; height:74px; margin:0 auto 10px;
+  border-radius:50%;
+  display:grid; place-items:center;
+  background: radial-gradient(110% 110% at 50% 35%, rgba(255,215,0,.22), rgba(255,215,0,.06));
+  border:1px solid rgba(255,215,0,.35);
+  box-shadow:0 12px 30px rgba(255,215,0,.25), inset 0 0 18px rgba(255,215,0,.12);
+}
+.badge-okay i{ font-size:1.9rem; color:var(--gold); }
+
+/* Heading + blurb */
+.ty-title{
+  font-size: clamp(2.1rem, 4.6vw, 2.8rem);
+  font-weight:900; text-transform:uppercase; letter-spacing:.6px; margin:.25rem 0 .35rem;
+  background: linear-gradient(90deg, var(--gold), #ffffff 45%, var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 18px rgba(255,255,255,.18);
+  background-size:200% auto; animation: shimmer 8s linear infinite;
+}
+.ty-sub{
+  max-width:600px; margin:.25rem auto 1rem; opacity:.95; line-height:1.75;
+  font-size: clamp(1rem, 2vw, 1.08rem);
+}
+
+/* Divider */
+.soft-hr{
+  height:1px; margin: 12px 0 14px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+  border:0;
+}
+
+/* Next steps list */
+.next-steps{
+  text-align:left; margin: 6px auto 2px; max-width:620px;
+  display:grid; gap:.55rem;
+}
+.step{
+  display:grid; grid-template-columns: 36px 1fr; gap:.6rem; align-items:start;
+  padding:.65rem .75rem; border-radius:14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);
+}
+.step i{
+  width:36px; height:36px; border-radius:50%;
+  display:grid; place-items:center; font-size:1rem; color:var(--gold);
+  background: rgba(255,215,0,.10); border:1px solid rgba(255,215,0,.28);
+}
+.step b{ display:block; margin-bottom:.1rem; }
+.step span{ opacity:.95; }
+
+/* Actions */
+.actions{
+  display:flex; gap:.6rem; flex-wrap:wrap; justify-content:center;
+  margin-top: 14px;
+}
+.btn{
+  display:inline-flex; align-items:center; gap:.55rem;
+  border-radius:999px; padding: .7rem 1.1rem; font-weight:800; text-decoration:none;
+  border:1px solid rgba(255,255,255,.18);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  color:#fff; box-shadow:0 10px 24px rgba(0,0,0,.28);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn:hover{ transform: translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
+
+.btn-gold{
+  border-color: rgba(255,215,0,.45);
+  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
+  color: var(--gold-ink);
+  box-shadow:0 12px 28px rgba(255,215,0,.32);
+}
+.btn-gold:hover{ box-shadow:0 18px 40px rgba(255,215,0,.42); }
+
+/* Subtle sparkles */
+.sparkle{
+  position:fixed; width:3px; height:3px; border-radius:50%;
+  background: rgba(255,215,0,.9); box-shadow:0 0 8px rgba(255,215,0,.75);
+  pointer-events:none; z-index:1; animation: sparkleAnim linear infinite;
+}
+
+/* Animations */
+@@keyframes shimmer{ from{background-position:0% 50%} to{background-position:200% 50%} }
+@@keyframes sparkleAnim{
+  0%{ transform: translateY(0) scale(.5); opacity:0 }
+  50%{ transform: translateY(-25px) scale(1); opacity:1 }
+  100%{ transform: translateY(-50px) scale(.5); opacity:0 }
+}
+
+/* Responsive */
+@@media (max-width:560px){
+  .actions{ gap:.5rem }
+  .btn{ width:100%; justify-content:center }
+}
+</style>
+}
+
+<div class="page-aurora"></div>
+<div class="page-grain"></div>
+
+<section class="ty-wrap">
+  <div class="ty-card" id="ty-card">
+    <div class="badge-okay"><i class="bi bi-check2"></i></div>
+    <h1 class="ty-title">Thank You!</h1>
+    <p class="ty-sub">
+      Your volunteer information has been submitted successfully. We’re grateful you’re partnering with us to serve our community.
+      You’ll receive a confirmation email shortly.
+    </p>
+
+    <hr class="soft-hr"/>
+
+    <div class="next-steps" aria-label="What happens next">
+      <div class="step">
+        <i class="bi bi-envelope-paper"></i>
+        <div>
+          <b>Confirmation & details</b>
+          <span>We’ll email your signup summary and any items to bring for the event.</span>
+        </div>
+      </div>
+      <div class="step">
+        <i class="bi bi-bell"></i>
+        <div>
+          <b>Reminder before the event</b>
+          <span>Expect a reminder 24–48 hours beforehand with time, location, and team lead info.</span>
+        </div>
+      </div>
+      <div class="step">
+        <i class="bi bi-pencil-square"></i>
+        <div>
+          <b>Need to update?</b>
+          <span>If your availability changes, reach out via the <a href="/Contact">Contact</a> page so we can adjust the roster.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions" role="group" aria-label="Actions">
+      <a href="/Events" class="btn btn-gold"><i class="bi bi-calendar2-week"></i> Back to Events</a>
+      <a href="/" class="btn"><i class="bi bi-house"></i> Home</a>
+      <a href="/Volunteer" class="btn"><i class="bi bi-people"></i> Volunteer Again</a>
+    </div>
+  </div>
+</section>
+
+@section Scripts {
+<script>
+// Reveal card
+document.addEventListener('DOMContentLoaded', () => {
+  const card = document.getElementById('ty-card');
+  requestAnimationFrame(()=> card.classList.add('visible'));
+});
+
+// Floating sparkles (subtle)
+function createSparkle(){
+  const s=document.createElement('div');
+  s.className='sparkle';
+  s.style.left = Math.random()*window.innerWidth + 'px';
+  s.style.top  = Math.random()*window.innerHeight + 'px';
+  s.style.animationDuration = (2 + Math.random()*3) + 's';
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(), 3800);
+}
+let sparkleTimer = setInterval(createSparkle, 180);
+window.addEventListener('beforeunload', ()=> clearInterval(sparkleTimer));
 </script>
 }
