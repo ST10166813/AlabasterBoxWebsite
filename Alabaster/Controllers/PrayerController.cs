@@ -15,24 +15,24 @@ namespace Alabaster.Controllers
         }
 
         // User: Prayer Request Form
- public async Task<IActionResult> Index()
-{
-    if (HttpContext.Session.GetString("FirebaseToken") == null)
-        return RedirectToAction("Login", "Auth");
+        public async Task<IActionResult> Index()
+        {
+            if (HttpContext.Session.GetString("FirebaseToken") == null)
+                return RedirectToAction("Login", "Auth");
 
-    var userEmail = HttpContext.Session.GetString("UserEmail");
-    var prayers = await _firebase.Child("prayers")
-                                 .OnceAsync<PrayerRequest>();
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            var prayers = await _firebase.Child("prayers")
+                                         .OnceAsync<PrayerRequest>();
 
-    // Get latest prayer from this user (if any)
-    var latestPrayer = prayers
-        .Select(p => p.Object)
-        .Where(p => p.UserEmail == userEmail)
-        .OrderByDescending(p => p.CreatedAt)
-        .FirstOrDefault();
+            // Get latest prayer from this user (if any)
+            var latestPrayer = prayers
+                .Select(p => p.Object)
+                .Where(p => p.UserEmail == userEmail)
+                .OrderByDescending(p => p.CreatedAt)
+                .FirstOrDefault();
 
-    return View(latestPrayer); // Pass the latest prayer as model
-}
+            return View(latestPrayer); // Pass the latest prayer as model
+        }
 
 
         // User: Submit Prayer Request
@@ -69,26 +69,56 @@ namespace Alabaster.Controllers
         }
 
         [HttpPost]
-public async Task<IActionResult> RespondToPrayer(string id, string response)
+        public async Task<IActionResult> RespondToPrayer(string id, string response)
+        {
+            if (HttpContext.Session.GetString("IsAdmin") != "true")
+                return Unauthorized();
+
+            // Fetch the existing prayer request
+            var prayerSnapshot = await _firebase.Child("prayers").Child(id).OnceSingleAsync<PrayerRequest>();
+
+            if (prayerSnapshot == null)
+                return NotFound();
+
+            // Update with admin response
+            prayerSnapshot.Response = response;
+            prayerSnapshot.RespondedAt = DateTime.UtcNow;
+
+            await _firebase.Child("prayers").Child(id).PutAsync(prayerSnapshot);
+
+            TempData["Success"] = "Response sent successfully 🙌";
+            return RedirectToAction("AdminView");
+        }
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> DeletePrayerRequest(string id)
 {
-    if (HttpContext.Session.GetString("IsAdmin") != "true")
-        return Unauthorized();
+    if (string.IsNullOrEmpty(id))
+    {
+        TempData["Error"] = "Invalid request ID";
+        return RedirectToAction("AdminView");
+    }
 
-    // Fetch the existing prayer request
-    var prayerSnapshot = await _firebase.Child("prayers").Child(id).OnceSingleAsync<PrayerRequest>();
+    try
+    {
+        await _firebase
+            .Child("prayers")  // ✅ Correct Firebase node
+            .Child(id)         // ✅ Delete item by Firebase key
+            .DeleteAsync();
 
-    if (prayerSnapshot == null)
-        return NotFound();
+        TempData["Success"] = "Prayer request deleted successfully ✅";
+    }
+    catch (Exception ex)
+    {
+        TempData["Error"] = "Error deleting request: " + ex.Message;
+    }
 
-    // Update with admin response
-    prayerSnapshot.Response = response;
-    prayerSnapshot.RespondedAt = DateTime.UtcNow;
-
-    await _firebase.Child("prayers").Child(id).PutAsync(prayerSnapshot);
-
-    TempData["Success"] = "Response sent successfully 🙌";
     return RedirectToAction("AdminView");
 }
+
+
+
 
     }
 }
