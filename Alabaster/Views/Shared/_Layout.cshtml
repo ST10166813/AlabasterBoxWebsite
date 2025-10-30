@@ -645,8 +645,7 @@
   </script>
 </body>
 </html> *@
-
-@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -661,6 +660,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    :root{
+      /* Unified, responsive header height */
+      --nav-h: clamp(68px, 12vw, 110px);
+    }
+
     /* =================== GLOBAL =================== */
     html, body { margin:0; padding:0; width:100%; min-height:100%; overflow-x:hidden; overflow-y:auto; background:transparent !important; }
     body{
@@ -692,19 +696,45 @@
       100%{ transform: translateY(-10vh) translateX(50vw) rotate(360deg); opacity:0; }
     }
 
+    /* ===== Glass header rail that reserves space (prevents overlap) ===== */
+    .nav-guard{
+      position:fixed; top:0; left:0; right:0; height:var(--nav-h); z-index:1000;
+      background:linear-gradient(180deg, rgba(8,8,10,.78), rgba(16,16,20,.62) 60%, rgba(16,16,20,0));
+      border-bottom:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      transition: height .25s ease, background .25s ease, box-shadow .25s ease;
+      pointer-events:none;
+    }
+    body.scrolled .nav-guard{
+      height: calc(var(--nav-h) - 16px);
+      background:linear-gradient(180deg, rgba(8,8,10,.86), rgba(16,16,20,.72) 60%, rgba(16,16,20,0));
+      box-shadow: 0 14px 36px rgba(0,0,0,.45);
+    }
+
     /* =================== TOP NAV (fixed center links) =================== */
     .top-words{
-      position:fixed; top:40px; left:50%; transform:translateX(-50%);
-      display:flex; gap:clamp(18px,4vw,70px); z-index:2; font-weight:600; text-transform:uppercase;
-      white-space:nowrap;
+      position:fixed; left:50%; transform:translateX(-50%);
+      top: calc( (var(--nav-h) - 28px) / 2 ); /* vertically centers inside rail */
+      display:flex; gap:clamp(18px,4vw,70px); z-index:1002; font-weight:600; text-transform:uppercase;
+      white-space:nowrap; transition: top .25s ease;
+    }
+    body.scrolled .top-words{
+      top: calc( (var(--nav-h) - 16px - 28px) / 2 );
     }
     .top-words a{ color:#f1f1f1; text-decoration:none; transition:opacity .2s, transform .15s; opacity:.9; }
     .top-words a:hover{ opacity:1; transform:translateY(-1px); }
 
     /* Right-side auth area */
     .auth-links{
-      position:fixed; top:40px; right:20px; z-index:3; display:flex; gap:16px;
-      align-items:center; font-weight:600; text-transform:uppercase;
+      position:fixed; right:20px;
+      top: calc( (var(--nav-h) - 32px) / 2 );
+      z-index:1002; display:flex; gap:16px; align-items:center;
+      font-weight:600; text-transform:uppercase; transition: top .25s ease;
+    }
+    body.scrolled .auth-links{
+      top: calc( (var(--nav-h) - 16px - 32px) / 2 );
     }
     .auth-links a, .auth-links span{ color:#f1f1f1; text-decoration:none; transition:opacity .2s; opacity:.9; }
     .auth-links a:hover{ opacity:1; }
@@ -712,11 +742,15 @@
     /* Content wrapper (leave space for fixed nav) */
     .page-wrapper{
       position:relative; z-index:1; width:100%; min-height:100vh;
-      padding-top:120px; /* ensures titles never hide under the fixed nav */
+      padding-top: calc(var(--nav-h) + 16px); /* ensures titles never hide under the fixed nav */
       background:transparent !important;
+      transition: padding-top .25s ease;
+    }
+    body.scrolled .page-wrapper{
+      padding-top: calc(var(--nav-h));
     }
 
-    /* ===== Top fade so content “disappears” under nav (prevents overlap) ===== */
+    /* Top fade (aesthetic) */
     .top-fade{
       position:fixed; inset:0 0 auto 0; height:110px; z-index:1; pointer-events:none;
       background:linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.55) 40%, rgba(0,0,0,0) 100%);
@@ -734,6 +768,7 @@
       -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
       box-shadow:0 10px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
       color:#f5f5f5; font-size:0; transition: transform .15s, box-shadow .2s, background .2s, border-color .2s;
+      z-index:1003;
     }
     .hamburger-icon::before, .hamburger-icon::after{
       content:""; position:absolute; width:26px; height:2px; border-radius:2px; background:rgba(255,255,255,.92);
@@ -793,15 +828,23 @@
 
     .overlay{ position:fixed; inset:0; z-index:1090; display:none; background:rgba(0,0,0,.45); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
 
+    /* =================== CONTENT & ANCHOR BEHAVIOR =================== */
+    /* Prevent anchor targets (e.g., #section) from being hidden under the fixed header */
+    :is(h1,h2,h3,h4,h5,h6,[id]){ scroll-margin-top: calc(var(--nav-h) + 24px); }
+
     /* =================== RESPONSIVE TWEAKS =================== */
     @@media (max-width:640px){
       .hamburger-icon{ width:52px; height:52px; }
+      .top-words{ gap:20px; font-size:.92rem; }
     }
   </style>
 
   @RenderSection("Styles", required: false)
 </head>
 <body>
+  <!-- Glass header rail to reserve visual space for the fixed nav -->
+  <div class="nav-guard" aria-hidden="true"></div>
+
   <!-- Spline Background -->
   <script type="module" src="https://unpkg.com/@@splinetool/viewer@1.10.85/build/spline-viewer.js"></script>
   <spline-viewer loading-anim-type="none" url="https://prod.spline.design/IklUESOTGHIJ0hhn/scene.splinecode"></spline-viewer>
@@ -822,7 +865,7 @@
   <nav class="top-words" aria-label="Primary">
     @if (isAdmin)
     {
-        <!-- Admin: keep Home + About Us, then admin items -->
+        <!-- Admin: keep Home + admin items -->
         <a href="/">Home</a>
         <a href="/Prayer/AdminView">Prayer Requests</a>
         <a href="/Events/AddEvent">Add Events</a>           
@@ -866,10 +909,9 @@
     <div class="menu-links">
       @if (isAdmin)
       {
-
-         <div class="drawer-section">Admin</div>
+        <div class="drawer-section">Admin</div>
         <a class="menu-item" asp-controller="Prayer" asp-action="AdminView"><i class="bi bi-journal-bookmark-fill"></i> Prayer Requests</a>
-        <a class="menu-item" asp-controller="Events" asp-action="AddEvent"><i class="bi bi-calendar-plus"></i> Add Events</a> @* change to Create if needed *@
+        <a class="menu-item" asp-controller="Events" asp-action="AddEvent"><i class="bi bi-calendar-plus"></i> Add Events</a>
         <a class="menu-item" asp-controller="Testimonies" asp-action="Admin"><i class="bi bi-chat-heart-fill"></i> Manage Testimonies</a>
         <a class="menu-item" asp-controller="Events" asp-action="ManageVolunteers"><i class="bi bi-people-fill"></i> Manage Volunteers</a>
 
@@ -881,9 +923,7 @@
         <a class="menu-item" asp-controller="Testimonies" asp-action="Index"><i class="bi bi-chat-quote"></i> Testimonies</a>
         <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
         <a class="menu-item" asp-controller="Prayer" asp-action="Index"><i class="bi bi-journal"></i> Prayer</a>
-        <a class="menu-item" asp-controller="Home" asp-action="Contact"><i class="bi  bi-chat-dots"></i> Contact</a>
-
-
+        <a class="menu-item" asp-controller="Home" asp-action="Contact"><i class="bi bi-chat-dots"></i> Contact</a>
       }
       else
       {
@@ -895,7 +935,6 @@
         <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
         <a class="menu-item" asp-controller="Prayer" asp-action="Index"><i class="bi bi-journal"></i> Prayer</a>
         <a class="menu-item" asp-controller="Home" asp-action="Contact"><i class="bi bi-chat-dots"></i> Contact</a>
-
       }
     </div>
 
@@ -967,6 +1006,16 @@
 
       window.__particlesInterval = setInterval(createParticle, 150);
       window.addEventListener('pagehide', () => clearInterval(window.__particlesInterval));
+    })();
+
+    /* =================== Scroll handler: toggles shrink and keeps spacing aligned =================== */
+    (function(){
+      function onScroll(){
+        if (window.scrollY > 8) document.body.classList.add('scrolled');
+        else document.body.classList.remove('scrolled');
+      }
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive:true });
     })();
   </script>
 </body>
