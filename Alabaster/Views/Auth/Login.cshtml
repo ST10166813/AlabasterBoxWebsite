@@ -684,11 +684,12 @@ input:-webkit-autofill:focus{
   --shadow: 0 24px 60px rgba(0,0,0,.55);
 }
 
-/* ===== Full-viewport; no scroll ===== */
 html, body{
   font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
-  height: 100dvh;
-  overflow: hidden;
+  min-height: 100dvh;           /* allow taller than viewport if zoomed */
+  height: auto;                 /* don't lock the height */
+  overflow-y: auto;             /* let the page scroll vertically */
+  overflow-x: hidden;
   color: var(--ink);
   background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
 }
@@ -697,10 +698,9 @@ html, body{
 body::before{
   content:"";
   position: fixed; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(55vmax 55vmax at 15% 20%, rgba(255,215,0,.08), transparent 60%),
-    radial-gradient(60vmax 60vmax at 85% 30%, rgba(0,0,0,.20), transparent 60%),
-    linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.35) 55%, rgba(0,0,0,.45));
+  background: rgba(0, 0, 0, 0.296);
+
+    
 }
 body::after{
   content:""; position: fixed; inset:0; z-index:0; pointer-events:none;
@@ -710,10 +710,11 @@ body::after{
 /* ===== Stage ===== */
 .main-wrapper{
   position: relative; z-index:1;
-  height: 100dvh; width: 100vw;
+  min-height: 100dvh;           /* can grow taller if content needs it */
+  width: 100vw;
   display:grid;
   place-items: start center;
-  padding: clamp(8px, 2.5vw, 18px) 2vw 0;
+  padding: clamp(8px, 2.5vw, 18px) 2vw 24px; /* bottom padding so last button never hugs edge */
   animation: fadeIn .6s ease forwards;
 }
 @@keyframes fadeIn{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
@@ -723,23 +724,29 @@ body::after{
   display:grid;
   grid-template-columns: 1.08fr .92fr;
   width: min(1200px, 92vw);
-  height: clamp(540px, 78dvh, 760px);
+  height: auto;                           /* don’t force a fixed height */
+  max-height: min(780px, 92dvh);          /* cap to viewport, then scroll */
   border-radius: 22px;
   border: 1px solid var(--glass-brd);
   background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   box-shadow: var(--shadow);
-  overflow: clip;
+  overflow-y: auto;                        /* enable internal scroll if needed */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;       /* smooth iOS scroll */
 }
 
 /* ===== Left (Form) ===== */
+/* Add/keep these small tweaks */
 .auth-form{
   padding: clamp(18px, 3vw, 32px) clamp(16px, 2.2vw, 28px);
   display:grid; gap: clamp(10px, 1.2vw, 16px);
   align-content:start;
   min-width: 0;
+  min-height: 0;             /* allow child to shrink instead of overflowing */
 }
+.brand-panel{ min-height: 0; } /* defensive */
 
 /* ===== Right (Brand Panel) ===== */
 .brand-panel{
@@ -899,11 +906,13 @@ input:-webkit-autofill:focus{
   .auth-container{
     grid-template-columns: 1fr;
     width: min(860px, 94vw);
-    height: clamp(540px, 82dvh, 760px);
+    height: auto;                    /* let it size naturally */
+    max-height: 94dvh;               /* still caps and scrolls if needed */
   }
   .brand-panel{ display:none; }
   .auth-form{ padding: clamp(14px, 4vw, 24px) clamp(14px, 5vw, 28px); }
 }
+
 </style>
 
 <div class="main-wrapper">
