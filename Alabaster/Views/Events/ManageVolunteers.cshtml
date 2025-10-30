@@ -295,25 +295,24 @@ body::before{ content:""; display:none; }
   display:grid; gap:.6rem; justify-items:center; text-align:center;
   margin-bottom: clamp(1.6rem, 3.2vw, 2.2rem);
 }
-.page-head h1{
+.page-head h1 {
   font-size: clamp(2.4rem, 5.6vw, 4.4rem);
-  font-weight: 900; line-height:1.12; padding-bottom:6px;
-  background: linear-gradient(90deg, var(--gold), #ffffff 45%, var(--gold));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  background-size: 200% auto;
-  animation: hshimmer 8s linear infinite;
+  font-weight: 900;
+  line-height: 1.12;
+  padding-bottom: 6px;
   letter-spacing: .3px;
-  text-shadow: 0 0 18px rgba(255,255,255,.18);
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
 }
+
 .tagline{
   font-size: clamp(.95rem, 1.6vw, 1.15rem);
-  letter-spacing: .6px; text-transform:uppercase;
+  letter-spacing: .6px;
   color: var(--ink); opacity:.95;
   display:inline-flex; gap:.7rem; flex-wrap:wrap;
 }
-.tagline span + span::before{
-  content:"•"; color:var(--gold); margin-right:.7rem;
-}
+
 .head-desc{
   max-width: 920px; opacity:.92; text-align:center;
   font-size: clamp(1rem, 1.4vw, 1.12rem);
@@ -351,19 +350,65 @@ body::before{ content:""; display:none; }
 .controls{
   display:flex; justify-content:center; margin-bottom:1.25rem;
 }
-.event-select select{
+/* ===== Dropdown (glass style) ===== */
+.event-select select {
+  appearance: none;              /* Remove default arrow styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  color: #fff;
   padding: .77rem 1.1rem;
   font-size: 1.05rem;
   border-radius: 10px;
-  border: 1px solid rgba(255, 215, 0, 0.6);
-  background: rgba(0,0,0,0.25);
-  color: #fff; cursor: pointer;
-  transition: box-shadow .25s ease, border-color .25s ease, transform .1s ease;
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  cursor: pointer;
+  width: 100%;
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease, transform .1s ease;
 }
-.event-select select:hover,.event-select select:focus{
-  box-shadow: 0 0 18px rgba(255,215,0,.5);
+
+/* On hover or focus — gold shimmer effect */
+.event-select select:hover,
+.event-select select:focus {
   border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(255,215,0,.38);
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+  outline: none;
 }
+
+/* Remove the ugly blue outline entirely */
+.event-select select:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 16px rgba(255,215,0,.38);
+}
+
+/* ===== Placeholder / Default Option ===== */
+.event-select select option {
+  background: #08090c00;       /* Keeps dropdown dark */
+  color: #000000;               /* White text inside dropdown */
+}
+
+/* Chrome autofill + Safari fixes */
+.event-select select:-webkit-autofill {
+  -webkit-text-fill-color: #fff !important;
+  transition: background-color 9999s ease-out;
+}
+
+/* Optional: add a small down-arrow icon (gold accent) */
+.event-select {
+  position: relative;
+}
+.event-select::after {
+  content: "▾";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  pointer-events: none;
+  font-size: 1.1rem;
+  opacity: .8;
+}
+
 
 /* ===== Table (same palette & header treatment as Manage Testimonies) ===== */
 .table-wrap{
@@ -413,9 +458,7 @@ tbody tr:hover{ background:rgba(255,255,255,.03); }
   <!-- Cohesive heading section -->
   <header class="page-head" aria-labelledby="mv-head">
     <h1 id="mv-head">MANAGE VOLUNTEERS</h1>
-    <div class="tagline">
-      <span>Admin</span><span>Volunteers</span><span>Events</span><span>Community</span>
-    </div>
+    <div class="tagline">Admin • Volunteers • Events • Community</div>
     <p class="head-desc">
       View and manage volunteer sign-ups by event. Use the selector to filter the roster and coordinate your teams with clarity.
     </p>

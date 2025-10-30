@@ -309,6 +309,8 @@ setInterval(createSparkle, 200);
         }
     </div>
 </div> *@
+
+
 @model IEnumerable<Alabaster.Models.Testimony>
 @{
     ViewBag.Title = "Testimonies";
@@ -352,24 +354,21 @@ body::before{ content:""; display:none; }
   justify-items:center; text-align:center;
   margin-bottom: clamp(1.6rem, 3.2vw, 2.2rem);
 }
-.page-head h1 {
+/* SAFE, SIMPLE HEADING — closes correctly */
+.page-head h1{
   font-size: clamp(2.4rem, 5.6vw, 4.4rem);
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: .3px;
   text-transform: uppercase;
+  color: #fff;                           /* no transparent text */
+  text-shadow: 0 2px 6px rgba(0,0,0,.55);
+} /* <= important closing brace */
 
-  /* === Gradient like Prayer Admin Page === */
-  background: linear-gradient(90deg, #FFD700, #ffffff 45%, #0a0a08); /* gold → white → black */
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
+/* keep wallpaper visible and nav above any effects */
+header, nav.navbar, .site-nav, .top-nav{ position:relative; z-index:10; }
+.page-content{ position:relative; z-index:2; }
 
-  /* Subtle motion shimmer effect */
-  animation: aboutShimmer 8s linear infinite;
-  text-shadow: 0 0 18px rgba(255,255,255,.18);
-}
 .page-head .tagline{
   font-size: clamp(.95rem, 1.6vw, 1.15rem);
   letter-spacing: .6px; opacity: .95;

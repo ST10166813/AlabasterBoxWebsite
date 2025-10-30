@@ -557,18 +557,34 @@ html, body{
   position:relative; z-index:1;
 }
 
-.hero-title h1{
+.hero-title h1 {
   font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-weight:900; text-transform:uppercase; letter-spacing:2px;
-  background: linear-gradient(90deg, var(--gold), #fff, var(--gold));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 34px rgba(255,255,255,.32);
-  background-size:200% auto; animation: shimmer 6s linear infinite;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
 }
-.hero-title p{
-  font-size:1.08rem; color:#e6e6ef; opacity:.92;
-  max-width:760px; margin:10px auto 0;
+
+.hero-title .tagline {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  color: #fff;
+  text-transform: capitalize;
+  margin-top: 6px;
+  margin-bottom: 50px; /* reduced space below tagline */
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
+
+.hero-title p {
+  font-size: 1.08rem;
+  color: #ffffff;
+  opacity: .92;
+  max-width: 760px;
+  margin: 1px auto 1px; /* less space below paragraph */
+}
+
 @@keyframes shimmer{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 
 /* ===== Stage ===== */
@@ -639,12 +655,55 @@ label{ font-weight:700; font-size:.95rem; color:#efefef; }
 }
 .input-icon{ font-size:1.05rem; opacity:.9; }
 
-/* Controls */
-.form-control{
-  flex:1; border:0; outline:0; background:transparent!important;
-  color:var(--bg)!important; font-size:.98rem; padding:8px 4px;
+/* ===== Make form text and placeholders white ===== */
+.form-control {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent !important;
+  color: #fff !important;            /* white input text */
+  font-size: .98rem;
+  padding: 8px 4px;
   caret-color: var(--gold);
 }
+
+/* ===== Make all placeholders white ===== */
+::placeholder {
+  color: #ffffff !important;
+  opacity: 0.85;
+}
+
+::-webkit-input-placeholder {
+  color: #ffffff !important;
+  opacity: 0.85;
+}
+
+:-ms-input-placeholder {
+  color: #ffffff !important;
+  opacity: 0.85;
+}
+
+::-ms-input-placeholder {
+  color: #ffffff !important;
+  opacity: 0.85;
+}
+
+
+/* ===== Fix dropdown (select) visibility ===== */
+select.form-control {
+  color: #ffffff !important;             /* white text inside select */
+  background: rgba(20, 20, 20, 0) !important; /* dark dropdown background */
+  appearance: none;                   /* hides default arrow for a cleaner look */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Dropdown options */
+select.form-control option {
+  background: #11111100;                   /* dark background for dropdown list */
+  color: #040404;                        /* white text inside options */
+}
+
 textarea.form-control{ resize:vertical; min-height:110px; }
 
 /* Remove default glow */
@@ -692,12 +751,14 @@ textarea.form-control{ resize:vertical; min-height:110px; }
 }
 .btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
 .meta-note{ text-align:center; font-size:.9rem; color:var(--muted); }
+
 </style>
 }
 
 <!-- ===== Hero heading + paragraph ===== -->
 <section class="hero-title">
   <h1>Volunteer With Us</h1>
+  <div class="tagline">Serve • Support • Shine • Showcase</div>
   <p>Use your gifts to serve our community. Choose an event and tell us how you’d like to help — we’ll be in touch with the details.</p>
 </section>
 

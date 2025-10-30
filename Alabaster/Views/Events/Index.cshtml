@@ -416,12 +416,15 @@ img { max-width: 100%; display: block; }
 /* ------------------ PAGE HEADING ------------------ */
 .page-head { display: grid; gap: .6rem; justify-items: center; text-align: center; }
 .page-head h1 {
-  font-size: clamp(2.4rem, 5.6vw, 4.4rem); font-weight: 900; line-height: 1.05;
-  letter-spacing: .3px; text-transform: uppercase;
-  background: linear-gradient(90deg, #FFD700, #ffffff 45%, #0a0a08);
-  background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
-  animation: aboutShimmer 8s linear infinite; text-shadow: 0 0 18px rgba(255,255,255,.18);
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
 }
+
 .page-head .tagline{ font-size: clamp(1rem, 1.6vw, 1.2rem); letter-spacing: .6px; opacity: .95; }
 @@keyframes aboutShimmer { from{background-position:0% 50%} to{background-position:200% 50%} }
 
@@ -546,7 +549,7 @@ window.addEventListener('DOMContentLoaded', () => {
   <!-- PAGE HEADING -->
   <header class="page-head" aria-labelledby="events-heading">
     <h1 id="events-heading">Upcoming Events</h1>
-    <div class="tagline">Community • Kindness • Love • Selflessness</div>
+    <div class="tagline">Hardwork • Timeless • Support • Drive</div>
   </header>
 
   <!-- ADMIN TOOLBAR (only when logged in as admin) -->

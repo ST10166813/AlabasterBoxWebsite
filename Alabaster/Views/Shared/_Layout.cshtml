@@ -216,12 +216,14 @@
   <nav class="top-words" aria-label="Primary">
     @if (isAdmin)
     {
-        <!-- Admin: keep Home + admin items -->
+
+        <!-- Regular menu -->
         <a href="/">Home</a>
-        <a href="/Prayer/AdminView">Prayer Requests</a>
-        <a href="/Events/AddEvent">Add Events</a>           
-        <a href="/Testimonies/Admin">Manage Testimonies</a>
-        <a href="/Events/ManageVolunteers">View Volunteers</a>
+        <a href="/AboutUs">About Us</a>
+        <a href="/Events">Events</a>
+        <a href="/Events/Volunteer">Volunteer</a>
+        <a href="/Testimonies">Testimonies</a>
+        <a href="/Prayer/Index">Prayer Requests</a>
     }
     else
     {
@@ -231,7 +233,8 @@
         <a href="/Events">Events</a>
         <a href="/Events/Volunteer">Volunteer</a>
         <a href="/Testimonies">Testimonies</a>
-        <a href="/Home/Contact">Contact</a>
+        <a href="/Prayer/Index">Prayer Requests</a>
+
     }
   </nav>
 
@@ -272,9 +275,9 @@
         <a class="menu-item" asp-controller="Events" asp-action="Index"><i class="bi bi-calendar-event"></i> Events</a>
         <a class="menu-item" asp-controller="Events" asp-action="Volunteer"><i class="bi bi-people"></i> Volunteer</a>
         <a class="menu-item" asp-controller="Testimonies" asp-action="Index"><i class="bi bi-chat-quote"></i> Testimonies</a>
-        <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
         <a class="menu-item" asp-controller="Prayer" asp-action="Index"><i class="bi bi-journal"></i> Prayer</a>
-        <a class="menu-item" asp-controller="Home" asp-action="Contact"><i class="bi bi-chat-dots"></i> Contact</a>
+        <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
+
       }
       else
       {
@@ -283,9 +286,9 @@
         <a class="menu-item" asp-controller="Events" asp-action="Index"><i class="bi bi-calendar-event"></i> Events</a>
         <a class="menu-item" asp-controller="Events" asp-action="Volunteer"><i class="bi bi-people"></i> Volunteer</a>
         <a class="menu-item" asp-controller="Testimonies" asp-action="Index"><i class="bi bi-chat-quote"></i> Testimonies</a>
-        <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
         <a class="menu-item" asp-controller="Prayer" asp-action="Index"><i class="bi bi-journal"></i> Prayer</a>
-        <a class="menu-item" asp-controller="Home" asp-action="Contact"><i class="bi bi-chat-dots"></i> Contact</a>
+        <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
+
       }
     </div>
 

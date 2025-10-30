@@ -286,14 +286,15 @@ html, body{
   position:relative;
   z-index:1;
 }
-.hero-title h1{
+.hero-title h1 {
   font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-weight:900; text-transform:uppercase; letter-spacing:2px;
-  background: linear-gradient(90deg, var(--gold), #fff, var(--gold));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 34px rgba(255,255,255,.32);
-  background-size:200% auto; animation: shimmer 6s linear infinite;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
 }
+
 .hero-title p{
   font-size:1.08rem; color:#e6e6ef; opacity:.92;
   max-width:740px; margin: 10px auto 0;
@@ -344,7 +345,7 @@ label{ font-weight:700; font-size:.95rem; color:#efefef; }
 .input-wrap{
   position:relative; display:flex; align-items:center; gap:10px;
   border:1px solid rgba(255,255,255,.14);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  background: linear-gradient(180deg, rgba(223, 223, 223, 0.08), rgba(255,255,255,.03));
   border-radius:14px; padding:10px 12px;
   transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
 }
@@ -358,29 +359,63 @@ label{ font-weight:700; font-size:.95rem; color:#efefef; }
 }
 .input-icon{ font-size:1.05rem; opacity:.9; }
 
-/* Remove blue/white focus */
-.form-control,
+/* ===== Input Fix (consistent placeholder + no white box) ===== */
 .form-control:focus,
 input.form-control,
-textarea.form-control{
-  flex:1;
-  background:transparent !important;
-  color:var(--ink) !important;
-  border:0 !important;
-  outline:none !important;
-  box-shadow:none !important;
-  font-size:.98rem; padding:8px 4px;
+textarea.form-control {
+  flex: 1;
+  background: transparent !important;
+  color: var(--ink) !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-size: 0.98rem;
+  padding: 8px 4px;
   caret-color: var(--gold);
 }
-::placeholder{ color: rgba(236,236,246,.75); }
 
-/* Autofill */
-input:-webkit-autofill,
-textarea:-webkit-autofill{
-  -webkit-text-fill-color: var(--ink) !important;
-  box-shadow: 0 0 0 1000px transparent inset !important;
-  transition: background-color 99999s ease-in-out 0s;
+/* ===== White placeholders (all browsers) ===== */
+.form-control::placeholder,
+input.form-control::placeholder,
+textarea.form-control::placeholder {
+  color: #fff !important;
+  opacity: 0.8 !important;
 }
+
+.form-control::-webkit-input-placeholder {
+  color: #fff !important;
+  opacity: 0.8 !important;
+}
+.form-control:-ms-input-placeholder {
+  color: #fff !important;
+  opacity: 0.8 !important;
+}
+.form-control::-ms-input-placeholder {
+  color: #fff !important;
+  opacity: 0.8 !important;
+}
+.form-control::-moz-placeholder {
+  color: #fff !important;
+  opacity: 0.8 !important;
+}
+
+/* ===== Remove blue focus glow ===== */
+input:focus,
+textarea:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ===== Remove Chrome autofill white background ===== */
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-text-fill-color: #fff !important;
+  caret-color: var(--gold);
+  transition: background-color 999999s ease-out, color 999999s ease-out;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+}
+
 
 /* Date/Time pickers */
 input[type="date"].form-control,

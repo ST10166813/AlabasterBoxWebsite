@@ -286,14 +286,15 @@ html, body{
   z-index:1;
 }
 
-.hero-title h1{
+.hero-title h1 {
   font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-weight:900; text-transform:uppercase; letter-spacing:2px;
-  background: linear-gradient(90deg, var(--gold), #fff, var(--gold));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 34px rgba(255,255,255,.32);
-  background-size:200% auto; animation: shimmer 6s linear infinite;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
 }
+
 .hero-title p{
   font-size:1.08rem; color:#e6e6ef; opacity:.92;
   max-width:760px; margin: 10px auto 0;
@@ -354,18 +355,44 @@ label{ font-weight:700; font-size:.95rem; color:#efefef; }
   border-radius:14px; padding:10px 12px;
   transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
 }
-.input-wrap:focus-within{
-  border-color: rgba(255,215,0,.55);
-  box-shadow: 0 0 0 6px rgba(255,215,0,.10);
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
-}
-.input-icon{ font-size:1.05rem; opacity:.9; }
-
-.form-control, textarea.form-control{
-  flex:1; border:0; outline:0; background:transparent!important;
-  color:var(--ink)!important; font-size:1rem; padding:8px 4px;
+/* ===== Input + Textarea Style (white text, no blue glow) ===== */
+.form-control, 
+textarea.form-control {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent !important;
+  color: #fff !important;              /* white input text */
+  font-size: 1rem;
+  padding: 8px 4px;
   caret-color: var(--gold);
 }
+
+/* Remove browser blue & white outlines */
+.form-control:focus,
+textarea.form-control:focus,
+input:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep only yellow glow on input wrapper */
+.input-wrap:focus-within {
+  border-color: rgba(255, 215, 0, 0.55);
+  box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+}
+
+/* ===== White placeholders ===== */
+::placeholder {
+  color: #ffffff !important;
+  opacity: 0.85;
+}
+::-webkit-input-placeholder { color: #ffffff !important; opacity: 0.85; }
+:-ms-input-placeholder { color: #ffffff !important; opacity: 0.85; }
+::-ms-input-placeholder { color: #ffffff !important; opacity: 0.85; }
+
 textarea.form-control{ resize:vertical; min-height:130px; }
 
 /* Alerts */

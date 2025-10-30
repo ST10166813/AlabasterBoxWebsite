@@ -79,22 +79,14 @@
             text-align: center;
         }
 
-            .page-head h1 {
-                font-size: clamp(2.4rem, 5.6vw, 4.4rem);
-                font-weight: 900;
-                line-height: 1.05;
-                letter-spacing: .3px;
-                text-transform: uppercase;
-                /* === Gradient like Prayer Admin Page === */
-                background: linear-gradient(90deg, #FFD700, #ffffff 45%, #0a0a08); /* gold → white → black */
-                background-size: 200% auto;
-                color: transparent;
-                -webkit-background-clip: text;
-                background-clip: text;
-                /* Subtle motion shimmer effect */
-                animation: aboutShimmer 8s linear infinite;
-                text-shadow: 0 0 18px rgba(255,255,255,.18);
-            }
+           .page-head h1 {
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
 
             .page-head .tagline {
                 font-size: clamp(1rem, 1.6vw, 1.2rem);
@@ -113,12 +105,19 @@
         }
 
         /* ------------------ INTRO ------------------ */
-        .hero {
+       .hero {
             display: grid;
-            gap: .9rem;
+            gap: 1.1rem;
             justify-items: center;
             text-align: center;
-        }
+
+            /* Make text slightly larger and more comfortable */
+            font-size: 1.12rem;       /* roughly +10% */
+            line-height: 1.9;         /* add a bit of breathing room */
+            max-width: 900px;         /* keep long lines readable */
+            margin-inline: auto;
+            }
+
         /* chip matches glass language */
         .badge {
             font-size: .85rem;
