@@ -1,251 +1,3 @@
-@* @model Alabaster.Models.UpcomingEvent
-
-@section Styles {
-<style>
-/* ===== BASE STYLING ===== */
-html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    color: #fff;
-}
-
-body {
-    background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
-    background-color: #000;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* CINEMATIC OVERLAY */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: 0;
-}
-
-/* ===== PAGE CONTAINER ===== */
-.event-form-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 90vh;
-    padding: 2rem;
-    position: relative;
-    z-index: 2;
-    opacity: 0;
-    transform: translateY(40px);
-    animation: fadeInUp 1.2s ease-out forwards;
-}
-
-/* ===== FORM CARD ===== */
-.add-event-form {
-    width: 100%;
-    max-width: 660px;
-    padding: 2.5rem 2rem;
-    /* DARKER BACKGROUND */
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 1.5rem;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 40px rgba(255,215,0,0.3);
-    border: 1px solid rgba(255,215,0,0.15);
-    position: relative;
-    overflow: hidden;
-}
-
-/* GOLDEN LIGHT SWEEP */
-.add-event-form::before {
-    content: "";
-    position: absolute;
-    top: 0; left: -75%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,215,0,0.3), transparent);
-    animation: lightSweep 6s infinite linear;
-}
-
-/* ===== HEADER ===== */
-.add-event-form h2 {
-    text-align: center;
-    font-size: 2.4rem;
-    font-weight: 900;
-    letter-spacing: 1px;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
-    background: linear-gradient(90deg, #FFD700, #fff, #FFD700);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-size: 200% auto;
-    animation: shimmer 4s linear infinite;
-    text-shadow: 0 0 25px rgba(255,255,255,0.4);
-}
-
-/* ===== FORM ELEMENTS ===== */
-.form-group {
-    margin-bottom: 1.5rem;
-    animation: fadeIn 1s ease both;
-}
-
-.form-group:nth-child(odd) { animation-delay: 0.3s; }
-.form-group:nth-child(even) { animation-delay: 0.6s; }
-
-label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #FFD700;
-    font-size: 1rem;
-}
-
-.form-control, input[type="file"] {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    font-size: 1rem;
-    border-radius: 0.5rem;
-    outline: none;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(0,0,0,0.3);
-    color: #fff;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus, input[type="file"]:focus {
-    border-color: #FFD700;
-    box-shadow: 0 0 10px rgba(255,215,0,0.4);
-}
-
-/* ===== SUBMIT BUTTON ===== */
-.btn-submit {
-    width: 100%;
-    padding: 0.9rem;
-    font-size: 1rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 0.6rem;
-    color: #000;
-    background: linear-gradient(90deg, #FFD700, #FFB700, #FFD700);
-    background-size: 200% auto;
-    animation: shimmer 5s linear infinite;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1.5rem;
-}
-
-.btn-submit:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255,215,0,0.6);
-}
-
-/* ===== ANIMATIONS ===== */
-@@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(40px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-@@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@@keyframes shimmer {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-}
-
-@@keyframes lightSweep {
-    0% { left: -75%; }
-    100% { left: 125%; }
-}
-
-/* ===== FLOATING PARTICLES ===== */
-.sparkle {
-    position: fixed;
-    width: 3px;
-    height: 3px;
-    background: rgba(255,215,0,0.9);
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(255,215,0,0.8);
-    pointer-events: none;
-    animation: sparkleAnim linear infinite;
-    z-index: 1;
-}
-
-@@keyframes sparkleAnim {
-    0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    50% { transform: translateY(-25px) scale(1); opacity: 1; }
-    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
-}
-
-@@media (max-width: 768px) {
-    .add-event-form h2 { font-size: 1.8rem; }
-}
-</style>
-}
-
-<div class="event-form-container">
-    <div class="add-event-form">
-        <h2>Add New Event</h2>
-
-        <form asp-action="AddEvent" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Event Name</label>
-                <input asp-for="Name" class="form-control" required />
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea asp-for="Description" class="form-control" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Date</label>
-                <input asp-for="Date" type="date" class="form-control" required />
-            </div>
-            <div class="form-group">
-                <label>Time</label>
-                <input asp-for="Time" type="time" class="form-control" required />
-            </div>
-            <div class="form-group">
-                <label>Choose Image</label>
-                <input type="file" id="imageFile" class="form-control" accept="image/*" />
-                <input type="hidden" asp-for="ImageUrl" id="ImageUrl" />
-            </div>
-
-            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Save Event</button>
-        </form>
-    </div>
-</div>
-
-@section Scripts {
-<script>
-    // Convert image file to base64
-    document.getElementById("imageFile").addEventListener("change", function (e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = function () {
-                document.getElementById("ImageUrl").value = reader.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Floating sparkles
-    function createSparkle() {
-        const sparkle = document.createElement('div');
-        sparkle.classList.add('sparkle');
-        sparkle.style.left = Math.random() * window.innerWidth + 'px';
-        sparkle.style.top = Math.random() * window.innerHeight + 'px';
-        sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
-        document.body.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 4000);
-    }
-    setInterval(createSparkle, 150);
-</script>
-} *@
-
 @model Alabaster.Models.UpcomingEvent
 
 @{
@@ -253,362 +5,488 @@ label {
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
 
 @section Styles {
-<style>
-:root{
-  --bg:#08090c;
-  --ink:#f2f2f2;
-  --muted:#cfcfd6;
-  --glass-1: rgba(18,18,22,.55);
-  --glass-2: rgba(18,18,22,.35);
-  --glass-brd: rgba(255,255,255,.14);
-  --gold:#FFD700;
-  --gold-ink:#181818;
-  --shadow:0 24px 60px rgba(0,0,0,.55);
-}
+    <style>
+        :root {
+            --bg: #08090c;
+            --ink: #f2f2f2;
+            --muted: #cfcfd6;
+            --glass-1: rgba(18,18,22,.55);
+            --glass-2: rgba(18,18,22,.35);
+            --glass-brd: rgba(255,255,255,.14);
+            --gold: #FFD700;
+            --gold-ink: #181818;
+            --shadow: 0 24px 60px rgba(0,0,0,.55);
+        }
 
-/* ===== Base ===== */
-html, body{
-  margin:0;
-  font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
-  color:var(--ink);
-  min-height:100vh;
-  overflow-x:hidden;
-  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
-}
+        /* ===== Base ===== */
+        html, body {
+            margin: 0;
+            font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
+        }
 
-/* ===== Hero Title Section ===== */
-.hero-title{
-  text-align:center;
-  padding: clamp(100px, 12vh, 160px) 20px 50px;
-  position:relative;
-  z-index:1;
-}
-.hero-title h1 {
-  font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #fff;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
-}
+        /* ===== Hero Title Section ===== */
+        .hero-title {
+            text-align: center;
+            padding: clamp(100px, 12vh, 160px) 20px 50px;
+            position: relative;
+            z-index: 1;
+        }
 
-.hero-title p{
-  font-size:1.08rem; color:#e6e6ef; opacity:.92;
-  max-width:740px; margin: 10px auto 0;
-}
-@@keyframes shimmer{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+            .hero-title h1 {
+                font-size: clamp(2.4rem, 4vw, 3.6rem);
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                color: #fff;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+            }
 
-/* ===== Page Section ===== */
-.page-wrap{ position:relative; padding: clamp(40px, 5vh, 70px) 18px 90px; }
+            .hero-title p {
+                font-size: 1.08rem;
+                color: #e6e6ef;
+                opacity: .92;
+                max-width: 740px;
+                margin: 10px auto 0;
+            }
 
-/* ===== Event Card ===== */
-.event-card{
-  width:min(1280px, 94vw);
-  margin:0 auto;
-  padding: clamp(18px, 2.2vw, 28px);
-  border-radius:22px;
-  border:1px solid var(--glass-brd);
-  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: var(--shadow);
-}
+        @@keyframes shimmer {
+            0% {
+                background-position: 0% 50%
+            }
 
-/* ===== Card Header ===== */
-h2.page-title{
-  margin:0; text-align:center;
-  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
-  font-weight:900;
-  background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 18px rgba(255,255,255,.18);
-}
-.subtitle{ text-align:center; margin-top:4px; color:#dcdce5; opacity:.9; font-size:.98rem; }
+            100% {
+                background-position: 200% 50%
+            }
+        }
 
-/* Divider */
-.hr{
-  height:1px; margin: 12px 0 10px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-  border:0;
-}
+        <!-- rest of styles unchanged -->
+        /* ===== Page Section ===== */
+        .page-wrap {
+            position: relative;
+            padding: clamp(40px, 5vh, 70px) 18px 90px;
+        }
 
-/* ===== Form Layout ===== */
-.form-grid{ display:grid; gap:14px; grid-template-columns: 1fr; }
-@@media (min-width:860px){ .form-grid{ grid-template-columns:1fr 1fr; } .col-span-2{ grid-column:1 / -1; } }
+        /* ===== Event Card ===== */
+        .event-card {
+            width: min(1280px, 94vw);
+            margin: 0 auto;
+            padding: clamp(18px, 2.2vw, 28px);
+            border-radius: 22px;
+            border: 1px solid var(--glass-brd);
+            background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            box-shadow: var(--shadow);
+        }
 
-/* Inputs */
-label{ font-weight:700; font-size:.95rem; color:#efefef; }
+        /* ===== Card Header ===== */
+        h2.page-title {
+            margin: 0;
+            text-align: center;
+            font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 18px rgba(255,255,255,.18);
+        }
 
-.input-wrap{
-  position:relative; display:flex; align-items:center; gap:10px;
-  border:1px solid rgba(255,255,255,.14);
-  background: linear-gradient(180deg, rgba(223, 223, 223, 0.08), rgba(255,255,255,.03));
-  border-radius:14px; padding:10px 12px;
-  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
-}
-.input-wrap:focus-within{
-  border-color: rgba(255,215,0,.70);
-  box-shadow:
-    0 0 0 6px rgba(255,215,0,.12),
-    0 8px 26px rgba(0,0,0,.28),
-    inset 0 0 22px rgba(255,215,0,.12);
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
-}
-.input-icon{ font-size:1.05rem; opacity:.9; }
+        .subtitle {
+            text-align: center;
+            margin-top: 4px;
+            color: #dcdce5;
+            opacity: .9;
+            font-size: .98rem;
+        }
 
-/* ===== Input Fix (consistent placeholder + no white box) ===== */
-.form-control:focus,
-input.form-control,
-textarea.form-control {
-  flex: 1;
-  background: transparent !important;
-  color: var(--ink) !important;
-  border: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-  font-size: 0.98rem;
-  padding: 8px 4px;
-  caret-color: var(--gold);
-}
+        /* Divider */
+        .hr {
+            height: 1px;
+            margin: 12px 0 10px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+            border: 0;
+        }
 
-/* ===== White placeholders (all browsers) ===== */
-.form-control::placeholder,
-input.form-control::placeholder,
-textarea.form-control::placeholder {
-  color: #fff !important;
-  opacity: 0.8 !important;
-}
+        /* ===== Form Layout ===== */
+        .form-grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: 1fr;
+        }
 
-.form-control::-webkit-input-placeholder {
-  color: #fff !important;
-  opacity: 0.8 !important;
-}
-.form-control:-ms-input-placeholder {
-  color: #fff !important;
-  opacity: 0.8 !important;
-}
-.form-control::-ms-input-placeholder {
-  color: #fff !important;
-  opacity: 0.8 !important;
-}
-.form-control::-moz-placeholder {
-  color: #fff !important;
-  opacity: 0.8 !important;
-}
+        @@media (min-width:860px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
 
-/* ===== Remove blue focus glow ===== */
-input:focus,
-textarea:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
+            .col-span-2 {
+                grid-column: 1 / -1;
+            }
+        }
 
-/* ===== Remove Chrome autofill white background ===== */
-input:-webkit-autofill,
-textarea:-webkit-autofill {
-  -webkit-text-fill-color: #fff !important;
-  caret-color: var(--gold);
-  transition: background-color 999999s ease-out, color 999999s ease-out;
-  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-  box-shadow: 0 0 0px 1000px transparent inset !important;
-}
+        /* Inputs */
+        label {
+            font-weight: 700;
+            font-size: .95rem;
+            color: #efefef;
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,.14);
+            background: linear-gradient(180deg, rgba(223, 223, 223, 0.08), rgba(255,255,255,.03));
+            border-radius: 14px;
+            padding: 10px 12px;
+            transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+        }
+
+            .input-wrap:focus-within {
+                border-color: rgba(255,215,0,.70);
+                box-shadow: 0 0 0 6px rgba(255,215,0,.12), 0 8px 26px rgba(0,0,0,.28), inset 0 0 22px rgba(255,215,0,.12);
+                background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+            }
+
+        .input-icon {
+            font-size: 1.05rem;
+            opacity: .9;
+        }
+
+        /* ===== Input Fix (consistent placeholder + no white box) ===== */
+        .form-control:focus,
+        input.form-control,
+        textarea.form-control {
+            flex: 1;
+            background: transparent !important;
+            color: var(--ink) !important;
+            border: 0 !important;
+            outline: none !important;
+            box-shadow: none !important;
+            font-size: 0.98rem;
+            padding: 8px 4px;
+            caret-color: var(--gold);
+        }
+
+            /* ===== White placeholders (all browsers) ===== */
+            .form-control::placeholder,
+            input.form-control::placeholder,
+            textarea.form-control::placeholder {
+                color: #fff !important;
+                opacity: 0.8 !important;
+            }
+
+        .form-control::-webkit-input-placeholder {
+            color: #fff !important;
+            opacity: 0.8 !important;
+        }
+
+        .form-control:-ms-input-placeholder {
+            color: #fff !important;
+            opacity: 0.8 !important;
+        }
+
+        .form-control::-ms-input-placeholder {
+            color: #fff !important;
+            opacity: 0.8 !important;
+        }
+
+        .form-control::-moz-placeholder {
+            color: #fff !important;
+            opacity: 0.8 !important;
+        }
+
+        /* ===== Remove blue focus glow ===== */
+        input:focus,
+        textarea:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ===== Remove Chrome autofill white background ===== */
+        input:-webkit-autofill,
+        textarea:-webkit-autofill {
+            -webkit-text-fill-color: #fff !important;
+            caret-color: var(--gold);
+            transition: background-color 999999s ease-out, color 999999s ease-out;
+            -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+            box-shadow: 0 0 0px 1000px transparent inset !important;
+        }
 
 
-/* Date/Time pickers */
-input[type="date"].form-control,
-input[type="time"].form-control{ color-scheme: dark; }
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator{ filter: invert(1) brightness(1.2); opacity: .85; }
+        /* Date/Time pickers */
+        input[type="date"].form-control,
+        input[type="time"].form-control {
+            color-scheme: dark;
+        }
 
-/* ===== Custom file field (matches other screens) ===== */
-.file-wrap{ position:relative; display:flex; align-items:center; gap:12px; }
-.file-native{
-  position:absolute; inset:0; opacity:0; cursor:pointer; /* full-area click */
-}
-.file-btn{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:.55rem 1rem;
-  border-radius:10px;
-  background:linear-gradient(135deg, rgba(255,215,0,.18), rgba(255,215,0,.08));
-  border:1px solid rgba(255,215,0,.45);
-  color:#FFD700; font-weight:800; letter-spacing:.2px;
-  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 20px rgba(0,0,0,.28);
-}
-.file-btn:hover{
-  transform: translateY(-1px);
-  background:#FFD700; color:#000; border-color:#FFD700;
-  box-shadow: 0 16px 32px rgba(255,215,0,.32);
-}
-.file-name{
-  flex:1; min-width:0; /* ellipsis */
-  color:#e9e9f2; opacity:.9; font-size:.95rem;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) brightness(1.2);
+            opacity: .85;
+        }
 
-/* Optional preview image */
-.file-preview{
-  display:none; margin-top:10px; max-height:140px;
-  border-radius:12px; border:1px solid var(--glass-brd);
-  box-shadow:0 10px 24px rgba(0,0,0,.28);
-  width:auto;
-}
+        /* ===== Custom file field (matches other screens) ===== */
+        .file-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-/* Buttons */
-.actions{ margin-top:14px; display:grid; gap:12px; }
-.btn-primary{
-  display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
-  color: var(--gold-ink);
-  border: 1px solid rgba(255,215,0,.5);
-  border-radius: 12px;
-  font-weight:900; font-size:.98rem;
-  padding:12px 16px; width:100%;
-  box-shadow:0 10px 26px rgba(255,215,0,.28);
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-}
-.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
+        .file-native {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer; /* full-area click */
+        }
 
-.btn-alt{
-  display:inline-flex; align-items:center; justify-content:center; gap:12px;
-  background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-  color:#fff; border:1px solid rgba(255,255,255,.18);
-  border-radius:12px; font-weight:800; font-size:.96rem;
-  padding:12px 16px; width:100%;
-  box-shadow:0 10px 24px rgba(0,0,0,.28);
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-  text-decoration:none;
-}
-.btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
+        .file-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: .55rem 1rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(255,215,0,.18), rgba(255,215,0,.08));
+            border: 1px solid rgba(255,215,0,.45);
+            color: #FFD700;
+            font-weight: 800;
+            letter-spacing: .2px;
+            transition: transform .15s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 20px rgba(0,0,0,.28);
+        }
 
-.hr-bottom{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 8px 0; }
-</style>
+            .file-btn:hover {
+                transform: translateY(-1px);
+                background: #FFD700;
+                color: #000;
+                border-color: #FFD700;
+                box-shadow: 0 16px 32px rgba(255,215,0,.32);
+            }
+
+        .file-name {
+            flex: 1;
+            min-width: 0; /* ellipsis */
+            color: #e9e9f2;
+            opacity: .9;
+            font-size: .95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Optional preview image */
+        .file-preview {
+            display: none;
+            margin-top: 10px;
+            max-height: 140px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-brd);
+            box-shadow: 0 10px 24px rgba(0,0,0,.28);
+            width: auto;
+        }
+
+        /* Buttons */
+        .actions {
+            margin-top: 14px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
+            color: var(--gold-ink);
+            border: 1px solid rgba(255,215,0,.5);
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: .98rem;
+            padding: 12px 16px;
+            width: 100%;
+            box-shadow: 0 10px 26px rgba(255,215,0,.28);
+            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 16px 38px rgba(255,215,0,.38);
+                filter: saturate(1.05);
+            }
+
+        .btn-alt {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+            color: #fff;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: .96rem;
+            padding: 12px 16px;
+            width: 100%;
+            box-shadow: 0 10px 24px rgba(0,0,0,.28);
+            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+            text-decoration: none;
+        }
+
+            .btn-alt:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 16px 36px rgba(0,0,0,.38);
+            }
+
+        .hr-bottom {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+            margin: 8px 0;
+        }
+    </style>
 }
 
 <!-- ===== Hero Title ===== -->
 <section class="hero-title">
-  <h1>Create a New Event</h1>
-  <p>Plan and share upcoming gatherings, services, or community events that bring people together.</p>
+    <h1>Create a New Event</h1>
+    <p>Plan and share upcoming gatherings, services, or community events that bring people together.</p>
 </section>
 
 <!-- ===== Event Form ===== -->
 <div class="page-wrap">
-  <div class="event-card">
-    <h2 class="page-title">Add Event Details</h2>
-    <p class="subtitle">Provide a name, short description, and event poster below.</p>
+    <div class="event-card">
+        <h2 class="page-title">Add Event Details</h2>
+        <p class="subtitle">Provide a name, short description, and event poster below.</p>
 
-    <hr class="hr"/>
+        <hr class="hr" />
 
-    <form asp-action="AddEvent" method="post" enctype="multipart/form-data" novalidate>
-      <div class="form-grid">
-        <!-- Name -->
-        <div class="col-span-2">
-          <label>Event Name</label>
-          <div class="input-wrap">
-            <i class="bi bi-type input-icon"></i>
-            <input asp-for="Name" class="form-control" required placeholder="e.g., Youth Worship Night"/>
-          </div>
-        </div>
+        <form asp-action="AddEvent" method="post" enctype="multipart/form-data" novalidate>
+            <div class="form-grid">
+                <!-- Name -->
+                <div class="col-span-2">
+                    <label>Event Name</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-type input-icon"></i>
+                        <input asp-for="Name" class="form-control" required placeholder="e.g., Youth Worship Night" />
+                    </div>
+                </div>
 
-        <!-- Description -->
-        <div class="col-span-2">
-          <label>Description</label>
-          <div class="input-wrap">
-            <i class="bi bi-card-text input-icon"></i>
-            <textarea asp-for="Description" class="form-control" required placeholder="Brief details about the event..."></textarea>
-          </div>
-        </div>
+                <!-- Description -->
+                <div class="col-span-2">
+                    <label>Description</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-card-text input-icon"></i>
+                        <textarea asp-for="Description" class="form-control" required placeholder="Brief details about the event..."></textarea>
+                    </div>
+                </div>
 
-        <!-- Date -->
-        <div>
-          <label>Date</label>
-          <div class="input-wrap">
-            <i class="bi bi-calendar-event input-icon"></i>
-            <input asp-for="Date" type="date" class="form-control" required/>
-          </div>
-        </div>
+                <!-- Date -->
+                <div>
+                    <label>Date</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-calendar-event input-icon"></i>
+                        <input asp-for="Date" type="date" class="form-control" required />
+                    </div>
+                </div>
 
-        <!-- Time -->
-        <div>
-          <label>Time</label>
-          <div class="input-wrap">
-            <i class="bi bi-clock input-icon"></i>
-            <input asp-for="Time" type="time" class="form-control" required/>
-          </div>
-        </div>
+                <!-- Time -->
+                <div>
+                    <label>Time</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-clock input-icon"></i>
+                        <input asp-for="Time" type="time" class="form-control" required />
+                    </div>
+                </div>
 
-        <!-- Image (custom file control) -->
-        <div class="col-span-2">
-          <label>Event Poster</label>
-          <div class="input-wrap file-wrap">
-            <i class="bi bi-image input-icon"></i>
+                <!-- Image (custom file control) -->
+                <div class="col-span-2">
+                    <label>Event Poster</label>
+                    <div class="input-wrap file-wrap">
+                        <i class="bi bi-image input-icon"></i>
 
-            <!-- Invisible native input covering the whole wrap -->
-            <input type="file" id="imageFile" class="file-native" accept="image/*"/>
+                        <!-- Invisible native input covering the whole wrap -->
+                        <!-- id changed from "imageFile" to "eventImageFile" to avoid duplicate id conflicts -->
+                        <input type="file" id="eventImageFile" class="file-native" accept="image/*" />
 
-            <!-- Visible custom controls -->
-            <button type="button" class="file-btn">
-              <i></i> Choose File
-            </button>
-            <span id="fileName" class="file-name">No file chosen</span>
-          </div>
+                        <!-- Visible custom controls -->
+                        <button type="button" class="file-btn">
+                            <i></i> Choose File
+                        </button>
+                        <span id="fileName" class="file-name">No file chosen</span>
+                    </div>
 
-          <!-- Hidden URL for base64 -->
-          <input type="hidden" asp-for="ImageUrl" id="ImageUrl"/>
+                    <!-- Hidden URL for base64 -->
+                    <!-- id changed from "ImageUrl" to "eventImageUrl" to avoid duplicate id conflicts; keep asp-for for model binding -->
+                    <input type="hidden" asp-for="ImageUrl" id="eventImageUrl" />
 
-          <!-- Optional preview -->
-          <img id="posterPreview" class="file-preview" alt="Poster preview"/>
-        </div>
-      </div>
+                    <!-- Optional preview -->
+                    <img id="posterPreview" class="file-preview" alt="Poster preview" />
+                </div>
+            </div>
 
-      <div class="actions">
-        <button type="submit" class="btn-primary">
-          <i></i> Save Event
-        </button>
+            <div class="actions">
+                <button type="submit" class="btn-primary">
+                    <i></i> Save Event
+                </button>
 
-        <div class="hr-bottom"></div>
+                <div class="hr-bottom"></div>
 
-        <a class="btn-alt" href="@Url.Action("Index","Events")">
-          <i class="bi bi-calendar2-week"></i> View All Events
-        </a>
-      </div>
-    </form>
-  </div>
+                <a class="btn-alt" href="@Url.Action("Index", "Events")">
+                    <i class="bi bi-calendar2-week"></i> View All Events
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
-<script>
-  // Custom file field: show name, preview, and set hidden base64
-  const fileInput = document.getElementById("imageFile");
-  const fileNameEl = document.getElementById("fileName");
-  const hiddenUrl = document.getElementById("ImageUrl");
-  const previewImg = document.getElementById("posterPreview");
+    <script>
+        // Custom file field: show name, preview, and set hidden base64
+        // selectors updated to match the new unique IDs
+        const fileInput = document.getElementById("eventImageFile");
+        const fileNameEl = document.getElementById("fileName");
+        const hiddenUrl = document.getElementById("eventImageUrl");
+        const previewImg = document.getElementById("posterPreview");
 
-  fileInput?.addEventListener("change", (e) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      fileNameEl.textContent = "No file chosen";
-      hiddenUrl.value = "";
-      if (previewImg){ previewImg.style.display = "none"; previewImg.src = ""; }
-      return;
-    }
+        fileInput?.addEventListener("change", (e) => {
+          const file = e.target.files?.[0];
+          if (!file) {
+            if (fileNameEl) fileNameEl.textContent = "No file chosen";
+            if (hiddenUrl) hiddenUrl.value = "";
+            if (previewImg){ previewImg.style.display = "none"; previewImg.src = ""; }
+            return;
+          }
 
-    // Show filename
-    fileNameEl.textContent = file.name;
+          // Show filename
+          if (fileNameEl) fileNameEl.textContent = file.name;
 
-    // Read -> base64 + preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      hiddenUrl.value = reader.result;
-      if (previewImg){
-        previewImg.src = reader.result;
-        previewImg.style.display = "block";
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-</script>
+          // Read -> base64 + preview
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            if (hiddenUrl) hiddenUrl.value = reader.result;
+            if (previewImg){
+              previewImg.src = reader.result;
+              previewImg.style.display = "block";
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+
+        // Optional: allow clicking the visible button to open native file dialog (defensive)
+        document.querySelectorAll('.file-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (fileInput) fileInput.click();
+          });
+        });
+    </script>
 }
