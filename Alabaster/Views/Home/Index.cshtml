@@ -1,302 +1,415 @@
-﻿@* @{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 
 @section Styles {
-<style>
-/* =============== GLOBAL =============== */
-body {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
-    background-color: #000;
-    color: #fff;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #FFD700;
+            --gold2: #FFB300;
+            --ink: #fff;
+            --muted: #d1d1d1;
+            --shadow-ink-weak: 0 2px 6px rgba(0,0,0,.85);
+            --shadow-ink-strong: 0 3px 10px rgba(0,0,0,.92), 0 8px 26px rgba(0,0,0,.55);
+        }
+
+        /* ===== BASE ===== */
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins','Segoe UI',sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            /* Global readable shadow for most text */
+            text-shadow: var(--shadow-ink-weak);
+        }
+
+        /* Make sure literally all common text elements are white + shadow */
+        h1, h2, h3, h4, h5, h6, p, a, li, span, small, label, summary, button, dt, dd, figcaption, .name, .strip .item span, .faq * {
+            color: #fff !important;
+            text-shadow: var(--shadow-ink-weak);
+        }
+
+        /* ===== LAYOUT ===== */
+        section {
+            padding: 68px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+            flex-wrap: wrap;
+            text-align: left;
+        }
+
+            section.compact {
+                padding: 36px 20px;
+            }
+
+            section:nth-of-type(even):not(.compact) {
+                flex-direction: row-reverse;
+            }
+
+            section img {
+                width: 460px;
+                height: 360px;
+                object-fit: cover;
+                border-radius: 18px;
+                box-shadow: 0 10px 34px rgba(0,0,0,.45);
+            }
+
+            section .content {
+                max-width: 620px;
+            }
+
+        /* ===== HEADINGS (white + strong black shadow) ===== */
+        h1, h2 {
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            /* remove gradient fill and use solid white for stronger contrast */
+            background: none !important;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+            color: #fff !important;
+            text-shadow: var(--shadow-ink-strong);
+            margin: 0 0 .6rem;
+        }
+
+        h1 {
+            font-size: clamp(2.2rem,4.8vw,3.2rem);
+            text-align: center;
+            width: 100%;
+        }
+
+        h2 {
+            font-size: clamp(1.6rem,3.6vw,2.2rem);
+        }
+
+        /* Paragraphs remain white with subtle shadow for readability */
+        p {
+            font-size: 1.03rem;
+            line-height: 1.7;
+            color: #fff !important; /* override muted */
+            margin: 0 0 .8rem;
+        }
+
+        /* ===== BUTTON ===== */
+        .btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 10px 26px;
+            font-weight: 600;
+            border-radius: 42px;
+            text-decoration: none;
+            color: #111; /* keep legible on gold */
+            background: linear-gradient(135deg,var(--gold),var(--gold2));
+            box-shadow: 0 8px 22px rgba(0,0,0,.45);
+            transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 34px rgba(0,0,0,.55);
+                filter: brightness(1.05);
+            }
+
+        /* ===== MINI STRIP (Quick Links) ===== */
+        .strip {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(160px,1fr));
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+            .strip .item {
+                display: grid;
+                place-items: center;
+                gap: 6px;
+                text-align: center;
+                padding: 10px 8px;
+                border-radius: 12px;
+                border: 1px solid rgb(255, 255, 255);
+                background: linear-gradient(180deg, rgba(10, 10, 10, 0), rgba(255,255,255,.06));
+                transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
+            }
+
+                .strip .item:hover {
+                    transform: translateY(-2px);
+                    border-color: rgba(255,215,0,.45);
+                    box-shadow: 0 12px 32px rgba(0,0,0,.5);
+                }
+
+            .strip i {
+                font-size: 1.2rem;
+                opacity: .95;
+            }
+
+        /* ===== TESTIMONIES HIGHLIGHTS ===== */
+        .quotes {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 14px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .quote {
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 14px;
+            padding: 16px 14px;
+            background: linear-gradient(180deg, rgba(8, 8, 8, 0.319), rgba(255,255,255,.06));
+            box-shadow: 0 10px 28px rgba(0,0,0,.5);
+        }
+
+            .quote p {
+                margin: 0;
+                font-size: .98rem;
+            }
+
+            .quote .name {
+                margin-top: 8px;
+                font-size: .9rem;
+                opacity: .95;
+            }
+
+        /* ===== FAQ – HIGH VISIBILITY ===== */
+        .faq {
+            width: 100%;
+            max-width: 900px;
+        }
+
+            .faq details {
+                border: 1px solid rgba(255, 217, 0, 0.212);
+                border-radius: 15px;
+                background: linear-gradient(180deg, rgba(8, 8, 8, 0.067), rgba(22, 22, 22, 0.149));
+                padding: 14px 16px;
+                margin-bottom: 12px;
+                box-shadow: 0 12px 28px rgba(0,0,0,.55);
+                transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+            }
+
+                .faq details[open] {
+                    border-color: rgb(255, 255, 255);
+                    box-shadow: 0 16px 36px rgba(121, 121, 121, 0.33);
+                    background: linear-gradient(180deg, rgba(162, 162, 162, 0.297), rgba(26, 26, 26, 0.39));
+                }
+
+            .faq summary {
+                cursor: pointer;
+                font-weight: 300;
+                font-size: 1.08rem;
+                padding-right: 32px;
+                list-style: none;
+                outline: none;
+                position: relative;
+                color: #fff !important;
+                text-shadow: var(--shadow-ink-strong);
+            }
+
+                /* Chevron indicator */
+                .faq summary::after {
+                    content: "›";
+                    position: absolute;
+                    right: 6px;
+                    top: 50%;
+                    transform: translateY(-50%) rotate(90deg);
+                    font-size: 1.4rem;
+                    line-height: 1;
+                    opacity: .95;
+                    transition: transform .2s ease;
+                }
+
+            .faq details[open] summary::after {
+                transform: translateY(-50%) rotate(270deg);
+            }
+
+            /* FAQ body text */
+            .faq p {
+                margin-top: 10px;
+                font-size: 1rem;
+                opacity: .98;
+            }
+
+        /* ===== VIDEO ===== */
+        .video-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 6px auto 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(0,0,0,.65);
+            border: 1px solid rgba(255,215,0,.35);
+        }
+
+            .video-container iframe {
+                width: 100%;
+                height: 460px;
+                border: 0;
+            }
+
+        /* ===== ANIMATIONS (retrigger) ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(42px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+            .reveal.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        .fade-left {
+            transform: translateX(-64px);
+            opacity: 0;
+            transition: all .8s ease;
+        }
+
+        .fade-right {
+            transform: translateX(64px);
+            opacity: 0;
+            transition: all .8s ease;
+        }
+
+            .fade-left.show, .fade-right.show {
+                transform: none;
+                opacity: 1;
+            }
+
+        /* ===== RESPONSIVE ===== */
+        @@media (max-width:1024px) {
+            section img {
+                width: 48vw;
+                height: 38vw;
+                max-width: 520px;
+                max-height: 420px;
+            }
+        }
+
+        @@media (max-width:900px) {
+            section {
+                flex-direction: column !important;
+                text-align: center;
+                gap: 22px;
+            }
+
+                section .content {
+                    text-align: center;
+                }
+
+                section img {
+                    width: 92%;
+                    height: 280px;
+                }
+
+            .quotes {
+                grid-template-columns: 1fr;
+            }
+
+            .strip {
+                grid-template-columns: repeat(2,1fr);
+            }
+        }
+    </style>
 }
 
-/* PAGE OVERLAY */
-.page-overlay {
-    padding: 80px 15px;
-    position: auto;
-    z-index: 1;
-}
 
-.page-overlay::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: -1;
-}
+<div class="page-overlay">
 
-/* ===== PARTICLES ===== */
-#particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: -1;
-}
-
-.particle {
-    position: absolute;
-    background: rgba(255, 215, 0, 0.8);
-    border-radius: 50%;
-    filter: blur(2px);
-    animation: float 12s linear infinite;
-}
-
-@@keyframes float {
-    0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    100% { transform: translateY(-10vh) translateX(50vw) rotate(360deg); opacity: 0; }
-}
-
-/* ===== HERO SECTION ===== */
-.hero {
-    padding: 160px 20px 100px 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.hero h1 {
-    font-size: 4rem;
-    font-weight: 900;
-    background: linear-gradient(90deg, #FFD700, #FFAA00, #ffffff);
-    -webkit-background-clip: text;
-    color: transparent;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
-    animation: shimmer 5s linear infinite;
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-}
-
-.hero p {
-    font-size: 1.5rem;
-    line-height: 1.6;
-    margin-bottom: 2.5rem;
-    max-width: 750px;
-    margin-left: auto;
-    margin-right: auto;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-}
-
-.hero-cta {
-    display: inline-block;
-    padding: 1rem 2.5rem;
-    background: linear-gradient(135deg, #FFD700, #FFAA00);
-    color: #000;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 1.3rem;
-    font-weight: 800;
-    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
-    transition: all 0.3s ease;
-}
-
-.hero-cta:hover {
-    transform: translateY(-3px) scale(1.08);
-    box-shadow: 0 14px 35px rgba(255, 215, 0, 0.7);
-}
-
-/* ===== SECTIONS ===== */
-.section {
-    padding: 100px 20px;
-    text-align: center;
-    position: relative;
-}
-
-.section h2 {
-    font-size: 2.8rem;
-    font-weight: 900;
-    margin-bottom: 40px;
-    color: #FFD700;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-    text-transform: uppercase;
-}
-
-.section p {
-    font-size: 1.3rem;
-    max-width: 900px;
-    margin: 0 auto;
-    line-height: 1.7;
-    color: #eee;
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
-}
-
-
-/* ===== MISSION & VISION CARDS ===== */
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.card {
-    background: rgba(255, 215, 0, 0.1);
-    border: 2px solid #FFD700;
-    border-radius: 20px;
-    padding: 2rem;
-    width: 300px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card h3 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #FFD700;
-}
-
-.card p {
-    font-size: 1.1rem;
-    color: #fff;
-}
-
-.card:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 15px 50px rgba(255, 215, 0, 0.6);
-}
-
-/* ===== BUTTONS ===== */
-.section a.btn {
-    display: inline-block;
-    margin-top: 2rem;
-    padding: 14px 32px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 1.2rem;
-    text-decoration: none;
-    background: linear-gradient(135deg, #FFD700, #FFAA00);
-    color: #000;
-    box-shadow: 0 8px 20px rgba(255, 170, 0, 0.5);
-    transition: all 0.3s ease;
-}
-
-.section a.btn:hover {
-    transform: translateY(-3px) scale(1.08);
-    box-shadow: 0 14px 35px rgba(255, 170, 0, 0.7);
-}
-
-/* ===== SHIMMER ANIMATION ===== */
-@@keyframes shimmer {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-}
-
-/* ===== RESPONSIVE ===== */
-@@media (max-width: 992px) {
-    .hero h1 { font-size: 2.8rem; }
-    .hero p, .section p { font-size: 1.1rem; }
-    .section h2 { font-size: 2.2rem; }
-    .hero-cta { font-size: 1rem; padding: 10px 22px; }
-    .cards-container { flex-direction: column; align-items: center; }
-}
-
-@@media (max-width: 768px) {
-    .hero h1 { font-size: 2.2rem; }
-    .hero p, .section p { font-size: 1rem; }
-    .section h2 { font-size: 1.8rem; }
-    .hero-cta { font-size: 0.9rem; padding: 8px 18px; }
-}
-
-/* ===== SPARKLES ===== */
-.sparkle {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: rgba(255, 215, 0, 0.9);
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
-    pointer-events: none;
-    animation: sparkleAnim linear infinite;
-    z-index: 0;
-}
-
-@@keyframes sparkleAnim {
-    0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    50% { transform: translateY(-25px) scale(1); opacity: 1; }
-    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
-}
-</style>
-}
-
-<!-- ===== PARTICLES ===== -->
-<div id="particles"></div>
-
-<!-- ===== PAGE OVERLAY ===== -->
-<div class="page-overlay text-center">
-
-    <!-- ===== HERO ===== -->
-    <div class="hero">
-        <h1>Welcome to Alabaster Box</h1>
-        <p>Your place of worship, inspiration, and spreading the Good News through acts of love and service.</p>
-        <a href="/Donate" class="hero-cta">Support Our Ministry</a>
-    </div>
-
-    <!-- ===== ABOUT SECTION ===== -->
-    <div class="section" id="about">
-        <h2>About Alabaster Box</h2>
-        <p>
-            Alabaster Box Anointing Ministries is committed to inspiring, teaching, and guiding people to live in faith, love, and purpose. 
-            We create opportunities to worship, learn, volunteer, and share blessings with our community.
-        </p>
-        <a class="btn" asp-controller="AboutUs" asp-action="Index">Learn More</a>
-    </div>
-
-    <!-- ===== MISSION & VISION ===== -->
-    <div class="section" id="mission">
-        <h2>Our Mission & Vision</h2>
-        <div class="cards-container">
-            <div class="card">
-                <h3>Our Mission</h3>
-                <p>To bring the light of Christ into every life through teaching, community outreach, and acts of love.</p>
-            </div>
-            <div class="card">
-                <h3>Our Vision</h3>
-                <p>To create a community of faith, hope, and service where everyone can experience God's love daily.</p>
-            </div>
+    <!-- HERO (tight) -->
+    <section class="compact" style="flex-direction: column; text-align: center;">
+        <div class="content reveal">
+            <h1>Welcome to Alabaster Box Anointing Ministries</h1>
+            <p>Discover a sacred space of faith, hope, and love. Our ministry exists to uplift, inspire, and guide you to live out God’s word in every moment of your life.</p>
+            <a href="/Donate" class="btn">Support Our Ministry</a>
         </div>
+    </section>
+
+    <!-- QUICK LINKS STRIP (fills empty space neatly) -->
+@* <section class="compact" style="flex-direction: column; text-align:center;">
+    <div class="strip reveal">
+      <a class="item" href="/Prayer/Index"><i class="bi bi-info-circle"></i><span>Prayer</span></a>
+      <a class="item" href="/Donate"><i class="bi bi-heart"></i><span>Donate</span></a>
     </div>
+  </section> *@
 
-    <!-- ===== EVENTS / TEACHINGS ===== -->
-    <div class="section" id="events">
-        <h2>Join Our Events & Teachings</h2>
-        <p>We host worship services, volunteer events, and teaching sessions to help you grow spiritually and connect with others.</p>
-        <a href="/Events" class="btn">See Upcoming Events</a>
-    </div>
-</div>
-<!-- ===== youtube account text ===== -->
-<div class="section" id="events">
-    <h2>Join Our online Sermons </h2>
-    <p>
-        We host worship services, volunteer events and live teachings on our YouTube channel.
-        Subscribe to our channel to get notified when we go live and to watch past sermons, worship sessions,
-        and community outreach videos anytime.
-    </p>
+    <!-- ABOUT -->
+    <section>
+        <img src="~/images/imgthree.jpg" alt="About Alabaster Box" class="fade-left reveal">
+        <div class="content fade-right reveal">
+            <h2>About Alabaster Box</h2>
+            <p>Alabaster Box Anointing Ministries is built on compassion and purpose. We provide opportunities for worship, teaching, outreach, and personal growth through the Word of God. Our heart is to serve and equip every believer to walk boldly in their calling.</p>
+            <a href="/AboutUs" class="btn">Learn More</a>
+        </div>
+    </section>
 
-    <!-- Link to YouTube channel (opens in new tab) -->
-    <a class="btn" href="https://www.youtube.com/channel/UCFqkqWkSvJ_hm0m2whwGZWQ" target="_blank" rel="noopener noreferrer">
-        Watch on YouTube
-    </a>
-</div>
+    <!-- MISSION -->
+    <section>
+        <img src="~/images/imgtwo.jpg" alt="Our Mission" class="fade-right reveal">
+        <div class="content fade-left reveal">
+            <h2>Our Mission</h2>
+            <p>To share the gospel of Christ through worship, discipleship, and acts of love, bringing hope to every heart. Every service, outreach, and prayer moment aims to glorify God and uplift His people.</p>
+        </div>
+    </section>
+
+    <!-- VISION -->
+    <section>
+        <img src="~/images/imgone.jpg" alt="Our Vision" class="fade-left reveal">
+        <div class="content fade-right reveal">
+            <h2>Our Vision</h2>
+            <p>We envision a faith-filled community where lives are transformed through the power of God’s Word, empowered to impact families, cities, and nations for His glory.</p>
+        </div>
+    </section>
+
+    <!-- OUTREACH -->
+    <section>
+        <img src="~/images/imgfour.jpg" alt="Community Outreach" class="fade-right reveal">
+        <div class="content fade-left reveal">
+            <h2>Community & Outreach</h2>
+            <p>Faith in action — that’s our call. Through feeding programs, youth mentorship, and acts of kindness, we live out God’s love daily. Be part of the change that brings hope to our communities.</p>
+            <a href="/Events/Volunteer" class="btn">Join Our Outreach</a>
+        </div>
+    </section>
+
+    <!-- TEACHINGS -->
+    <section>
+        <img src="~/images/teachings.jpg" alt="Worship and Teaching" class="fade-left reveal">
+        <div class="content fade-right reveal">
+            <h2>Teachings & Worship</h2>
+            <p>Our gatherings are filled with God’s presence. Every sermon, song, and prayer seeks to strengthen your faith and fill you with His peace. Join us weekly for powerful teachings and worship sessions.</p>
+            <a href="/Events" class="btn">View Upcoming Services</a>
+        </div>
+    </section>
+
+    <!-- YOUTUBE (tight spacing) -->
+    <section class="compact" style="flex-direction: column; text-align: center;">
+        <div class="content reveal">
+            <h2>Watch Our Latest Sermon</h2>
+            <p>Can’t make it in person? Connect with us online. Subscribe to our YouTube channel to watch live and archived sermons that will inspire your journey with Christ.</p>
+        </div>
+        <div class="video-container reveal">
+            @if (!string.IsNullOrEmpty((string?)ViewBag.YouTubeVideoId))
+            {
+                <iframe src="https://www.youtube.com/embed/@(ViewBag.YouTubeVideoId)?rel=0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            }
+            else
+            {
+                <iframe src="https://www.youtube.com/embed/UCFqkqWkSvJ_hm0m2whwGZWQ?rel=0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            }
+        </div>
+        <!-- ====== YOUTUBE PLAYER +===== -->
+        <div class="player-section" style="padding: 40px 20px; text-align:center;">
 
 
-<!-- ====== YOUTUBE PLAYER +===== -->
-<div class="player-section" style="padding: 40px 20px; text-align:center;">
-
-
-    <!-- Player area -->
+            @* <!-- Player area -->
     @if (!string.IsNullOrEmpty((string?)ViewBag.YouTubeVideoId))
     {
         <div class="player-container" role="region" aria-label="Live / Latest video">
@@ -319,426 +432,69 @@ body {
         </div>
     }
 </div>
+  </section> *@
+
+            <!-- TESTIMONY HIGHLIGHTS (fills vertical gaps) -->
+            <section class="compact" style="flex-direction: column; text-align:center;">
+                <div class="content reveal" style="max-width:900px;">
+                    <h2>Testimony Highlights</h2>
+                    <p>Stories of healing, restoration, and hope — be encouraged by what God is doing in our community.</p>
+                </div>
+                <div class="quotes reveal">
+                    <div class="quote">
+                        <p>“I walked in burdened and left renewed — God met me in worship.”</p>
+                        <div class="name">— N.D.</div>
+                    </div>
+                    <div class="quote">
+                        <p>“Our family experienced breakthrough after the prayer team stood with us.”</p>
+                        <div class="name">— P.M.</div>
+                    </div>
+                    <div class="quote">
+                        <p>“Serving at the outreach reminded me how powerful love in action is.”</p>
+                        <div class="name">— S.K.</div>
+                    </div>
+                </div>
+                <a href="/Testimonies" class="btn" style="margin-top:12px;">Read More Testimonies</a>
+            </section>
+
+
+            <!-- FAQ + CONNECT (slim, fills bottom gap) -->
+            <section class="compact" style="flex-direction: column; text-align: left;">
+                <div class="content reveal" style="max-width:900px; margin: 0 auto;">
+                    <h2 style="text-align:center;">Frequently Asked Questions</h2>
+                    <div class="faq">
+                        <details class="reveal">
+                            <summary>What time are services?</summary>
+                            <p>Please see our Events page for the latest service and teaching times.</p>
+                        </details>
+                        <details class="reveal">
+                            <summary>How do I volunteer?</summary>
+                            <p>Head to the Volunteer page, choose an event, and submit the quick form — our team will contact you.</p>
+                        </details>
+                        <details class="reveal">
+                            <summary>How can I give?</summary>
+                            <p>Use the Donate page for once-off or recurring giving. Thank you for partnering with us!</p>
+                        </details>
+                    </div>
+
+                </div>
+            </section>
+        </div>
 
 @section Scripts {
-<script>
-/* ===== PARTICLE EFFECT ===== */
-const particleContainer = document.getElementById('particles');
-
-function createParticle() {
-    const particle = document.createElement('div');
-    particle.classList.add('particle');
-    const size = Math.random() * 6 + 2;
-    particle.style.width = size + 'px';
-    particle.style.height = size + 'px';
-    particle.style.left = Math.random() * window.innerWidth + 'px';
-    particle.style.animationDuration = (5 + Math.random() * 10) + 's';
-    particle.style.background = `rgba(255,215,0,${Math.random() * 0.6 + 0.3})`;
-    particleContainer.appendChild(particle);
-
-    setTimeout(() => {
-        particle.remove();
-    }, 15000);
-}
-
-setInterval(createParticle, 150);
-
-/* ===== SPARKLES EFFECT ===== */
-function createSparkle() {
-    const sparkle = document.createElement('div');
-    sparkle.classList.add('sparkle');
-    sparkle.style.left = Math.random() * window.innerWidth + 'px';
-    sparkle.style.top = Math.random() * window.innerHeight + 'px';
-    sparkle.style.animationDuration = (5 + Math.random() * 5) + 's';
-    document.body.appendChild(sparkle);
-    setTimeout(() => sparkle.remove(), 10000);
-}
-
-setInterval(createSparkle, 200);
-</script>
-} *@
-
-
-
-@{
-    ViewData["Title"] = "Home Page";
-}
-
-@section Styles {
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-/* =============== GLOBAL =============== */
-:root {
-  --gold: #0a0a08;
-  --gold2: #43310e;
-}
-
-* { box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: "Poppins", "Lexend Giga", system-ui, sans-serif;
-  background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
-  color: #fff;
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-  margin: 0;
-
-  /* one-at-a-time scroll */
-  scroll-snap-type: y mandatory;
-}
-
-/* === Center each fullpage section === */
-.fullpage{
-  min-height: 100svh;
-  padding: 0;                 /* remove extra vertical padding */
-  display: grid;
-  place-items: center;        /* vertical + horizontal center */
-  scroll-snap-align: start;
-  opacity: 0; visibility: hidden; pointer-events: none; transform: scale(.985);
-  transition: opacity .45s ease, transform .45s ease, visibility .45s step-end;
-}
-.fullpage.is-active{ opacity:1; visibility:visible; pointer-events:auto; transform:none; }
-
-/* Center the content block inside each section */
-.fullpage > .container{
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  justify-items: center;      /* center headings, text, buttons, cards */
-  text-align: center;
-  gap: 18px;                  /* tidy spacing between elements */
-}
-
-/* Tighten section/hero padding so true center is achieved */
-.hero{ padding: 0; }
-.section{ padding: 0; }
-
-/* Keep paragraphs nicely contained in the middle */
-.hero p,
-.section p{ margin-left:auto; margin-right:auto; }
-
-/* Cards already centered; ensure the row itself sits centered */
-.cards-container{ justify-content: center; }
-
-/* YouTube wrapper centered */
-section.fullpage .container [role="region"][aria-label="Live / Latest video"]{
-  margin-left: auto; margin-right: auto;
-}
-
-
-/* ========================= CONTAINERS ========================= */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* ========================= PARTICLES ========================= */
-#particles {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.particle {
-  position: absolute;
-  background: rgba(247, 246, 244, 0.8);
-  border-radius: 50%;
-  filter: blur(2px);
-  animation: float 12s linear infinite;
-}
-
-@@keyframes float {
-  0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translateY(-10vh) translateX(50vw) rotate(360deg); opacity: 0; }
-}
-
-/* ========================= PAGE CONTENT WRAPPER ========================= */
-.page-overlay {
-  padding: 0; /* fullpage sections control their own spacing */
-  position: relative;
-  z-index: 1;
-}
-.page-overlay::before { content: none !important; }
-
-/* ========================= HERO ========================= */
-.hero {
-  padding: clamp(120px, 18vh, 180px) 0 80px;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 800;
-  background: linear-gradient(90deg, var(--gold), var(--gold2), #fff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin: 0 0 1rem;
-  animation: shimmer 5s linear infinite;
-  text-shadow: 0 0 30px rgba(255, 140, 0, 0.3);
-}
-
-.hero p {
-  font-size: clamp(1rem, 2.1vw, 1.3rem);
-  line-height: 1.7;
-  max-width: 750px;
-  margin: 0 auto 2rem;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
-}
-
-.hero-cta {
-  display: inline-block;
-  padding: 1rem 2.5rem;
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
-  color: #fff;
-  text-decoration: none;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
-  transition: all 0.3s ease;
-}
-.hero-cta:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 14px 35px rgba(255, 215, 0, 0.7);
-}
-
-/* ========================= SECTIONS ========================= */
-.section {
-  padding: 90px 0;
-  text-align: center;
-}
-
-.section h2 {
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
-  font-weight: 800;
-  margin-bottom: 30px;
-  color: var(--gold);
-  text-transform: uppercase;
-  text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-}
-
-.section p {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  max-width: 900px;
-  margin: 0 auto;
-  line-height: 1.75;
-  color: #f1f1f1;
-}
-
-/* ========================= CARDS ========================= */
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 24px;
-  margin-top: 28px;
-}
-
-.card {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 215, 0, 0.35);
-  border-radius: 18px;
-  padding: 24px;
-  width: min(100%, 320px);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-.card h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0 0 10px;
-  color: var(--gold);
-}
-.card p { font-size: 1rem; color: #fff; margin: 0; }
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-  border-color: var(--gold);
-}
-
-/* ========================= BUTTONS ========================= */
-.section a.btn {
-  display: inline-block;
-  margin-top: 22px;
-  padding: 12px 28px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 1rem;
-  text-decoration: none;
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
-  color: #fdfdfd;
-  box-shadow: 0 10px 24px rgba(255, 170, 0, 0.45);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.section a.btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 36px rgba(255, 170, 0, 0.6);
-}
-
-/* ========================= ANIMATIONS ========================= */
-@@keyframes shimmer {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-/* ========================= SCROLL REVEAL ========================= */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px) scale(0.98);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.show {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-@@media (prefers-reduced-motion: reduce) {
-  .reveal { transition: none; }
-}
-</style>
-}
-
-<!-- PARTICLES -->
-<div id="particles" aria-hidden="true"></div>
-
-<!-- PAGE CONTENT -->
-<div class="page-overlay">
-
-  <!-- HERO -->
-  <section class="fullpage">
-    <div class="hero container reveal">
-      <h1>Welcome to Alabaster Box</h1>
-      <p>Your place of worship, inspiration, and spreading the Good News through acts of love and service.</p>
-      <a href="/Donate" class="hero-cta">Support Our Ministry</a>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="fullpage" id="about">
-    <div class="section container reveal">
-      <h2>About Alabaster Box</h2>
-      <p>Alabaster Box Anointing Ministries is committed to inspiring, teaching, and guiding people to live in faith, love, and purpose. We create opportunities to worship, learn, volunteer, and share blessings with our community.</p>
-      <a class="btn" asp-controller="AboutUs" asp-action="Index">Learn More</a>
-    </div>
-  </section>
-
-  <!-- MISSION & VISION -->
-  <section class="fullpage" id="mission">
-    <div class="section container reveal">
-      <h2>Our Mission & Vision</h2>
-      <div class="cards-container">
-        <div class="card">
-          <h3>Our Mission</h3>
-          <p>To bring the light of Christ into every life through teaching, community outreach, and acts of love.</p>
-        </div>
-        <div class="card">
-          <h3>Our Vision</h3>
-          <p>To create a community of faith, hope, and service where everyone can experience God's love daily.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- EVENTS -->
-  <section class="fullpage" id="events">
-    <div class="section container reveal">
-      <h2>Join Our Events & Teachings</h2>
-      <p>We host worship services, volunteer events, and teaching sessions to help you grow spiritually and connect with others.</p>
-      <a href="/Events" class="btn">See Upcoming Events</a>
-    </div>
-  </section>
-
-  <!-- YOUTUBE -->
-  <section class="fullpage" id="youtube">
-    <div class="section container reveal">
-      <h2>Join Our Online Sermons</h2>
-      <p>We host worship services, volunteer events, and live teachings on our YouTube channel. Subscribe to get notified when we go live and to watch past sermons, worship sessions, and community outreach videos anytime.</p>
-      <a class="btn" href="https://www.youtube.com/channel/UCFqkqWkSvJ_hm0m2whwGZWQ" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
-    </div>
-  </section>
-
-  <!-- YOUTUBE PLAYER -->
-  <section class="fullpage">
-    <div class="container reveal" style="padding: 40px 0; text-align:center;">
-      @if (!string.IsNullOrEmpty((string?)ViewBag.YouTubeVideoId))
-      {
-        <div role="region" aria-label="Live / Latest video" style="max-width:900px;margin:0 auto;">
-          <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.45);">
-            <iframe id="ytIframe"
-                    src="https://www.youtube.com/embed/@(ViewBag.YouTubeVideoId)?rel=0"
-                    style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-            </iframe>
-          </div>
-        </div>
-      }
-      else
-      {
-        <div style="max-width:900px;margin:0 auto;">
-          <div style="padding:24px 18px;border:1px dashed rgba(255,215,0,0.35);border-radius:12px;">
-            <p style="margin:0;">We couldn't find a video to display right now. Please check back during a live stream or visit our <a href="/Donate" style="color:#FFD700;font-weight:700;">Donate</a> page.</p>
-          </div>
-        </div>
-      }
-    </div>
-  </section>
-</div>
-
-@section Scripts {
-<script>
-/* PARTICLES (unchanged) */
-const particleContainer = document.getElementById('particles');
-function createParticle() {
-  const p = document.createElement('div');
-  p.className = 'particle';
-  const size = Math.random()*6+2;
-  p.style.width = size+'px';
-  p.style.height = size+'px';
-  p.style.left = Math.random()*window.innerWidth+'px';
-  p.style.animationDuration = (5+Math.random()*10)+'s';
-  p.style.background = `rgba(255,215,0,${(Math.random()*0.6+0.3).toFixed(2)})`;
-  particleContainer.appendChild(p);
-  setTimeout(()=>p.remove(),15000);
-}
-setInterval(createParticle,150);
-
-/* Reveal on first view (unchanged) */
-const toReveal = document.querySelectorAll('.reveal');
-const revObs = new IntersectionObserver((entries, obs)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){ e.target.classList.add('show'); obs.unobserve(e.target); }
-  });
-},{ threshold: 0.15 });
-toReveal.forEach(el=>revObs.observe(el));
-
-/* One-at-a-time visibility */
-const pages = Array.from(document.querySelectorAll('.fullpage'));
-if (pages.length) pages[0].classList.add('is-active');
-
-const activeObs = new IntersectionObserver((entries)=>{
-  // pick the most visible section and mark it active
-  let best=null;
-  entries.forEach(e=>{ if(!best || e.intersectionRatio>best.intersectionRatio) best=e; });
-  if(best && best.isIntersecting){
-    pages.forEach(s=>s.classList.toggle('is-active', s===best.target));
-    history.replaceState(null, "", "#"+(best.target.id||""));
-  }
-},{ threshold: [0.25,0.5,0.75] });
-
-pages.forEach(s=>activeObs.observe(s));
-</script>
+            <script>
+                /* Retriggering scroll animations to keep the page lively */
+                const reveals = document.querySelectorAll('.reveal, .fade-left, .fade-right');
+                const io = new IntersectionObserver((entries)=>{
+                  entries.forEach(entry=>{
+                    if (entry.isIntersecting) {
+                      entry.target.classList.add('show');
+                    } else {
+                      entry.target.classList.remove('show'); // allows re-animate on reverse scroll
+                    }
+                  });
+                },{ threshold: 0.18 });
+                revelsInit();
+                function revelsInit(){ reveals.forEach(el=>io.observe(el)); }
+            </script>
 }
