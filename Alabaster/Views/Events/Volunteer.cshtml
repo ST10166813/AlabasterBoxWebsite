@@ -11,19 +11,19 @@
     @await Html.PartialAsync("_EventsShared")
 
     <style>
-        /* Volunteer page-specific tweaks */
         .volunteer-card {
             width: min(1280px, 94vw);
             margin: 0 auto;
             padding: clamp(18px, 2.2vw, 28px);
             border-radius: 22px;
-            border: 1px solid var(--glass-brd);
+                border: 1px solid var(--glass-brd);
             background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
             backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
             box-shadow: var(--shadow);
         }
 
-        h2.page-title {
+             h2.page-title {
             margin: 0;
             text-align: center;
             font-size: clamp(1.6rem, 2.2vw, 2.1rem);
@@ -48,6 +48,11 @@
             margin: 18px 0 14px;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
             border: 0;
+        }
+      @@media (max-width: 480px) {
+            .volunteer-card {
+                padding: 12px;
+            }
         }
     </style>
 }
@@ -145,6 +150,5 @@
 
 @section Scripts {
     <script>
-        // Volunteer page does not require custom JS — shared partial already wires small helpers.
-    </script>
+           </script>
 }
