@@ -1,247 +1,3 @@
-@* @model Alabaster.Models.Volunteer
-
-@{
-    ViewData["Title"] = "Volunteer";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-@section Styles {
-<style>
-/* ===== GLOBAL BODY ===== */
-html, body {
-    margin: 0;
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    color: #fff;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* ===== BACKGROUND IMAGE ===== */
-body {
-    background: url('../images/cross7.png') center -10% / cover no-repeat fixed;
-    background-color: #000;
-}
-
-/* ===== CINEMATIC OVERLAY ===== */
-.page-overlay::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: -1;
-}
-
-/* ===== VOLUNTEER CARD ===== */
-.volunteer-card {
-    width: 100%;
-    max-width: 660px;
-    margin: 80px auto;
-    padding: 2.5rem 2rem;
-    background: rgba(0, 0, 0, 0.55); /* darker background */
-    border-radius: 1.5rem;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 40px rgba(255,215,0,0.25); /* slightly softer glow */
-    border: 1px solid rgba(255,215,0,0.15); /* softer border */
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-
-/* GOLDEN LIGHT SWEEP */
-.volunteer-card::before {
-    content: "";
-    position: absolute;
-    top: 0; left: -75%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,215,0,0.3), transparent);
-    animation: lightSweep 6s infinite linear;
-}
-
-/* CARD HEADER */
-.volunteer-card h2 {
-    text-align: center;
-    font-size: 2.4rem;
-    font-weight: 900;
-    letter-spacing: 1px;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
-    background: linear-gradient(90deg, #FFD700, #fff, #FFD700);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-size: 200% auto;
-    animation: shimmer 4s linear infinite;
-    text-shadow: 0 0 25px rgba(255,255,255,0.4);
-}
-
-/* FORM ELEMENTS */
-.form-group { margin-bottom: 1.5rem; }
-
-label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #FFD700;
-    font-size: 1rem;
-}
-
-.form-control {
-    width: 100%;
-    padding: 0.9rem 1rem;
-    font-size: 1rem;
-    border-radius: 0.5rem;
-    outline: none;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(0,0,0,0.3);
-    color: #fff;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus {
-    border-color: #FFD700;
-    box-shadow: 0 0 10px rgba(255,215,0,0.4);
-}
-
-/* SUBMIT BUTTON */
-.btn-submit {
-    width: 100%;
-    padding: 0.9rem;
-    font-size: 1rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 0.6rem;
-    color: #000;
-    background: linear-gradient(90deg, #FFD700, #FFB700, #FFD700);
-    background-size: 200% auto;
-    animation: shimmer 5s linear infinite;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1.5rem;
-}
-
-.btn-submit:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255,215,0,0.6);
-}
-
-/* ANIMATIONS */
-@@keyframes shimmer {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-}
-
-@@keyframes lightSweep {
-    0% { left: -75%; }
-    100% { left: 125%; }
-}
-
-/* SPARKLES */
-.sparkle {
-    position: fixed;
-    width: 3px;
-    height: 3px;
-    background: rgba(255,215,0,0.9);
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(255,215,0,0.8);
-    pointer-events: none;
-    animation: sparkleAnim linear infinite;
-    z-index: 1;
-}
-
-@@keyframes sparkleAnim {
-    0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    50% { transform: translateY(-25px) scale(1); opacity: 1; }
-    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
-}
-
-/* RESPONSIVE */
-@@media (max-width: 768px) {
-    .volunteer-card h2 { font-size: 1.8rem; }
-}
-</style>
-}
-
-<div class="page-overlay">
-    <div class="volunteer-card">
-        <h2>🙌 Volunteer for an Event 🙌</h2>
-
-        @if (TempData["Message"] != null)
-        {
-            <div class="alert-success">@TempData["Message"]</div>
-        }
-
-        <form asp-action="Volunteer" method="post" novalidate>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label>Select Event</label>
-                <select asp-for="EventId" class="form-control">
-                    <option value="">-- Select Event --</option>
-                    @foreach (var evt in (List<Alabaster.Models.UpcomingEvent>)ViewBag.Events)
-                    {
-                        <option value="@evt.Id" selected="@(Model.EventId == evt.Id)">
-                            @evt.Name (@evt.Date)
-                        </option>
-                    }
-                </select>
-                <span asp-validation-for="EventId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label>Name</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input asp-for="Email" type="email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label>Phone</label>
-                <input asp-for="Phone" class="form-control" maxlength="10" pattern="\d{10}" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label>Notes / Allergies (optional)</label>
-                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label>Number of Volunteers</label>
-                <input asp-for="NumberOfVolunteers" type="number" class="form-control" min="1" value="1" />
-                <span asp-validation-for="NumberOfVolunteers" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn-submit">Submit</button>
-        </form>
-    </div>
-</div>
-
-@section Scripts {
-<script>
-/* Floating sparkles */
-function createSparkle() {
-    const sparkle = document.createElement('div');
-    sparkle.classList.add('sparkle');
-    sparkle.style.left = Math.random() * window.innerWidth + 'px';
-    sparkle.style.top = Math.random() * window.innerHeight + 'px';
-    sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
-    document.body.appendChild(sparkle);
-    setTimeout(() => sparkle.remove(), 4000);
-}
-setInterval(createSparkle, 150);
-</script>
-} *@
-@* 
 @model Alabaster.Models.Volunteer
 
 @{
@@ -257,284 +13,6 @@ setInterval(createSparkle, 150);
   --bg:#08090c;
   --ink:#f2f2f2;
   --muted:#cfcfd6;
-  --glass-1: rgba(18,18,22,.55);
-  --glass-2: rgba(18,18,22,.35);
-  --glass-brd: rgba(255,255,255,.14);
-  --gold:#FFD700;
-  --gold-ink:#181818;
-  --shadow:0 24px 60px rgba(0,0,0,.55);
-}
-
-/* ===== Base (no page tint) ===== */
-html, body{
-  margin:0;
-  font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
-  color:var(--ink);
-  min-height:100vh;
-  overflow-x:hidden;
-  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
-}
-
-/* ===== Stage ===== */
-.page-overlay{
-  position:relative;
-  padding: clamp(80px, 9vh, 120px) 18px;
-}
-
-/* ===== Card (matches login glass) ===== */
-.volunteer-card{
-  width:min(1280px, 94vw);
-  margin:0 auto;
-  padding: clamp(18px, 2.2vw, 28px);
-  border-radius:22px;
-  border:1px solid var(--glass-brd);
-  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: var(--shadow);
-}
-
-/* ===== Headings ===== */
-h2.page-title{
-  margin:0;
-  text-align:center;
-  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
-  font-weight:900;
-  background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 0 18px rgba(255,255,255,.18);
-}
-.subtitle{
-  text-align:center; margin-top:6px; color:#dcdce5; opacity:.9;
-  font-size:.98rem;
-}
-
-/* Divider (like login) */
-.hr{
-  height:1px; margin: 18px 0 14px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-  border:0;
-}
-
-/* ===== Form layout ===== */
-.form-grid{
-  display:grid; gap:14px; grid-template-columns: 1fr;
-}
-@@media (min-width: 860px){
-  .form-grid{ grid-template-columns: 1fr 1fr; }
-  .col-span-2{ grid-column:1 / -1; }
-}
-
-/* Labels */
-label{ font-weight:700; font-size:.95rem; color:#efefef; }
-
-/* Input shell (matches login) */
-.input-wrap{
-  position:relative; display:flex; align-items:center; gap:10px;
-  border:1px solid rgba(255,255,255,.14);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  border-radius:14px; padding:10px 12px;
-  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
-}
-.input-wrap:focus-within{
-  border-color: rgba(255,215,0,.55); 
-  box-shadow: 0 0 0 6px rgba(255,215,0,.10);
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
-}
-.input-icon{ font-size:1.05rem; opacity:.9; }
-
-/* Controls */
-.form-control{
-  flex:1; border:0; outline:0; background:transparent!important;
-  color:var(--bg)!important; font-size:.98rem; padding:8px 4px;
-  caret-color: var(--gold);
-}
-textarea.form-control{ resize:vertical; min-height:110px; }
-
-/* Remove default glow */
-.form-control:focus, input:focus, textarea:focus, select:focus{ outline:none!important; box-shadow:none!important; }
-
-/* Validation + alerts */
-.text-danger{ color:#ffc6c6; font-size:.85rem; }
-.alert-success{
-  background: rgba(46,204,113,.15);
-  border:1px solid rgba(46,204,113,.3);
-  color:#e9ffe9; padding:10px 12px; border-radius:10px; margin-bottom:12px;
-}
-.alert-summary{
-  background: rgba(255,77,77,.12);
-  border:1px solid rgba(255,77,77,.28);
-  color:#ffe2e2; padding:10px 12px; border-radius:10px; margin-bottom:10px;
-}
-
-/* ===== Buttons (same palette/feel as login) ===== */
-.actions{ margin-top:14px; display:grid; gap:12px; }
-.btn-primary{
-  display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
-  color: var(--gold-ink);
-  border: 1px solid rgba(255,215,0,.5);
-  border-radius: 12px;
-  font-weight:900; font-size:.98rem;
-  padding:12px 16px; width:100%;
-  box-shadow:0 10px 26px rgba(255,215,0,.28);
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-}
-.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
-
-.hr-bottom{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 8px 0; }
-
-/* “Additional bottom button like Sign in with Google” */
-.btn-alt{
-  display:inline-flex; align-items:center; justify-content:center; gap:12px;
-  background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-  color:#fff; border:1px solid rgba(255,255,255,.18);
-  border-radius:12px; font-weight:800; font-size:.96rem;
-  padding:12px 16px; width:100%;
-  box-shadow:0 10px 24px rgba(0,0,0,.28);
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-  text-decoration:none;
-}
-.btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
-
-.meta-note{ text-align:center; font-size:.9rem; color:var(--muted); }
-</style>
-}
-
-<div class="page-overlay">
-  <div class="volunteer-card">
-    <h2 class="page-title">Be Part of the Mission</h2>
-    <p class="subtitle">Lend a hand at an upcoming event — quick sign-up below.</p>
-
-    <hr class="hr" />
-
-    @if (TempData["Message"] != null)
-    {
-      <div class="alert-success">@TempData["Message"]</div>
-    }
-
-    <form asp-action="Volunteer" method="post" novalidate>
-      <div asp-validation-summary="ModelOnly" class="alert-summary"></div>
-
-      <div class="form-grid">
-        <!-- Event -->
-        <div class="col-span-2">
-          <label>Select Event</label>
-          <div class="input-wrap">
-            <i class="bi bi-calendar-event input-icon"></i>
-            <select asp-for="EventId" class="form-control">
-              <option value="">-- Select Event --</option>
-              @foreach (var evt in (List<Alabaster.Models.UpcomingEvent>)ViewBag.Events)
-              {
-                <option value="@evt.Id" selected="@(Model.EventId == evt.Id)">
-                  @evt.Name (@evt.Date)
-                </option>
-              }
-            </select>
-          </div>
-          <span asp-validation-for="EventId" class="text-danger"></span>
-        </div>
-
-        <!-- Name -->
-        <div>
-          <label>Name</label>
-          <div class="input-wrap">
-            <i class="bi bi-person input-icon"></i>
-            <input asp-for="Name" class="form-control" placeholder="Your full name" />
-          </div>
-          <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label>Email</label>
-          <div class="input-wrap">
-            <i class="bi bi-envelope input-icon"></i>
-            <input asp-for="Email" type="email" class="form-control" placeholder="you@example.com" />
-          </div>
-          <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-
-        <!-- Phone -->
-        <div>
-          <label>Phone</label>
-          <div class="input-wrap">
-            <i class="bi bi-telephone input-icon"></i>
-            <input asp-for="Phone" class="form-control" maxlength="10" pattern="\d{10}" placeholder="10-digit number" />
-          </div>
-          <span asp-validation-for="Phone" class="text-danger"></span>
-        </div>
-
-        <!-- Number of Volunteers -->
-        <div>
-          <label>Number of Volunteers</label>
-          <div class="input-wrap">
-            <i class="bi bi-people input-icon"></i>
-            <input asp-for="NumberOfVolunteers" type="number" class="form-control" min="1" value="1" />
-          </div>
-          <span asp-validation-for="NumberOfVolunteers" class="text-danger"></span>
-        </div>
-
-        <!-- Notes -->
-        <div class="col-span-2">
-          <label>Notes / Allergies (Optional)</label>
-          <div class="input-wrap">
-            <textarea asp-for="Notes" class="form-control" rows="4" placeholder="Allergies, preferred role, time availability, etc."></textarea>
-          </div>
-          <span asp-validation-for="Notes" class="text-danger"></span>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="submit" class="btn-primary">
-          <i class="bi bi-send-fill"></i> Submit
-        </button>
-
-        <div class="hr-bottom"></div>
-
-        <!-- Additional bottom button like the Login screen -->
-        <a class="btn-alt" href="@Url.Action("Index","Events")">
-          <i class="bi bi-calendar2-heart"></i> Browse Upcoming Events
-        </a>
-
-      </div>
-    </form>
-  </div>
-</div>
-@section Scripts {
-<script>
-/* Floating sparkles */
-function createSparkle() {
-    const sparkle = document.createElement('div');
-    sparkle.classList.add('sparkle');
-    sparkle.style.left = Math.random() * window.innerWidth + 'px';
-    sparkle.style.top = Math.random() * window.innerHeight + 'px';
-    sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
-    document.body.appendChild(sparkle);
-    setTimeout(() => sparkle.remove(), 4000);
-}
-setInterval(createSparkle, 150);
-</script>
-} *@
-
-@model Alabaster.Models.Volunteer
-
-@{
-    ViewData["Title"] = "Volunteer";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
-
-@section Styles {
-<style>
-:root{
-  --bg:#08090c;
-  --ink:#f2f2f2;
-  --muted:#cfcfd6;
-  --glass-1: rgba(18,18,22,.55);
-  --glass-2: rgba(18,18,22,.35);
-  --glass-brd: rgba(255,255,255,.14);
   --gold:#FFD700;
   --gold-ink:#181818;
   --shadow:0 24px 60px rgba(0,0,0,.55);
@@ -545,179 +23,152 @@ html, body{
   margin:0;
   font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
   color:var(--ink);
+  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
   min-height:100vh;
   overflow-x:hidden;
-  background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
 }
 
-/* ===== Hero Title (global heading + paragraph) ===== */
+/* ===== Hero Section ===== */
 .hero-title{
   text-align:center;
-  padding: clamp(100px, 12vh, 160px) 20px 50px;
-  position:relative; z-index:1;
+  padding: clamp(90px, 11vh, 130px) 20px 40px;
 }
-
-.hero-title h1 {
+.hero-title h1{
   font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #fff;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
-}
-
-.hero-title .tagline {
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  font-weight: 500;
-  letter-spacing: 0.6px;
-  color: #fff;
-  text-transform: capitalize;
-  margin-top: 6px;
-  margin-bottom: 50px; /* reduced space below tagline */
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-.hero-title p {
-  font-size: 1.08rem;
-  color: #ffffff;
-  opacity: .92;
-  max-width: 760px;
-  margin: 1px auto 1px; /* less space below paragraph */
-}
-
-@@keyframes shimmer{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
-
-/* ===== Stage ===== */
-.page-overlay{
-  position:relative;
-  padding: clamp(40px, 6vh, 80px) 18px 100px; /* slightly reduced top gap since hero exists */
-}
-
-/* ===== Card ===== */
-.volunteer-card{
-  width:min(1280px, 94vw);
-  margin:0 auto;
-  padding: clamp(18px, 2.2vw, 28px);
-  border-radius:22px;
-  border:1px solid var(--glass-brd);
-  background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: var(--shadow);
-}
-
-/* ===== Headings inside card ===== */
-h2.page-title{
-  margin:0;
-  text-align:center;
-  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
   font-weight:900;
-  background: linear-gradient(90deg, var(--gold), #ffffff 45%, #c6c6c6);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  color:#fff;
+  text-shadow:0 2px 6px rgba(0,0,0,.55);
+}
+.hero-title .tagline{
+  font-size:1.1rem; color:#fff; opacity:.9; margin-top:6px;
+}
+.hero-title p{
+  font-size:1.05rem; color:#fff; opacity:.9; max-width:760px;
+  margin:12px auto 0;
+}
+
+/* ===== Form Card ===== */
+.volunteer-card{
+  width:min(1280px,94vw);
+  margin:0 auto;
+  padding:clamp(18px,2vw,28px);
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.18);
+  background: linear-gradient(180deg, rgba(18,18,22,.55), rgba(18,18,22,.35));
+  backdrop-filter:blur(14px) saturate(140%);
+  box-shadow:var(--shadow);
+}
+h2.page-title{
+  text-align:center;
+  font-size:clamp(1.6rem,2.2vw,2.1rem);
+  font-weight:900;
+  background:linear-gradient(90deg,var(--gold),#fff 45%,#c6c6c6);
+  -webkit-background-clip:text; color:transparent;
   text-shadow:0 0 18px rgba(255,255,255,.18);
 }
 .subtitle{
-  text-align:center; margin-top:6px; color:#dcdce5; opacity:.9;
-  font-size:.98rem;
+  text-align:center; margin-top:4px; color:#dcdce5; opacity:.9; font-size:.98rem;
 }
-
-/* Divider */
 .hr{
-  height:1px; margin: 18px 0 14px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+  height:1px; margin:18px 0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
   border:0;
 }
 
-/* ===== Form layout ===== */
+/* ===== Form Layout ===== */
 .form-grid{
-  display:grid; gap:14px; grid-template-columns: 1fr;
+  display:grid; gap:14px; grid-template-columns:1fr;
 }
-@@media (min-width: 860px){
-  .form-grid{ grid-template-columns: 1fr 1fr; }
+@@media (min-width:860px){
+  .form-grid{ grid-template-columns:1fr 1fr; }
   .col-span-2{ grid-column:1 / -1; }
 }
-
-/* Labels */
 label{ font-weight:700; font-size:.95rem; color:#efefef; }
 
-/* Input shell */
+/* ===== Input Fields ===== */
 .input-wrap{
-  position:relative; display:flex; align-items:center; gap:10px;
+  display:flex; align-items:center; gap:10px;
   border:1px solid rgba(255,255,255,.14);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  background:rgba(255,255,255,.02);
   border-radius:14px; padding:10px 12px;
-  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+  transition:border-color .2s, box-shadow .2s;
 }
+.input-wrap:hover{ border-color:rgba(255,215,0,.35); }
 .input-wrap:focus-within{
-  border-color: rgba(255,215,0,.55); 
-  box-shadow: 0 0 0 6px rgba(255,215,0,.10);
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+  border-color:rgba(255,215,0,.85);
+  box-shadow:0 0 0 2px rgba(255,215,0,.45),0 0 14px rgba(255,215,0,.25);
+  background:rgba(255,255,255,.03);
 }
 .input-icon{ font-size:1.05rem; opacity:.9; }
 
-/* ===== Make form text and placeholders white ===== */
-.form-control {
-  flex: 1;
-  border: 0;
-  outline: 0;
-  background: transparent !important;
-  color: #fff !important;            /* white input text */
-  font-size: .98rem;
-  padding: 8px 4px;
-  caret-color: var(--gold);
+/* Transparent field styling */
+.form-control{
+  flex:1; border:0; outline:none !important;
+  background:transparent !important;
+  color:#fff !important;
+  font-size:.98rem; padding:8px 4px;
+  caret-color:var(--gold);
+  box-shadow:none !important;
 }
 
-/* ===== Make all placeholders white ===== */
-::placeholder {
-  color: #ffffff !important;
-  opacity: 0.85;
+/* Placeholder text */
+::placeholder{ color:#fff !important; opacity:.85; }
+
+/* Remove native focus ring (Chrome, Edge, Firefox, Safari) */
+input:focus, textarea:focus, select:focus {
+  outline:none !important;
+  box-shadow:none !important;
+  border:none;
 }
 
-::-webkit-input-placeholder {
-  color: #ffffff !important;
-  opacity: 0.85;
+/* Dropdown */
+select.form-control{
+  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  background:transparent !important; color:#fff !important;
 }
+select.form-control option{ background:#111; color:#fff; }
 
-:-ms-input-placeholder {
-  color: #ffffff !important;
-  opacity: 0.85;
-}
-
-::-ms-input-placeholder {
-  color: #ffffff !important;
-  opacity: 0.85;
-}
-
-
-/* ===== Fix dropdown (select) visibility ===== */
-select.form-control {
-  color: #ffffff !important;             /* white text inside select */
-  background: rgba(20, 20, 20, 0) !important; /* dark dropdown background */
-  appearance: none;                   /* hides default arrow for a cleaner look */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-/* Dropdown options */
-select.form-control option {
-  background: #11111100;                   /* dark background for dropdown list */
-  color: #040404;                        /* white text inside options */
-}
-
+/* Textarea */
 textarea.form-control{ resize:vertical; min-height:110px; }
 
-/* Remove default glow */
-.form-control:focus, input:focus, textarea:focus, select:focus{ outline:none!important; box-shadow:none!important; }
+/* ===== Autofill Fix (Chrome, Edge, Firefox) ===== */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color:#fff !important;
+  caret-color:var(--gold);
+  transition:background-color 9999s ease-in-out 0s;
+  box-shadow:0 0 0px 1000px rgba(255,255,255,.02) inset !important;
+}
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill:focus {
+  box-shadow:0 0 0px 1000px rgba(255,255,255,.03) inset !important;
+}
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  box-shadow:0 0 0px 1000px rgba(255,255,255,.02) inset !important;
+  -moz-text-fill-color:#fff !important;
+}
+.input-wrap:has(input:-webkit-autofill),
+.input-wrap:has(textarea:-webkit-autofill),
+.input-wrap:has(select:-webkit-autofill) {
+  border-color:rgba(255,215,0,.55);
+  box-shadow:0 0 0 2px rgba(255,215,0,.35),0 0 14px rgba(255,215,0,.20);
+}
 
-/* Validation + alerts */
+/* ===== Validation & Alerts ===== */
 .text-danger{ color:#ffc6c6; font-size:.85rem; }
 .alert-success{
-  background: rgba(46,204,113,.15);
+  background:rgba(46,204,113,.15);
   border:1px solid rgba(46,204,113,.3);
   color:#e9ffe9; padding:10px 12px; border-radius:10px; margin-bottom:12px;
 }
 .alert-summary{
-  background: rgba(255,77,77,.12);
+  background:rgba(255,77,77,.12);
   border:1px solid rgba(255,77,77,.28);
   color:#ffe2e2; padding:10px 12px; border-radius:10px; margin-bottom:10px;
 }
@@ -726,47 +177,51 @@ textarea.form-control{ resize:vertical; min-height:110px; }
 .actions{ margin-top:14px; display:grid; gap:12px; }
 .btn-primary{
   display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
-  color: var(--gold-ink);
-  border: 1px solid rgba(255,215,0,.5);
-  border-radius: 12px;
+  background:linear-gradient(135deg,var(--gold),#FFB700);
+  color:var(--gold-ink);
+  border:1px solid rgba(255,215,0,.5);
+  border-radius:12px;
   font-weight:900; font-size:.98rem;
   padding:12px 16px; width:100%;
   box-shadow:0 10px 26px rgba(255,215,0,.28);
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  transition:transform .18s, box-shadow .18s;
 }
-.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 16px 38px rgba(255,215,0,.38); filter:saturate(1.05); }
-
-.hr-bottom{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin: 8px 0; }
-
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 16px 38px rgba(255,215,0,.38);
+}
 .btn-alt{
   display:inline-flex; align-items:center; justify-content:center; gap:12px;
-  background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  background:rgba(255,255,255,.06);
   color:#fff; border:1px solid rgba(255,255,255,.18);
   border-radius:12px; font-weight:800; font-size:.96rem;
   padding:12px 16px; width:100%;
   box-shadow:0 10px 24px rgba(0,0,0,.28);
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-  text-decoration:none;
 }
-.btn-alt:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(0,0,0,.38); }
-.meta-note{ text-align:center; font-size:.9rem; color:var(--muted); }
-
+.btn-alt:hover{
+  transform:translateY(-1px);
+  box-shadow:0 16px 36px rgba(0,0,0,.38);
+}
+.hr-bottom{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  margin:8px 0;
+}
 </style>
 }
 
-<!-- ===== Hero heading + paragraph ===== -->
+<!-- ===== HERO ===== -->
 <section class="hero-title">
   <h1>Volunteer With Us</h1>
   <div class="tagline">Serve • Support • Shine • Showcase</div>
   <p>Use your gifts to serve our community. Choose an event and tell us how you’d like to help — we’ll be in touch with the details.</p>
 </section>
 
+<!-- ===== VOLUNTEER FORM ===== -->
 <div class="page-overlay">
   <div class="volunteer-card">
     <h2 class="page-title">Be Part of the Mission</h2>
     <p class="subtitle">Lend a hand at an upcoming event — quick sign-up below.</p>
-
     <hr class="hr" />
 
     @if (TempData["Message"] != null)
@@ -826,7 +281,7 @@ textarea.form-control{ resize:vertical; min-height:110px; }
           <span asp-validation-for="Phone" class="text-danger"></span>
         </div>
 
-        <!-- Number of Volunteers -->
+        <!-- Volunteers -->
         <div>
           <label>Number of Volunteers</label>
           <div class="input-wrap">
@@ -850,9 +305,7 @@ textarea.form-control{ resize:vertical; min-height:110px; }
         <button type="submit" class="btn-primary">
           <i class="bi bi-send-fill"></i> Submit
         </button>
-
         <div class="hr-bottom"></div>
-
         <a class="btn-alt" href="@Url.Action("Index","Events")">
           <i class="bi bi-calendar2-heart"></i> Browse Upcoming Events
         </a>
@@ -861,18 +314,3 @@ textarea.form-control{ resize:vertical; min-height:110px; }
   </div>
 </div>
 
-@section Scripts {
-<script>
-/* Floating sparkles */
-function createSparkle() {
-    const sparkle = document.createElement('div');
-    sparkle.classList.add('sparkle');
-    sparkle.style.left = Math.random() * window.innerWidth + 'px';
-    sparkle.style.top = Math.random() * window.innerHeight + 'px';
-    sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
-    document.body.appendChild(sparkle);
-    setTimeout(() => sparkle.remove(), 4000);
-}
-setInterval(createSparkle, 150);
-</script>
-}
