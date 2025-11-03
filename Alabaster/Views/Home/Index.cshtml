@@ -385,8 +385,8 @@
         </div>
     </section>
 
-    <!-- YOUTUBE (tight spacing) -->
-    <section class="compact" style="flex-direction: column; text-align: center;">
+<!---->   <!-- YOUTUBE (tight spacing) -->
+    @*  <section class="compact" style="flex-direction: column; text-align: center;">
         <div class="content reveal">
             <h2>Watch Our Latest Sermon</h2>
             <p>Can’t make it in person? Connect with us online. Subscribe to our YouTube channel to watch live and archived sermons that will inspire your journey with Christ.</p>
@@ -404,7 +404,31 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
             }
+        </div> *@ 
+
+    <!-- YOUTUBE (tight spacing) -->
+    <section class="compact" style="flex-direction: column; text-align: center;">
+        <div class="content reveal">
+            <h2>Watch Our Latest Sermon</h2>
+            <p>Can’t make it in person? Connect with us online. Subscribe to our YouTube channel to watch live and archived sermons that will inspire your journey with Christ.</p>
         </div>
+        <div class="video-container reveal">
+            @if (!string.IsNullOrEmpty((string?)ViewBag.YouTubeVideoId))
+            {
+                <iframe title="Latest sermon video" src="https://www.youtube.com/embed/@(ViewBag.YouTubeVideoId)?rel=0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                <!-- /////////// added title attribute -->
+            }
+            else
+            {
+                <iframe title="Default sermon video" src="https://www.youtube.com/embed/UCFqkqWkSvJ_hm0m2whwGZWQ?rel=0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                <!-- /////////// added title attribute -->
+            }
+        </div>
+
         <!-- ====== YOUTUBE PLAYER +===== -->
         <div class="player-section" style="padding: 40px 20px; text-align:center;">
 
