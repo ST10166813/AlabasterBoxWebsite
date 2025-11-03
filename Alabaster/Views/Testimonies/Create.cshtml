@@ -1,5 +1,4 @@
 ﻿@model Alabaster.Models.Testimony
-
 @{
     ViewBag.Title = "Share Your Testimony";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,30 +7,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
 
 @section Styles {
+    @* include shared styles *@
+    @await Html.PartialAsync("_TestimonyShared")
+
     <style>
-        :root {
-            --bg: #08090c;
-            --ink: #f2f2f2;
-            --muted: #cfcfd6;
-            --glass-1: rgba(18,18,22,.55);
-            --glass-2: rgba(18,18,22,.35);
-            --glass-brd: rgba(255,255,255,.14);
-            --gold: #FFD700;
-            --gold-ink: #181818;
-            --shadow: 0 24px 60px rgba(0,0,0,.55);
-        }
-
-        /* ===== Base ===== */
-        html, body {
-            margin: 0;
-            font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
-            color: var(--ink);
-            min-height: 100vh;
-            overflow-x: hidden;
-            background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
-        }
-
-        /* ===== Title Section (like About Us) ===== */
+        /* Create page specific styles (kept local) */
         .hero-title {
             text-align: center;
             padding: clamp(100px, 12vh, 180px) 20px 60px;
@@ -45,7 +25,7 @@
                 text-transform: uppercase;
                 letter-spacing: 2px;
                 color: #fff;
-                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+                text-shadow: 0 2px 6px rgba(0,0,0,.55);
             }
 
             .hero-title p {
@@ -56,23 +36,11 @@
                 margin: 10px auto 0;
             }
 
-        @@keyframes shimmer {
-            0% {
-                background-position: 0% 50%
-            }
-
-            100% {
-                background-position: 200% 50%
-            }
-        }
-
-        <!-- ===== Page Wrapper ===== -->
         .page-wrap {
             position: relative;
             padding: clamp(60px, 6vh, 100px) 18px 100px;
         }
 
-        /* ===== Card ===== */
         .testimony-card {
             width: min(1280px, 94vw);
             margin: 0 auto;
@@ -81,11 +49,9 @@
             border: 1px solid var(--glass-brd);
             background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
             backdrop-filter: blur(14px) saturate(140%);
-            -webkit-backdrop-filter: blur(14px) saturate(140%);
             box-shadow: var(--shadow);
         }
 
-        /* ===== Header ===== */
         h2.page-title {
             margin: 0;
             text-align: center;
@@ -106,7 +72,6 @@
             font-size: .98rem;
         }
 
-        /* Divider */
         .hr {
             height: 1px;
             margin: 18px 0 14px;
@@ -114,7 +79,6 @@
             border: 0;
         }
 
-        /* ===== Form ===== */
         .form-grid {
             display: grid;
             gap: 14px;
@@ -137,207 +101,18 @@
             color: #efefef;
         }
 
-        /* Input shell */
-        .input-wrap {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255,255,255,.14);
-            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-            border-radius: 14px;
-            padding: 10px 12px;
-            transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
-        }
-            /* ✅ Keep ONLY yellow glow (no blue/white) */
-            .input-wrap:focus-within {
-                border-color: rgba(255,215,0,.55);
-                box-shadow: 0 0 0 6px rgba(255,215,0,.10);
-                background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
-            }
-
-        .input-icon {
-            font-size: 1.05rem;
-            opacity: .9;
-        }
-
-        /* Kill default focus glows */
-        .form-control:focus,
-        .form-control:focus-visible,
-        input:focus, textarea:focus, select:focus {
-            outline: none !important;
-            box-shadow: none !important;
-        }
-
-        .form-control {
-            flex: 1;
-            border: 0;
-            outline: 0;
-            background: transparent !important;
-            color: #fff !important; /* white input text */
-            font-size: .98rem;
-            padding: 8px 4px;
-            caret-color: var(--gold);
-        }
-
-        /* White placeholders */
-        ::placeholder {
-            color: #fff !important;
-            opacity: 0.85;
-        }
-
-        ::-webkit-input-placeholder {
-            color: #fff !important;
-            opacity: 0.85;
-        }
-
-        :-ms-input-placeholder {
-            color: #fff !important;
-            opacity: 0.85;
-        }
-
-        ::-ms-input-placeholder {
-            color: #fff !important;
-            opacity: 0.85;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 110px;
-        }
-
-        /* ===== FILE INPUT (match other page) ===== */
-        .file-row {
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            width: 100%;
-        }
-
-        .file-name {
-            flex: 1;
-            font-size: .95rem;
-            opacity: .9;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        input[type="file"].file-input {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-        /* The visible button */
-        .file-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: .45rem;
-            background: rgba(255,215,0,.15);
-            border: 1px solid rgba(255,215,0,.35);
-            color: #FFD700;
-            border-radius: 8px;
-            padding: .5rem .9rem;
-            font-weight: 800;
-            font-size: .92rem;
-            transition: all .2s ease;
-            flex-shrink: 0;
-        }
-
-            .file-btn:hover {
-                background: #FFD700;
-                color: #000;
-                border-color: #FFD700;
-            }
-
-        /* Hide native button in Chromium */
-        input[type="file"].form-control::file-selector-button {
-            display: none;
-        }
-        /* Safari legacy */
-        input[type="file"].form-control::-webkit-file-upload-button {
-            visibility: hidden;
-        }
-
-        /* Autofill tame */
-        input:-webkit-autofill,
-        textarea:-webkit-autofill {
-            -webkit-text-fill-color: var(--ink);
-            caret-color: var(--gold);
-            transition: background-color 9999s ease-out;
-            box-shadow: 0 0 0px 1000px transparent inset !important;
-        }
-
-        /* Alerts */
-        .text-danger {
-            color: #ffc6c6;
-            font-size: .85rem;
-        }
-
-        /* ===== Buttons ===== */
-        .actions {
-            margin-top: 14px;
-            display: grid;
-            gap: 12px;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
-            color: var(--gold-ink);
-            border: 1px solid rgba(255,215,0,.5);
-            border-radius: 12px;
-            font-weight: 900;
-            font-size: .98rem;
-            padding: 12px 16px;
-            width: 100%;
-            box-shadow: 0 10px 26px rgba(255,215,0,.28);
-            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-        }
-
-            .btn-primary:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 16px 38px rgba(255,215,0,.38);
-                filter: saturate(1.05);
-            }
-
-        .hr-bottom {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-            margin: 8px 0;
-        }
-
-        .btn-alt {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-            color: #fff;
-            border: 1px solid rgba(255,255,255,.18);
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: .96rem;
-            padding: 12px 16px;
-            width: 100%;
-            box-shadow: 0 10px 24px rgba(0,0,0,.28);
-            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-            text-decoration: none;
-        }
-
-            .btn-alt:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 16px 36px rgba(0,0,0,.38);
-            }
-
+        /* Additional tweaks for file presentation (kept local to page) */
         .meta-note {
             text-align: center;
             font-size: .9rem;
             color: var(--muted);
+        }
+
+        /* Keep only small responsive changes */
+        @@media (max-width:860px) {
+            .testimony-card {
+                padding: 18px;
+            }
         }
     </style>
 }
@@ -353,7 +128,6 @@
     <div class="testimony-card">
         <h2 class="page-title">Your Testimony Details</h2>
         <p class="subtitle">Please fill in the information below to submit your testimony.</p>
-
         <hr class="hr" />
 
         <form asp-controller="Testimonies" asp-action="Create" method="post" enctype="multipart/form-data">
@@ -363,7 +137,6 @@
                     <label for="testimonyTitle">Title</label>
                     <div class="input-wrap">
                         <i class="bi bi-type input-icon"></i>
-                        <!-- id changed to avoid duplicate id collisions; keep name for model binding -->
                         <input id="testimonyTitle" name="Title" type="text" class="form-control" required placeholder="Give your testimony a title" />
                     </div>
                 </div>
@@ -373,23 +146,19 @@
                     <label for="testimonyName">Your Name</label>
                     <div class="input-wrap">
                         <i class="bi bi-person input-icon"></i>
-                        <!-- id changed to avoid duplicate id collisions; keep name="CreatedBy" for server -->
                         <input id="testimonyName" name="CreatedBy" type="text" class="form-control" required placeholder="Enter your name" />
                     </div>
                 </div>
 
-                <!-- Image Upload (styled like other page) -->
+                <!-- Image Upload -->
                 <div class="col-span-2">
                     <label for="testimonyImageUpload">Upload Image (optional)</label>
-                    <div class="input-wrap">
+                    <div class="input-wrap" style="position:relative;">
                         <i class="bi bi-image input-icon"></i>
-                        <!-- Invisible real input -->
-                        <!-- id changed to avoid duplicate id collisions; keep name for model binding -->
+
                         <input id="testimonyImageUpload" name="ImageUpload" type="file" accept="image/*" class="form-control file-input" />
-                        <!-- Visible row: gold button + filename -->
                         <div class="file-row" aria-hidden="true">
                             <button type="button" class="file-btn" aria-hidden="true">Choose Image</button>
-                            <!-- file name id changed to avoid collisions across pages -->
                             <span id="testimonyFileName" class="file-name">No file chosen</span>
                         </div>
                     </div>
@@ -400,18 +169,17 @@
                     <label for="testimonyDescription">Your Testimony</label>
                     <div class="input-wrap">
                         <i class="bi bi-chat-quote input-icon"></i>
-                        <!-- id changed to avoid duplicate id collisions; keep name for server -->
                         <textarea id="testimonyDescription" name="Description" class="form-control" required placeholder="Share what the Lord has done for you"></textarea>
                     </div>
                 </div>
             </div>
 
-            <div class="actions">
+            <div class="actions" style="margin-top:14px; display:grid; gap:12px;">
                 <button type="submit" class="btn-primary">
                     <i class="bi bi-send-fill"></i> Submit Testimony
                 </button>
 
-                <div class="hr-bottom"></div>
+                <div class="hr-bottom" style="height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); margin:8px 0;"></div>
 
                 <a class="btn-alt" href="@Url.Action("Index", "Testimonies")">
                     <i class="bi bi-journal-text"></i> View All Testimonies
@@ -423,14 +191,17 @@
 
 @section Scripts {
     <script>
-         const realInput = document.getElementById('testimonyImageUpload');
-        const fakeBtn   = document.querySelector('.file-btn');
-        const fileName  = document.getElementById('testimonyFileName');
+        // file input UI wiring (page-specific)
+        (function () {
+          const realInput = document.getElementById('testimonyImageUpload');
+          const fakeBtn = document.querySelector('.file-btn');
+          const fileName = document.getElementById('testimonyFileName');
 
-        fakeBtn?.addEventListener('click', ()=> realInput?.click());
-        realInput?.addEventListener('change', ()=>{
-          const name = realInput.files && realInput.files[0] ? realInput.files[0].name : 'No file chosen';
-          if (fileName) fileName.textContent = name;
-        });
+          fakeBtn?.addEventListener('click', () => realInput?.click());
+          realInput?.addEventListener('change', () => {
+            const name = realInput.files && realInput.files[0] ? realInput.files[0].name : 'No file chosen';
+            if (fileName) fileName.textContent = name;
+          });
+        })();
     </script>
 }

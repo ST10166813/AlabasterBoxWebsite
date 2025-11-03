@@ -1,0 +1,259 @@
+﻿@* Views/Shared/_TestimonyShared.cshtml
+   Shared UI/CSS for Testimonies pages (used by Admin.cshtml and Create.cshtml)
+*@
+
+<style>
+    :root {
+        --gold: #FFD700;
+        --ink: #fff;
+        --muted: #cfcfd6;
+        --glass-1: rgba(18,18,22,.55);
+        --glass-2: rgba(18,18,22,.35);
+        --glass-brd: rgba(255,255,255,.14);
+        --shadow: 0 24px 60px rgba(0,0,0,.55);
+        --bg: #08090c;
+    }
+
+    /* ===== Base / Background / Fonts (shared) ===== */
+    html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        width: 100%;
+        font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+        color: var(--ink);
+        background-color: var(--bg);
+        background-image: url('../images/cross7.png');
+        background-position: center -10%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* common container paddings used by pages */
+    .page-content, .page-wrap {
+        position: relative;
+        z-index: 1;
+        max-width: 1400px;
+        margin-inline: auto;
+        padding: clamp(2.5rem, 6vw, 5rem) 1.25rem clamp(3rem, 7vw, 5rem);
+    }
+
+    /* ===== Form inputs / shared look ===== */
+    .input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+        border-radius: 14px;
+        padding: 10px 12px;
+        transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+
+        .input-wrap:focus-within {
+            border-color: rgba(255,215,0,.55);
+            box-shadow: 0 0 0 6px rgba(255,215,0,.10);
+            background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+        }
+
+    .input-icon {
+        font-size: 1.05rem;
+        opacity: .9;
+    }
+
+    /* kill default focus glows for form controls */
+    .form-control:focus, .form-control:focus-visible, input:focus, textarea:focus, select:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .form-control {
+        flex: 1;
+        border: 0;
+        outline: 0;
+        background: transparent !important;
+        color: #fff !important;
+        font-size: .98rem;
+        padding: 8px 4px;
+        caret-color: var(--gold);
+    }
+
+    ::placeholder {
+        color: #fff !important;
+        opacity: 0.85;
+    }
+
+    ::-webkit-input-placeholder {
+        color: #fff !important;
+        opacity: 0.85;
+    }
+
+    ::-ms-input-placeholder {
+        color: #fff !important;
+        opacity: 0.85;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 110px;
+    }
+
+    /* ===== File input shared UI ===== */
+    .file-row {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        width: 100%;
+    }
+
+    .file-name {
+        flex: 1;
+        font-size: .95rem;
+        opacity: .9;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    input[type="file"].file-input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        background: rgba(255,215,0,.15);
+        border: 1px solid rgba(255,215,0,.35);
+        color: var(--gold);
+        border-radius: 8px;
+        padding: .5rem .9rem;
+        font-weight: 800;
+        font-size: .92rem;
+        transition: all .2s ease;
+        flex-shrink: 0;
+    }
+
+        .file-btn:hover {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+    input[type="file"].form-control::file-selector-button {
+        display: none;
+    }
+
+    input[type="file"].form-control::-webkit-file-upload-button {
+        visibility: hidden;
+    }
+
+    /* ===== Base button styling (shared) ===== */
+    .btn {
+        padding: .65rem 1.1rem;
+        border: none;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: .95rem;
+        cursor: pointer;
+        transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+        border: 1px solid rgba(255,255,255,.08);
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+        .btn:active {
+            transform: translateY(1px) scale(.99);
+        }
+
+    /* Primary golden button (used by create page) */
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
+        color: #181818;
+        border: 1px solid rgba(255,215,0,.5);
+        border-radius: 12px;
+        font-weight: 900;
+        font-size: .98rem;
+        padding: 12px 16px;
+        width: 100%;
+        box-shadow: 0 10px 26px rgba(255,215,0,.28);
+        transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 38px rgba(255,215,0,.38);
+            filter: saturate(1.05);
+        }
+
+    /* alt button */
+    .btn-alt {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+        color: #fff;
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: .96rem;
+        padding: 12px 16px;
+        width: 100%;
+        box-shadow: 0 10px 24px rgba(0,0,0,.28);
+        text-decoration: none;
+    }
+
+        .btn-alt:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 36px rgba(0,0,0,.38);
+        }
+
+    /* simple responsive tweak */
+    @@media (max-width: 768px) {
+        .btn {
+            padding: .55rem .9rem;
+            font-size: .9rem;
+        }
+    }
+
+    /* subtle sparkles (shared) */
+    .sparkle {
+        position: fixed;
+        width: 3px;
+        height: 3px;
+        background: rgba(255,215,0,0.9);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+        animation: sparkleAnim linear infinite;
+    }
+
+    @@keyframes sparkleAnim {
+        0% {
+            transform: translateY(0) scale(.5);
+            opacity: 0;
+        }
+
+        50% {
+            transform: translateY(-25px) scale(1);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-50px) scale(.5);
+            opacity: 0;
+        }
+    }
+</style>

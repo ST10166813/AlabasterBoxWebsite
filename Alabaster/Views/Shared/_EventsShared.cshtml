@@ -1,0 +1,412 @@
+﻿@* Views/Shared/_EventsShared.cshtml
+   Shared styles and small helpers for Events views
+*@
+
+<style>
+    :root {
+        --bg: #08090c;
+        --ink: #f2f2f2;
+        --muted: #cfcfd6;
+        --glass-1: rgba(18,18,22,.55);
+        --glass-2: rgba(18,18,22,.35);
+        --glass-brd: rgba(255,255,255,.14);
+        --gold: #FFD700;
+        --gold-ink: #181818;
+        --shadow: 0 24px 60px rgba(0,0,0,.55);
+    }
+
+    /* Base / page background (expanded to avoid shorthand parsing issues) */
+    html, body {
+        margin: 0;
+        font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+        color: var(--ink);
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-color: var(--bg);
+        background-image: url('../images/cross7.png');
+        background-position: center -10%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    /* Common containers */
+    .page-wrap, .page-content, .page-overlay {
+        position: relative;
+        z-index: 1;
+        max-width: 1400px;
+        margin-inline: auto;
+        padding: clamp(2.5rem, 6vw, 5rem) 1.25rem clamp(3rem, 7vw, 5rem);
+    }
+
+    /* Headings / hero */
+    .hero-title {
+        text-align: center;
+        padding: clamp(100px, 12vh, 160px) 20px 50px;
+        position: relative;
+        z-index: 1;
+    }
+
+        .hero-title h1 {
+            font-size: clamp(2.4rem, 4vw, 3.6rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 2px 6px rgba(0,0,0,.55);
+        }
+
+        .hero-title p {
+            font-size: 1.08rem;
+            color: #e6e6ef;
+            opacity: .92;
+            max-width: 760px;
+            margin: 10px auto 0;
+        }
+
+    /* Gold shimmer helper */
+    .section-title {
+        font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+        font-weight: 900;
+        text-align: center;
+        margin: 1.8rem auto 2.2rem;
+        padding: .9rem 1.6rem;
+        text-transform: uppercase;
+        background: linear-gradient(180deg, rgba(255,215,0,.15), rgba(255,255,255,.05));
+        border: 1px solid rgba(240,240,235,.6);
+        border-radius: 18px;
+        box-shadow: 0 0 25px rgba(255,215,0,.35), 0 0 55px rgba(255,215,0,.25);
+        backdrop-filter: blur(10px);
+        background-image: linear-gradient(90deg, var(--ink), #ffffff 45%, var(--ink));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        background-size: 200% auto;
+        animation: sectionShimmer 6s linear infinite;
+        letter-spacing: 1px;
+    }
+
+        .section-title:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255,215,0,.5), 0 0 90px rgba(255,215,0,.35);
+        }
+
+    @@keyframes sectionShimmer {
+        0% {
+            background-position: 0% 50%
+        }
+
+        100% {
+            background-position: 200% 50%
+        }
+    }
+
+    /* Glass panels */
+    .glass-panel {
+        background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
+        border: 1px solid var(--glass-brd);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: clamp(1rem, 2.2vw, 1.75rem);
+        backdrop-filter: blur(10px);
+    }
+
+    /* Inputs / form helpers */
+    .form-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr;
+    }
+
+    @@media (min-width:860px) {
+        .form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .col-span-2 {
+            grid-column: 1 / -1;
+        }
+    }
+
+    label {
+        font-weight: 700;
+        font-size: .95rem;
+        color: #efefef;
+    }
+
+    .input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+        border-radius: 14px;
+        padding: 10px 12px;
+        transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+
+        .input-wrap:focus-within {
+            border-color: rgba(255,215,0,.55);
+            box-shadow: 0 0 0 6px rgba(255,215,0,.10);
+            background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+        }
+
+    .input-icon {
+        font-size: 1.05rem;
+        opacity: .9;
+    }
+
+    /* form control base */
+    .form-control {
+        flex: 1;
+        border: 0;
+        outline: 0;
+        background: transparent !important;
+        color: #fff !important;
+        font-size: .98rem;
+        padding: 8px 4px;
+        caret-color: var(--gold);
+    }
+
+        .form-control::placeholder, input.form-control::placeholder, textarea.form-control::placeholder {
+            color: #fff !important;
+            opacity: 0.85 !important;
+        }
+
+    /* file controls */
+    .file-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .file-native {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: .55rem 1rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(255,215,0,.18), rgba(255,215,0,.08));
+        border: 1px solid rgba(255,215,0,.45);
+        color: var(--gold);
+        font-weight: 800;
+        transition: all .15s ease;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 20px rgba(0,0,0,.28);
+    }
+
+        .file-btn:hover {
+            transform: translateY(-1px);
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+            box-shadow: 0 16px 32px rgba(255,215,0,.32);
+        }
+
+    .file-name {
+        flex: 1;
+        min-width: 0;
+        color: #e9e9f2;
+        opacity: .9;
+        font-size: .95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .file-preview {
+        display: none;
+        margin-top: 10px;
+        max-height: 140px;
+        border-radius: 12px;
+        border: 1px solid var(--glass-brd);
+        box-shadow: 0 10px 24px rgba(0,0,0,.28);
+        width: auto;
+    }
+
+    /* buttons */
+    .actions {
+        margin-top: 14px;
+        display: grid;
+        gap: 12px;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(135deg, var(--gold), #FFB700, var(--gold));
+        color: var(--gold-ink);
+        border: 1px solid rgba(255,215,0,.5);
+        border-radius: 12px;
+        font-weight: 900;
+        font-size: .98rem;
+        padding: 12px 16px;
+        width: 100%;
+        box-shadow: 0 10px 26px rgba(255,215,0,.28);
+        transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 38px rgba(255,215,0,.38);
+            filter: saturate(1.05);
+        }
+
+    .btn-alt {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+        color: #fff;
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: .96rem;
+        padding: 12px 16px;
+        width: 100%;
+        box-shadow: 0 10px 24px rgba(0,0,0,.28);
+        text-decoration: none;
+    }
+
+        .btn-alt:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 36px rgba(0,0,0,.38);
+        }
+
+    /* table helpers */
+    .table-wrap {
+        overflow: auto;
+        border-radius: 16px;
+        background: rgba(255,255,255,.02);
+        border: 1px solid rgba(255,255,255,.08);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+        color: var(--ink);
+    }
+
+    thead th {
+        font-weight: 900;
+        text-transform: uppercase;
+        font-size: .95rem;
+        letter-spacing: .06em;
+        background: linear-gradient(180deg, rgba(213,188,43,.9), rgba(169,161,120,.536));
+        color: #111;
+        border-bottom: 1px solid rgba(255,255,255,.10);
+        padding: 1rem .9rem;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        backdrop-filter: blur(6px);
+    }
+
+    tbody td {
+        padding: .9rem .9rem;
+        font-size: .98rem;
+        vertical-align: top;
+        border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    tbody tr:hover {
+        background: rgba(255,255,255,.03);
+    }
+
+    /* small helpers: sparkles */
+    .sparkle {
+        position: fixed;
+        width: 3px;
+        height: 3px;
+        background: rgba(255,215,0,0.9);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+        animation: sparkleAnim linear infinite;
+    }
+
+    @@keyframes sparkleAnim {
+        0% {
+            transform: translateY(0) scale(.5);
+            opacity: 0;
+        }
+
+        50% {
+            transform: translateY(-25px) scale(1);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-50px) scale(.5);
+            opacity: 0;
+        }
+    }
+
+    /* responsive */
+    @@media (max-width:768px) {
+        .file-btn {
+            padding: .5rem .8rem;
+        }
+
+        .event-select select {
+            font-size: 1rem;
+            padding: .7rem .9rem;
+        }
+    }
+</style>
+
+<script>
+    // Small shared JS: wire file-btn -> native file input and basic preview behavior.
+    // Individual pages still use their own IDs; this helper will wire elements if they follow the .file-wrap pattern.
+    (function(){
+      if (window.__eventsSharedInit) return;
+      window.__eventsSharedInit = true;
+
+      document.addEventListener('click', function(e){
+        const btn = e.target.closest('.file-btn');
+        if (!btn) return;
+        const wrap = btn.closest('.file-wrap');
+        if (!wrap) return;
+        const native = wrap.querySelector('.file-native');
+        if (native) native.click();
+      });
+
+      document.addEventListener('change', function(e){
+        const native = e.target;
+        if (!native || !native.classList.contains('file-native')) return;
+        const wrap = native.closest('.file-wrap');
+        if (!wrap) return;
+        const fileNameEl = wrap.querySelector('.file-name');
+        const preview = wrap.querySelector('.file-preview');
+        const hidden = wrap.querySelector('input[type="hidden"]');
+
+        const file = native.files && native.files[0];
+        if (!file) {
+          if (fileNameEl) fileNameEl.textContent = 'No file chosen';
+          if (hidden) hidden.value = '';
+          if (preview) { preview.style.display = 'none'; preview.src = ''; }
+          return;
+        }
+
+        if (fileNameEl) fileNameEl.textContent = file.name;
+
+        const reader = new FileReader();
+        reader.onloadend = function(){
+          if (hidden) hidden.value = reader.result;
+          if (preview){ preview.src = reader.result; preview.style.display = 'block'; }
+        };
+        reader.readAsDataURL(file);
+      });
+    })();
+</script>
