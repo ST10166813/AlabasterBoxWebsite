@@ -20,12 +20,35 @@ builder.Services.AddSession(options =>
 });
 
 // Initialize Firebase Admin SDK once
+// if (FirebaseApp.DefaultInstance == null)
+// {
+//     FirebaseApp.Create(new AppOptions
+//     {
+//         Credential = GoogleCredential.FromFile("serviceAccountKey.json")
+//     });
+// }
+
+//added -> for render
+// ---- Firebase Admin: env-first, then file fallback ----
 if (FirebaseApp.DefaultInstance == null)
 {
-    FirebaseApp.Create(new AppOptions
-    {
-        Credential = GoogleCredential.FromFile("serviceAccountKey.json")
-    });
+    // Option B: JSON in env var
+    var json = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS_JSON");
+
+    // Option A: Secret File path set in GOOGLE_APPLICATION_CREDENTIALS
+    var path = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+
+    GoogleCredential creds = null!;
+    if (!string.IsNullOrWhiteSpace(json))
+        creds = GoogleCredential.FromJson(json);
+    else if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+        creds = GoogleCredential.FromFile(path);
+    else if (File.Exists("serviceAccountKey.json")) // local dev fallback
+        creds = GoogleCredential.FromFile("serviceAccountKey.json");
+    else
+        throw new InvalidOperationException("Firebase credentials not found. Set FIREBASE_CREDENTIALS_JSON or GOOGLE_APPLICATION_CREDENTIALS, or include serviceAccountKey.json locally.");
+
+    FirebaseApp.Create(new AppOptions { Credential = creds });
 }
 
 var app = builder.Build();
