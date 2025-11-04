@@ -1,0 +1,11 @@
+# Ignore build and output folders
+bin/
+obj/
+
+# Ignore Firebase service account key
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# Ignore all JSON files inside build folders
+*/bin/**/*.json
+*/obj/**/*.json
