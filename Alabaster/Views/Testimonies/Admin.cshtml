@@ -232,7 +232,7 @@ setInterval(createSparkle, 300);
                 <td>@item.CreatedAt</td>
                 <td>
                   <span class="table-img">
-                       <img title="image1" src="@(string.IsNullOrEmpty(item.ImageBase64)
+                       <img title="image" src="@(string.IsNullOrEmpty(item.ImageBase64)
                       ? Url.Content("~/Images/Default%20image.png")
                       : $"data:image/jpeg;base64,{item.ImageBase64}")"
                       width="96" height="72" loading="lazy" />
