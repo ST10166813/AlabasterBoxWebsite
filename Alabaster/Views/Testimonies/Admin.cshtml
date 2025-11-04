@@ -230,14 +230,21 @@ setInterval(createSparkle, 300);
                 <td>@item.Description</td>
                 <td>@(string.IsNullOrEmpty(item.CreatedBy) ? "Anonymous" : item.CreatedBy)</td>
                 <td>@item.CreatedAt</td>
-                <td>
-                  <span class="table-img">
-                       <img title="image" src="@(string.IsNullOrEmpty(item.ImageBase64)
-                      ? Url.Content("~/Images/Default%20image.png")
-                      : $"data:image/jpeg;base64,{item.ImageBase64}")"
-                      width="96" height="72" loading="lazy" />
-                  </span>
-                </td>
+                                <td>
+                                    <span class="table-img">
+                                        @{
+                                            var imgSrc = string.IsNullOrEmpty(item.ImageBase64)
+                                            ? Url.Content("~/Images/Default%20image.png")
+                                            : $"data:image/jpeg;base64,{item.ImageBase64}";
+
+                                            var altText = string.IsNullOrEmpty(item.ImageBase64)
+                                            ? "Default testimony image"
+                                            : (!string.IsNullOrEmpty(item.Title) ? $"Image for testimony: {item.Title}" : "Testimony image");
+                                        }
+                                        <img title="image" src="@imgSrc" alt="@altText" width="96" height="72" loading="lazy" />
+                                    </span>
+                                </td>
+
                 <td>
                   <div class="actions">
                     <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
