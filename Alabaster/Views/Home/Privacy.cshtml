@@ -1,0 +1,141 @@
+@{
+    ViewData["Title"] = "Privacy Policy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+<style>
+  /* ===== Page-specific styling (black-glass cohesive) ===== */
+  .hero-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 18px 10px;
+  }
+
+  .hero-card {
+    padding: 32px 22px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(16,16,20,.72), rgba(16,16,20,.55));
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    box-shadow: 0 24px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-card::after {
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 60%;
+    background: radial-gradient(40rem 18rem at 20% 0, rgba(255,215,0,.15), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-title {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    text-align: center;
+    margin: 6px 0 10px 0;
+    text-shadow: 0 4px 16px rgba(0,0,0,.65);
+  }
+
+  .hero-sub {
+    opacity: .9;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .policy-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 18px 48px;
+  }
+
+  .grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 1fr 1fr;
+  }
+  @@media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .glass-card {
+    padding: 24px 22px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(16,16,20,.72), rgba(16,16,20,.50));
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(10px) saturate(160%);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    box-shadow: 0 18px 48px rgba(0,0,0,.50), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+
+  .section-title {
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    letter-spacing: .3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,.4);
+  }
+
+  .list-plain {
+    margin: 8px 0 0 0;
+    padding-left: 18px;
+  }
+
+  .callout {
+    margin-top: 10px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(255,215,0,.12), rgba(255,215,0,.06));
+    border: 1px solid rgba(255,215,0,.28);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  }
+</style>
+}
+
+<div class="hero-wrap">
+  <div class="hero-card">
+    <h1 class="hero-title">Privacy Policy</h1>
+    <p class="hero-sub">Last updated: @DateTime.Now.ToString("yyyy-MM-dd")</p>
+  </div>
+</div>
+
+<div class="policy-wrap">
+  <div class="grid">
+    <!-- Column 1 -->
+    <section class="glass-card">
+      <h3 class="section-title">What We Collect</h3>
+      <p>We collect basic contact information you submit (e.g., name) and any content you choose to share, such as prayer requests, testimonies, and volunteer or event forms.</p>
+
+      <h3 class="section-title" style="margin-top:16px;">How We Use It</h3>
+      <ul class="list-plain">
+        <li>Respond to messages and manage community activities (events, volunteers, testimonies, and prayer requests).</li>
+        <li>Improve site functionality and protect against abuse or misuse.</li>
+      </ul>
+
+      <h3 class="section-title" style="margin-top:16px;">Sharing</h3>
+      <p>We do not sell your data. Limited sharing may occur with service providers (e.g., hosting or Firebase) solely to operate and secure the website.</p>
+    </section>
+
+    <!-- Column 2 -->
+    <section class="glass-card">
+      <h3 class="section-title">Retention & Security</h3>
+      <p>Your information is retained only as long as necessary for ministry purposes and is protected with reasonable technical and organizational safeguards.</p>
+
+      <h3 class="section-title" style="margin-top:16px;">Your Choices</h3>
+      <ul class="list-plain">
+        <li>Request access, correction, or deletion of your information.</li>
+        <li>Opt out of non-essential communications.</li>
+      </ul>
+
+      <div class="callout">
+        <h4 class="section-title" style="margin:0 0 6px 0;">Contact</h4>
+        <p style="margin:0">Questions? Please reach out via our contact options provided on the site.</p>
+      </div>
+    </section>
+  </div>
+</div>
