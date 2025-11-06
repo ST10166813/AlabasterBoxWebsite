@@ -346,7 +346,7 @@
                 // Prefer uploaded image; else fallback to logo. Ensure the path/casing matches your wwwroot.
                 var imgSrc = !string.IsNullOrWhiteSpace(item?.ImageBase64)
                 ? $"data:image/jpeg;base64,{item!.ImageBase64}"
-                : Url.Content("~/images/whitelogo.png"); // note: 'images' folder, lower-case
+                : Url.Content("~/Images/whitelogo.png"); // note: 'images' folder, lower-case
 
                 var cardClass = string.IsNullOrWhiteSpace(item?.ImageBase64)
                 ? "testimony-card no-image"
