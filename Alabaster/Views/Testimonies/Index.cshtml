@@ -2,6 +2,11 @@
 @{
     ViewBag.Title = "Testimonies";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var testimonies = (Model ?? Enumerable.Empty<Alabaster.Models.Testimony>())
+                      .Where(x => x != null)
+                      .OrderByDescending(t => t?.CreatedAt ?? "")
+                      .ToList();
 }
 
 @section Styles {
@@ -14,177 +19,105 @@
             --shadow: 0 25px 70px rgba(0,0,0,.55);
         }
 
-        /* ===== Global background (NO tint overlay) ===== */
+        /* Base & wallpaper */
         html, body {
             height: 100%;
             margin: 0;
             font-family: 'Poppins','Segoe UI',sans-serif;
             color: var(--ink);
-            background: #08090c url('../images/cross7.png') center -10% / cover no-repeat fixed;
+            background: transparent; /* wallpaper is handled by pseudo-element */
             overflow-x: hidden;
             position: relative;
         }
-            /* remove any previous dark tint */
+
+            /* wallpaper layer — use Url.Content so "~" resolves in Razor */
             body::before {
                 content: "";
-                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: -3;
+                pointer-events: none;
+                background-image: url('@Url.Content("~/images/4.jpg")');
+                background-position: center -10%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                /* subtle correction for brightness/contrast so text stays readable */
+                filter: saturate(1.02) brightness(0.86);
+                will-change: transform;
             }
 
-        /* ===== Page container ===== */
-        .page-content {
+            /* dim overlay so text and UI remain legible */
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: -2;
+                pointer-events: none;
+                background: rgba(0,0,0,0.22);
+            }
+
+        /* ensure nav/header appear above wallpaper */
+        header, nav, .page-content {
             position: relative;
-            z-index: 1;
-            max-width: 1400px;
-            margin-inline: auto;
-            padding: clamp(2.5rem, 6vw, 5rem) 1.25rem clamp(3rem, 7vw, 5rem);
+            z-index: 5;
         }
 
-        /* ===== About-like heading block ===== */
+        /* page container */
+        .page-content {
+            max-width: 1400px;
+            margin: 3.5rem auto;
+            padding: clamp(1rem, 3vw, 2.4rem);
+        }
+
+        /* heading */
         .page-head {
-            display: grid;
-            gap: .6rem;
-            justify-items: center;
             text-align: center;
-            margin-bottom: clamp(1.6rem, 3.2vw, 2.2rem);
+            margin-bottom: 1.2rem;
         }
 
             .page-head h1 {
-                font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+                font-size: clamp(2.2rem, 4.8vw, 3.8rem);
                 font-weight: 900;
-                line-height: 1.05;
-                letter-spacing: .3px;
-                text-transform: uppercase;
+                margin: 0;
                 color: #fff;
                 text-shadow: 0 2px 6px rgba(0,0,0,.55);
             }
 
-        header, nav.navbar, .site-nav, .top-nav {
-            position: relative;
-            z-index: 10;
-        }
-
-        .page-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .page-head .tagline {
-            font-size: clamp(.95rem, 1.6vw, 1.15rem);
-            letter-spacing: .6px;
-            opacity: .95;
-        }
-
-        /* short intro paragraph under the heading */
-        .hero-intro {
-            display: grid;
-            gap: .9rem;
-            justify-items: center;
-            text-align: center;
-            margin-bottom: clamp(1.8rem, 3vw, 2.4rem);
-        }
-
-            .hero-intro p {
-                max-width: 920px;
-                opacity: .92;
-                font-size: clamp(1rem, 1.4vw, 1.12rem);
+            .page-head .tagline {
+                color: rgba(255,255,255,.92);
             }
 
-        /* CTA styled like other pages */
-        .hero-cta {
-            display: inline-block;
-            margin-top: .3rem;
-            padding: .9rem 2.2rem;
-            font-weight: 800;
-            font-size: 1rem;
-            letter-spacing: .3px;
-            border-radius: 999px;
-            text-decoration: none;
-            background: linear-gradient(135deg, #ffb347, #ffcc33);
-            color: #111;
-            border: 1px solid rgba(255,215,0,.55);
-            box-shadow: 0 10px 26px rgba(255,200,0,.30);
-            transition: transform .2s ease, box-shadow .2s ease;
-        }
-
-            .hero-cta:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 14px 38px rgba(255,200,0,.45);
-            }
-
-        @@keyframes hshimmer {
-            from {
-                background-position: 0% 50%
-            }
-
-            to {
-                background-position: 200% 50%
-            }
-        }
-
-        /* ===== Section title ===== */
+        /* section title */
         .section-title {
-            font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+            display: inline-block;
+            padding: .7rem 1.1rem;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(255,215,0,.12), rgba(255,255,255,.02));
+            color: var(--gold);
             font-weight: 900;
-            color: #fff;
-            text-align: center;
-            margin: 1.8rem auto 2.2rem;
-            padding: 0.9rem 1.6rem;
-            background: linear-gradient(180deg, rgba(255, 215, 0, 0.15), rgba(255, 255, 255, 0.05));
-            border: 1px solid rgba(240, 240, 235, 0.6);
-            border-radius: 18px;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.35), 0 0 55px rgba(255, 215, 0, 0.25);
-            backdrop-filter: blur(10px);
-            background-image: linear-gradient(90deg, var(--ink), #ffffff 45%, var(--ink));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            background-size: 200% auto;
-            animation: sectionShimmer 6s linear infinite;
-            letter-spacing: 1px;
             text-transform: uppercase;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-            .section-title:hover {
-                transform: scale(1.05);
-                box-shadow: 0 0 40px rgba(255, 215, 0, 0.5), 0 0 90px rgba(255, 215, 0, 0.35);
-            }
-
-        @@keyframes sectionShimmer {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            100% {
-                background-position: 200% 50%;
-            }
-        }
-
-        /* ===== Testimony grid ===== */
+        /* testimony grid & cards */
         .testimony-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: clamp(1.2rem, 2.2vw, 2rem);
+            gap: clamp(1rem, 2vw, 1.6rem);
+            margin-top: 1rem;
         }
 
-        /* ===== Testimony card ===== */
         .testimony-card {
-            position: relative;
             background: rgba(18,18,18,.65);
             border: 1px solid var(--glass-brd);
-            border-radius: 18px;
-            backdrop-filter: blur(18px) saturate(150%);
-            -webkit-backdrop-filter: blur(18px) saturate(150%);
-            box-shadow: var(--shadow);
-            padding: 1.6rem 1.3rem 2rem;
+            border-radius: 16px;
+            padding: 1.4rem;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            box-shadow: var(--shadow);
             color: var(--ink);
             opacity: 0;
-            transform: translateY(40px);
-            transition: all .6s cubic-bezier(.25,.1,.25,1);
+            transform: translateY(30px);
+            transition: opacity .6s ease, transform .6s cubic-bezier(.2,.9,.25,1);
         }
 
             .testimony-card.show {
@@ -192,56 +125,35 @@
                 transform: translateY(0);
             }
 
-            .testimony-card:hover {
-                transform: translateY(-8px);
-                border-color: rgba(255,215,0,.35);
-                box-shadow: 0 18px 46px rgba(255,215,0,.35);
-            }
-
+            /* FIX: prevent cropping — keep same non-cropping rules you had before */
             .testimony-card img {
-                width: 75%;
-                max-height: 200px;
-                border-radius: 14px;
-                object-fit: contain;
-                margin: 0 auto 1rem;
+                width: 75%; /* not full width — keeps aspect and avoids squish/crop */
+                max-height: 200px; /* limits height */
+                object-fit: contain; /* show the whole image (no cropping) */
+                border-radius: 12px;
+                margin: 0 auto 0.9rem; /* center it and keep spacing */
                 display: block;
-                transition: transform 0.35s ease;
             }
-
-                .testimony-card img:hover {
-                    transform: scale(1.04);
-                }
 
             .testimony-card h4 {
-                font-size: 1.35rem;
-                font-weight: 800;
                 color: var(--gold);
-                margin-bottom: .5rem;
-                text-shadow: 0 0 10px rgba(255,215,0,.22);
+                font-weight: 800;
+                margin-bottom: .4rem;
             }
 
             .testimony-card p {
-                font-size: .98rem;
                 color: #eee;
-                line-height: 1.7;
-                margin-bottom: .5rem;
+                line-height: 1.6;
+                margin-bottom: .6rem;
             }
 
-            .testimony-card small {
-                font-size: .88rem;
-                color: var(--muted);
-            }
-
-        /* ===== Empty state ===== */
         .no-testimonies {
             grid-column: 1 / -1;
             text-align: center;
-            font-size: 1.1rem;
             color: var(--gold);
-            margin: 1.2rem 0;
         }
 
-        /* Optional sparkles */
+        /* sparkle elements (animated by JS, not keyframes) */
         .sparkle {
             position: fixed;
             width: 3px;
@@ -249,116 +161,86 @@
             background: rgba(255,215,0,0.9);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 0;
-            animation: sparkleAnim linear infinite;
-        }
-
-        @@keyframes sparkleAnim {
-            0% {
-                transform: translateY(0) scale(0.5);
-                opacity: 0;
-            }
-
-            50% {
-                transform: translateY(-25px) scale(1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-50px) scale(0.5);
-                opacity: 0;
-            }
-        }
-
-        /* ===== Responsive tweaks ===== */
-        @@media (max-width: 768px) {
-            .hero-cta {
-                font-size: .95rem;
-                padding: .8rem 1.6rem;
-            }
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(0) scale(.6);
+            transition: transform 900ms ease, opacity 900ms ease;
         }
     </style>
 }
 
 @section Scripts {
     <script>
-        // Animate cards on enter
-        const io = new IntersectionObserver((entries)=> {
-          entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); }});
-        },{ threshold:.2 });
-        document.querySelectorAll('.testimony-card').forEach(c => io.observe(c));
+        // Reveal cards when they enter viewport
+        (function(){
+          const io = new IntersectionObserver((entries, obs) => {
+            entries.forEach(e => {
+              if (e.isIntersecting) {
+                e.target.classList.add('show');
+                obs.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.18 });
 
-        // Optional sparkles (kept subtle)
-        function createSparkle() {
-          const s = document.createElement('div');
-          s.className = 'sparkle';
-          s.style.left = Math.random()*window.innerWidth + 'px';
-          s.style.top  = Math.random()*window.innerHeight + 'px';
-          s.style.width = s.style.height = (Math.random()*3 + 2) + 'px';
-          s.style.animationDuration = (5 + Math.random()*5) + 's';
-          document.body.appendChild(s);
-          setTimeout(()=> s.remove(), 10000);
-        }
-        setInterval(createSparkle, 250);
+          document.querySelectorAll('.testimony-card').forEach(c => io.observe(c));
+        })();
+
+        // subtle sparkle via JS transitions (no keyframes)
+        (function(){
+          function make(){
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            const size = Math.random()*3 + 2;
+            s.style.width = s.style.height = size + 'px';
+            s.style.left = Math.random()*window.innerWidth + 'px';
+            s.style.top = Math.random()*window.innerHeight + 'px';
+            document.body.appendChild(s);
+            void s.offsetWidth;
+            s.style.opacity = '1';
+            s.style.transform = 'translateY(-30px) scale(1)';
+            const life = 3500 + Math.random()*4000;
+            setTimeout(()=> {
+              s.style.opacity = '0';
+              s.style.transform = 'translateY(-60px) scale(.6)';
+              setTimeout(()=> s.remove(), 900);
+            }, life);
+          }
+          setInterval(make, 900);
+        })();
     </script>
 }
 
 <div class="page-content">
-    <!-- Heading + subheading + short paragraph -->
     <header class="page-head" aria-labelledby="t-head">
         <h1 id="t-head">Testimonies</h1>
         <div class="tagline">Experience • Declaration • Hope • Testament</div>
     </header>
 
-    <section class="hero-intro" aria-label="Introduction">
-        <p>
-            Stories change hearts. Here are real accounts of hope, healing, and transformation
-            from our Alabaster family. Share yours to encourage someone today.
-        </p>
-        <a asp-controller="Testimonies" asp-action="Create" class="hero-cta">Share Your Story</a>
-    </section>
-
     <h2 class="section-title">Voices From Our Community</h2>
 
-    <!-- ===== NULL-SAFE GRID (prevents NullReferenceException) ===== -->
-    <div class="testimony-grid">
-        @{
-            var hasData = Model != null && Model.Any();
-            var items = (Model ?? Enumerable.Empty<Alabaster.Models.Testimony>())
-            .Where(x => x != null)
-            // CreatedAt is a string in your model; keep ordering stable but safe:
-            .OrderByDescending(t => t?.CreatedAt ?? "");
-        }
-
-        @if (!hasData)
+    <div class="testimony-grid" role="list">
+        @if (!testimonies.Any())
         {
             <div class="no-testimonies">✨ No testimonies yet. Be the first to inspire others! ✨</div>
         }
         else
         {
-            foreach (var item in items)
+            foreach (var item in testimonies)
             {
-                var title = item?.Title ?? "Untitled testimony";
+                var title = item?.Title ?? "(No title)";
                 var desc = item?.Description ?? "";
-                var createdBy = string.IsNullOrWhiteSpace(item?.CreatedBy) ? "Anonymous" : item!.CreatedBy;
+                var author = string.IsNullOrWhiteSpace(item?.CreatedBy) ? "Anonymous" : item!.CreatedBy;
                 var createdAt = item?.CreatedAt ?? "";
+                var imgSrc = !string.IsNullOrWhiteSpace(item?.ImageBase64) ? $"data:image/jpeg;base64,{item.ImageBase64}" : Url.Content("~/Images/whitelogo.png");
 
-                // Prefer uploaded image; else fallback to logo. Ensure the path/casing matches your wwwroot.
-                var imgSrc = !string.IsNullOrWhiteSpace(item?.ImageBase64)
-                ? $"data:image/jpeg;base64,{item!.ImageBase64}"
-                : Url.Content("~/Images/whitelogo.png"); // note: 'images' folder, lower-case
-
-                var cardClass = string.IsNullOrWhiteSpace(item?.ImageBase64)
-                ? "testimony-card no-image"
-                : "testimony-card";
-                <div class="@cardClass">
-                    <img src="@imgSrc" alt="@title" />
-                    <h4>@title</h4>
+                <div class="testimony-card" role="listitem" aria-labelledby="t-@item?.Id">
+                    <img src="@imgSrc" alt="Image for @title" loading="lazy" />
+                    <h4 id="t-@item?.Id">@title</h4>
                     <p>@desc</p>
-                    <small>By: @createdBy</small>
+                    <small>By: @author</small>
                     @if (!string.IsNullOrWhiteSpace(createdAt))
                     {
-                        <small>Date: @createdAt</small>
+                        <small> • @createdAt</small>
                     }
                 </div>
             }
