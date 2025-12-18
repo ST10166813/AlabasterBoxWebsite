@@ -16,32 +16,52 @@
             --shadow: 0 25px 70px rgba(0,0,0,.55);
         }
 
-        /* ===== Global background (NO tint) ===== */
+        /* ==== Page background (Razor-friendly) ==== */
         html, body {
             height: 100%;
             margin: 0;
             font-family: 'Poppins','Segoe UI',sans-serif;
             color: var(--ink);
-            background: #08090c url('../images/cross7.png') center -10% / cover no-repeat fixed;
+            background: #08090c; /* fallback */
             overflow-x: hidden;
             position: relative;
         }
 
+            /* background image layer (Razor Url.Content resolves "~") */
             body::before {
                 content: "";
-                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: -3;
+                background-image: url('@Url.Content("~/images/4.jpg")');
+                background-position: center -10%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                filter: saturate(1.02) brightness(0.86);
             }
 
-        /* ===== Container ===== */
+            /* subtle global tint so text is legible */
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: -2;
+                background: rgba(0,0,0,0.22);
+                pointer-events: none;
+            }
+
+        /* Container */
         .page-content {
             position: relative;
             z-index: 1;
             max-width: 1400px;
             margin-inline: auto;
             padding: clamp(2.5rem, 6vw, 5rem) 1.25rem clamp(3rem, 7vw, 5rem);
+            box-sizing: border-box;
         }
 
-        /* ===== Index/Testimonies-like heading ===== */
+        /* Head */
         .page-head {
             display: grid;
             gap: .6rem;
@@ -54,23 +74,21 @@
                 font-size: clamp(2.4rem, 5.6vw, 4.4rem);
                 font-weight: 900;
                 line-height: 1.12;
-                padding-bottom: 6px;
                 letter-spacing: .3px;
                 text-transform: uppercase;
                 color: #fff;
-                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+                text-shadow: 0 2px 6px rgba(0,0,0,.55);
+                margin: 0;
             }
 
         .tagline {
-            /* dot-separated words like index page */
             font-size: clamp(.95rem, 1.6vw, 1.15rem);
             letter-spacing: .6px;
-            opacity: 9.95;
             text-transform: uppercase;
             color: var(--ink);
+            opacity: .95;
         }
 
-        /* short intro line */
         .head-desc {
             max-width: 920px;
             opacity: .92;
@@ -79,17 +97,7 @@
             margin: .6rem auto 0;
         }
 
-        @@keyframes hshimmer {
-            from {
-                background-position: 0% 50%
-            }
-
-            to {
-                background-position: 200% 50%
-            }
-        }
-
-        /* ===== Section title box  ===== */
+        /* Section title (static gradient text, no animation) */
         .section-title {
             font-size: clamp(1.6rem, 2.6vw, 2.2rem);
             font-weight: 900;
@@ -97,38 +105,15 @@
             margin: 1.8rem auto 2.2rem;
             padding: .9rem 1.6rem;
             text-transform: uppercase;
-            /* gold glass frame + shimmer text */
-            background: linear-gradient(180deg, rgba(255, 215, 0, 0.15), rgba(255, 255, 255, 0.05));
-            border: 1px solid rgba(240, 240, 235, 0.6);
-            border-radius: 18px;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.35), 0 0 55px rgba(255, 215, 0, 0.25);
-            backdrop-filter: blur(10px);
-            background-image: linear-gradient(90deg, var(--ink), #ffffff 45%, var(--ink));
+            background: linear-gradient(90deg, #ffffff 20%, var(--gold) 50%, #ffffff 80%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             background-size: 200% auto;
-            animation: sectionShimmer 6s linear infinite;
-            letter-spacing: 1px;
-            transition: transform .25s ease, box-shadow .25s ease;
+            border-radius: 18px;
         }
 
-            .section-title:hover {
-                transform: scale(1.05);
-                box-shadow: 0 0 40px rgba(255,215,0,.5), 0 0 90px rgba(255,215,0,.35);
-            }
-
-        @@keyframes sectionShimmer {
-            0% {
-                background-position: 0% 50%
-            }
-
-            100% {
-                background-position: 200% 50%
-            }
-        }
-
-        /* ===== Glass panel + table ===== */
+        /* Glass panel + table */
         .glass-panel {
             background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
             border: 1px solid var(--glass-brd);
@@ -136,7 +121,15 @@
             box-shadow: var(--shadow);
             padding: clamp(1rem, 2.2vw, 1.75rem);
             backdrop-filter: blur(10px);
+            transform: translateY(12px);
+            opacity: 0;
+            transition: transform 620ms cubic-bezier(.16,.84,.28,1), opacity 620ms ease;
         }
+
+            .glass-panel.visible {
+                transform: translateY(0);
+                opacity: 1;
+            }
 
         .table-wrap {
             overflow: auto;
@@ -157,16 +150,14 @@
             text-transform: uppercase;
             font-size: .95rem;
             letter-spacing: .06em;
-            background: linear-gradient(180deg, rgba(213, 188, 43, 0.9), rgba(169, 161, 120, 0.536));
+            background: linear-gradient(180deg, rgba(213,188,43,0.9), rgba(169,161,120,0.536));
             color: #111;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            border-bottom: 1px solid rgba(255,255,255,.10);
             padding: 1rem .9rem;
             position: sticky;
             top: 0;
             z-index: 1;
             backdrop-filter: blur(6px);
+            border-bottom: 1px solid rgba(255,255,255,.10);
         }
 
         tbody td {
@@ -176,9 +167,15 @@
             border-bottom: 1px solid rgba(255,255,255,.06);
         }
 
-        tbody tr:hover {
-            background: rgba(255,255,255,.03);
+        tbody tr {
+            transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
         }
+
+            tbody tr:hover {
+                background: rgba(255,255,255,.03);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+            }
 
         /* images */
         .table-img {
@@ -189,7 +186,13 @@
             box-shadow: 0 8px 24px rgba(0,0,0,.35);
         }
 
-        /* buttons */
+            .table-img img {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+
+        /* actions */
         .actions {
             display: flex;
             gap: .6rem;
@@ -203,7 +206,7 @@
             font-weight: 800;
             font-size: .95rem;
             cursor: pointer;
-            transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+            transition: transform .15s ease, box-shadow .2s ease;
             border: 1px solid rgba(255,255,255,.08);
         }
 
@@ -213,25 +216,17 @@
 
         .btn-approve {
             color: #0b1b13;
-            background: linear-gradient(180deg,rgba(0, 255, 128, 0.281),rgba(0, 200, 83, 0.314));
-            box-shadow: 0 10px 24px rgba(0,255,127,.25);
+            background: linear-gradient(180deg, rgba(0,255,128,0.28), rgba(0,200,83,0.31));
+            box-shadow: 0 10px 24px rgba(0,255,127,0.25);
         }
-
-            .btn-approve:hover {
-                box-shadow: 0 16px 36px rgba(0, 255, 128, 0.093);
-            }
 
         .btn-reject {
             color: #fff;
-            background: linear-gradient(180deg,rgba(255, 68, 68, 0.342),rgba(204, 0, 0, 0.222));
-            box-shadow: 0 10px 24px rgba(255,68,68,.25);
+            background: linear-gradient(180deg, rgba(255,68,68,0.34), rgba(204,0,0,0.22));
+            box-shadow: 0 10px 24px rgba(255,68,68,0.25);
         }
 
-            .btn-reject:hover {
-                box-shadow: 0 16px 36px rgba(255,68,68,.35);
-            }
-
-        /* ===== Empty state styled like “Voices From Our Community” ===== */
+        /* empty state */
         .empty-wrap {
             margin-top: 2.2rem;
             display: grid;
@@ -239,10 +234,6 @@
             justify-items: center;
             text-align: center;
         }
-
-            .empty-wrap .section-title {
-                margin: 0 auto .6rem;
-            }
 
             .empty-wrap p {
                 color: rgba(255,255,255,.9);
@@ -252,7 +243,7 @@
                 margin: 0 auto;
             }
 
-        /* subtle sparkles */
+        /* subtle sparkle (no CSS keyframes) */
         .sparkle {
             position: fixed;
             width: 3px;
@@ -261,56 +252,74 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 0;
-            animation: sparkleAnim linear infinite;
+            opacity: 0;
+            transform: translateY(0) scale(.6);
+            transition: transform 900ms ease, opacity 900ms ease;
+            filter: blur(0.6px);
         }
 
-        @@keyframes sparkleAnim {
-            0% {
-                transform: translateY(0) scale(.5);
-                opacity: 0;
-            }
-
-            50% {
-                transform: translateY(-25px) scale(1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-50px) scale(.5);
-                opacity: 0;
-            }
+        /* helpers */
+        .hidden-visually {
+            position: absolute !important;
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+            clip: rect(1px,1px,1px,1px);
+            white-space: nowrap;
         }
 
-        /* responsive */
-        @@media (max-width:768px) {
-            .btn {
-                padding: .55rem .9rem;
-                font-size: .9rem;
-            }
+        .container-pad {
+            padding-inline: clamp(12px, 4vw, 36px);
         }
     </style>
 }
 
 @section Scripts {
     <script>
-        // optional sparkles
-        function createSparkle(){
-          const s=document.createElement('div');
-          s.className='sparkle';
-          s.style.left=Math.random()*window.innerWidth+'px';
-          s.style.top=Math.random()*window.innerHeight+'px';
-          s.style.width=s.style.height=(Math.random()*3+2)+'px';
-          s.style.animationDuration=(5+Math.random()*5)+'s';
-          document.body.appendChild(s);
-          setTimeout(()=>s.remove(),10000);
-        }
-        setInterval(createSparkle, 300);
+        // Reveal the panel (no keyframes)
+        (function(){
+            const panel = document.querySelector('.glass-panel');
+            if (!panel) return;
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                        obs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            obs.observe(panel);
+        })();
+
+        // Sparkles via JS using transitions (no keyframes)
+        (function () {
+            function createSparkle() {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                const size = Math.random() * 3 + 2;
+                s.style.width = s.style.height = size + 'px';
+                s.style.left = Math.random() * window.innerWidth + 'px';
+                s.style.top = Math.random() * window.innerHeight + 'px';
+                document.body.appendChild(s);
+                // force reflow
+                void s.offsetWidth;
+                s.style.opacity = '1';
+                s.style.transform = 'translateY(-30px) scale(1)';
+                const lifetime = 3000 + Math.random() * 4000;
+                setTimeout(() => {
+                    s.style.opacity = '0';
+                    s.style.transform = 'translateY(-60px) scale(.6)';
+                    setTimeout(() => s.remove(), 900);
+                }, lifetime);
+            }
+            // gentle cadence
+            setInterval(createSparkle, 900);
+        })();
     </script>
 }
 
 <div class="page-content">
-
-    <!-- ===== Heading & Admin Subheading (matches Index/Testimonies style) ===== -->
+    <!-- Header -->
     <header class="page-head" aria-labelledby="pt-head">
         <h1 id="pt-head">PENDING TESTIMONIES</h1>
         <div class="tagline">Admin • Review • Approval • Community</div>
@@ -319,7 +328,6 @@
 
     @if (!Model.Any())
     {
-        <!-- ===== Empty state styled like “Voices From Our Community” ===== -->
         <section class="empty-wrap" aria-live="polite">
             <h2 class="section-title">Pending Testimonies</h2>
             <p>There are no testimonies awaiting review right now. Check back soon — new voices are on the way.</p>
@@ -327,7 +335,6 @@
     }
     else
     {
-        <!-- ===== Section title box (like index page) ===== -->
         <h2 class="section-title">Admin Review Queue</h2>
 
         <div class="glass-panel">
@@ -352,26 +359,27 @@
                                 <td>@(string.IsNullOrEmpty(item.CreatedBy) ? "Anonymous" : item.CreatedBy)</td>
                                 <td>@item.CreatedAt</td>
                                 <td>
-                                    <span class="table-img">
-                                        <img title="image" src="@(string.IsNullOrEmpty(item.ImageBase64)
-                                                                                 ? Url.Content("~/Images/Default%20image.png")
-                                                                                 : $"data:image/jpeg;base64,{item.ImageBase64}")"
-                                     alt='@(string.IsNullOrEmpty(item.Title) ? "Testimony image" : "Image for " + item.Title)'
-                                     width="96" height="72" loading="lazy" />
-                            </span>
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-approve">Approve</button>
-                                </form>
-                                <form asp-action="Reject" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-reject">Reject</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                                        }
+                                    <span class="table-img" style="width:96px;height:72px;display:inline-block;">
+                                        <img title="image"
+                                             src="@(string.IsNullOrEmpty(item.ImageBase64) ? Url.Content("~/Images/Default%20image.png") : $"data:image/jpeg;base64,{item.ImageBase64}")"
+                                             alt="@(string.IsNullOrEmpty(item.Title) ? "Testimony image" : "Image for " + item.Title)"
+                                             width="96" height="72" loading="lazy" />
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-approve">Approve</button>
+                                        </form>
+                                        <form asp-action="Reject" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-reject">Reject</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

@@ -17,101 +17,114 @@
         --shadow: 0 24px 60px rgba(0,0,0,.55);
     }
 
+    /* ===== Base & background layers (Razor-friendly) =====
+           Wallpaper is in body::before using Url.Content so "~" resolves correctly.
+           body::after is a subtle noise/dim layer.
+        */
     html, body {
         font-family: 'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
-        min-height: 100dvh; 
-        height: auto; 
-        overflow-y: auto; 
+        min-height: 100dvh;
+        height: auto;
+        overflow-y: auto;
         overflow-x: hidden;
         color: var(--ink);
-        background: var(--bg) url('../images/cross7.png') center -10% / cover no-repeat fixed;
+        background: transparent; /* actual image is provided by pseudo element */
+        margin: 0;
+        position: relative;
     }
 
-        /* film + grain */
+        /* wallpaper image layer */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            z-index: 0;
+            z-index: -3;
             pointer-events: none;
-            background: rgba(0, 0, 0, 0.296);
+            background-image: url('@Url.Content("~/images/4.jpg")');
+            background-position: center -10%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            filter: saturate(1.02) brightness(0.86);
+            will-change: transform;
         }
 
+        /* subtle film/tint/noise overlay */
         body::after {
             content: "";
             position: fixed;
             inset: 0;
-            z-index: 0;
+            z-index: -2;
             pointer-events: none;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" viewBox="0 0 130 130"><filter id="grainFilterLogin"><feTurbulence baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23grainFilterLogin)" opacity="0.03"/></svg>');
+            background: rgba(0, 0, 0, 0.296);
         }
 
-    /* ===== Stage ===== */
+    /* make header/nav always above the wallpaper */
+    header, nav, .main-wrapper, .auth-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ===== Stage wrapper (reveal via transition, no keyframes) ===== */
     .main-wrapper {
         position: relative;
         z-index: 1;
-        min-height: 100dvh; 
+        min-height: 100dvh;
         width: 100vw;
         display: grid;
         place-items: start center;
-        padding: clamp(8px, 2.5vw, 18px) 2vw 24px; 
-        animation: fadeIn .6s ease forwards;
+        padding: clamp(8px, 2.5vw, 18px) 2vw 24px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity .56s ease, transform .56s cubic-bezier(.2,.9,.25,1);
     }
 
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px)
-        }
-
-        to {
+        .main-wrapper.visible {
             opacity: 1;
-            transform: none
+            transform: none;
         }
-    }
 
-    /* ===== Auth Card ===== */
+    /* ===== Auth Card: use flex so it can naturally wrap on smaller widths (no media queries) ===== */
     .auth-container {
-        display: grid;
-        grid-template-columns: 1.08fr .92fr;
+        display: flex;
+        gap: 0;
+        flex-wrap: wrap;
+        align-items: stretch;
         width: min(1200px, 92vw);
-        height: auto; 
-        max-height: min(780px, 92dvh); 
+        max-height: min(780px, 92dvh);
         border-radius: 22px;
         border: 1px solid var(--glass-brd);
         background: linear-gradient(180deg, var(--glass-1), var(--glass-2));
         backdrop-filter: blur(16px) saturate(140%);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
         box-shadow: var(--shadow);
-        overflow-y: auto; 
+        overflow-y: auto;
         overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch; 
+        -webkit-overflow-scrolling: touch;
     }
 
-    /* ===== Left (Form) ===== */
-
+    /* Left form area: prefers ~60% but will shrink on narrow screens */
     .auth-form {
+        flex: 1 1 60%;
+        min-width: 320px;
         padding: clamp(18px, 3vw, 32px) clamp(16px, 2.2vw, 28px);
         display: grid;
         gap: clamp(10px, 1.2vw, 16px);
         align-content: start;
-        min-width: 0;
-        min-height: 0; 
+        box-sizing: border-box;
     }
 
+    /* Right brand area: prefers ~36% */
     .brand-panel {
-        min-height: 0;
-    }
-   
-    /* ===== Right (Brand Panel) ===== */
-    .brand-panel {
+        flex: 0 1 36%;
+        min-width: 260px;
         position: relative;
         background: radial-gradient(80% 70% at 70% 30%, rgba(255,215,0,.14), transparent 60%), linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
         border-left: 1px solid var(--glass-brd);
         display: grid;
         place-items: center;
         padding: clamp(16px, 2.4vw, 24px);
-        min-width: 0;
+        box-sizing: border-box;
     }
 
         .brand-panel::after {
@@ -119,7 +132,7 @@
             position: absolute;
             inset: 0;
             pointer-events: none;
-            background: radial-gradient(40% 35% at 50% 50%, rgba(207, 200, 145, 0.08), transparent 80%);
+            background: radial-gradient(40% 35% at 50% 50%, rgba(207,200,145,0.08), transparent 80%);
             mix-blend-mode: screen;
         }
 
@@ -131,7 +144,7 @@
         opacity: .95;
     }
 
-    /* ===== Headings ===== */
+    /* ===== Headings & text ===== */
     .auth-kicker {
         font-weight: 800;
         letter-spacing: .14em;
@@ -152,7 +165,7 @@
         margin-top: 4px;
     }
 
-    /* ===== Form ===== */
+    /* ===== Form elements ===== */
     form {
         display: grid;
         gap: 12px;
@@ -210,33 +223,20 @@
         opacity: .85;
     }
 
-    /* ===== Remove all default blue glow/outlines ===== */
-    input.form-control:focus,
-    input:focus,
-    .form-control:focus,
-    textarea:focus,
-    select:focus,
-    button:focus,
-    button:focus-visible,
-    .btn:focus,
-    .btn:focus-visible {
+    input:focus, .form-control:focus, textarea:focus, select:focus, button:focus {
         outline: none !important;
         box-shadow: none !important;
         border-color: transparent !important;
-        background: transparent !important;
     }
 
-    /* ===== Autofill ===== */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus {
+    /* autofill fixes */
+    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
         -webkit-text-fill-color: var(--ink);
         transition: background-color 9999s ease-in-out 0s;
         box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
         caret-color: var(--gold);
     }
 
-    /* ===== Toggle Password ===== */
     .toggle-pass {
         border: 0;
         outline: 0;
@@ -257,7 +257,6 @@
             box-shadow: none !important;
         }
 
-    /* ===== Helper text ===== */
     .help-line {
         font-size: .82rem;
         color: #c7c7d1;
@@ -278,17 +277,12 @@
         border-radius: 12px;
         font-weight: 900;
         font-size: .98rem;
-        line-height: 1.25;
         padding-block: 12px;
         padding-inline: 16px;
         box-shadow: 0 10px 26px rgba(255,215,0,.28);
         transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
         width: 100%;
     }
-
-        .btn-primary .btn-text {
-            padding-bottom: 1px;
-        }
 
         .btn-primary:hover {
             transform: translateY(-1px);
@@ -306,18 +300,17 @@
         align-items: center;
         justify-content: center;
         gap: 15px;
-        background: linear-gradient(135deg, #db4437, #e85549);
+        background: linear-gradient(135deg,#db4437,#e85549);
         color: #fff;
         border: 1px solid rgba(255,255,255,.18);
         border-radius: 12px;
         font-weight: 800;
         font-size: .96rem;
-        line-height: 1.25;
         padding-block: 12px;
         padding-inline: 16px;
-        width: 100%;
         box-shadow: 0 10px 24px rgba(219,68,55,.35);
-        transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+        width: 100%;
+        transition: transform .18s ease, box-shadow .18s ease;
     }
 
         .btn-google:hover {
@@ -325,7 +318,7 @@
             box-shadow: 0 16px 36px rgba(219,68,55,.5);
         }
 
-    /* ===== Links ===== */
+    /* links and hr */
     .meta-links {
         display: grid;
         gap: 6px;
@@ -343,7 +336,7 @@
         }
 
             .meta-links a:hover {
-                color: #ffffff;
+                color: #fff;
                 text-decoration: underline;
             }
 
@@ -353,15 +346,22 @@
         margin: 12px 0 8px;
     }
 
-    /* ===== Alerts ===== */
+    /* alerts — start hidden, then revealed by JS adding .show */
     .alert {
         font-size: .85rem;
         padding: 10px 12px;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,.16);
         background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-        animation: fadeInAlert .4s ease both;
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: opacity .42s ease, transform .42s ease;
     }
+
+        .alert.show {
+            opacity: 1;
+            transform: none;
+        }
 
     .alert-success {
         color: #b6ffb7;
@@ -373,68 +373,51 @@
         border-color: rgba(255,0,0,.25);
     }
 
-    @@keyframes fadeInAlert {
-        from {
-            opacity: 0;
-            transform: translateY(-6px)
-        }
-
-        to {
-            opacity: 1;
-            transform: none
-        }
+    /* small helpers */
+    .hidden-visually {
+        position: absolute !important;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+        clip: rect(1px,1px,1px,1px);
+        white-space: nowrap;
     }
 
-    /* ===== Responsive ===== */
-    @@media (max-width: 900px) {
-        .auth-container {
-            grid-template-columns: 1fr;
-            width: min(860px, 94vw);
-            height: auto; 
-            max-height: 94dvh; 
-        }
-
-        .brand-panel {
-            display: none;
-        }
-
-        .auth-form {
-            padding: clamp(14px, 4vw, 24px) clamp(14px, 5vw, 28px);
-        }
+    .container-pad {
+        padding-inline: clamp(12px, 4vw, 36px);
     }
-
 </style>
 
-<div class="main-wrapper">
-    <div class="auth-container">
+<div class="main-wrapper" id="mainWrapper">
+    <div class="auth-container" role="region" aria-labelledby="loginHeading">
 
         <!-- LEFT: FORM -->
         <div class="auth-form">
             <div>
                 <div class="auth-kicker">Welcome back</div>
-                <h1 class="auth-title">Sign in to continue</h1>
+                <h1 class="auth-title" id="loginHeading">Sign in to continue</h1>
             </div>
 
             @if (TempData["Success"] != null)
             {
-                <div class="alert alert-success">@TempData["Success"]</div>
+                <div class="alert alert-success" id="successAlert">@TempData["Success"]</div>
             }
 
             @if (!string.IsNullOrEmpty(ViewBag.Error as string))
             {
-                <div class="alert alert-danger">@ViewBag.Error</div>
+                <div class="alert alert-danger" id="errorAlert">@ViewBag.Error</div>
             }
 
             <form method="post" asp-action="Login" novalidate>
                 <!-- Email -->
                 <div class="form-row">
                     <label for="loginEmail" class="form-label">Email</label>
-                    <div class="input-wrap">
-                        <i class="bi bi-envelope input-icon"></i>
+                    <div class="input-wrap" role="group" aria-labelledby="emailLabel">
+                        <i class="bi bi-envelope input-icon" aria-hidden="true"></i>
                         <input type="email" name="email" id="loginEmail" class="form-control"
                                placeholder="you@example.com" inputmode="email" autocomplete="email" required />
                     </div>
-                    <div class="help-line">
+                    <div class="help-line" aria-hidden="true">
                         <i class="bi bi-info-circle"></i><span>Use the email you registered with.</span>
                     </div>
                 </div>
@@ -443,14 +426,14 @@
                 <div class="form-row">
                     <label for="loginPassword" class="form-label">Password</label>
                     <div class="input-wrap">
-                        <i class="bi bi-shield-lock input-icon"></i>
+                        <i class="bi bi-shield-lock input-icon" aria-hidden="true"></i>
                         <input type="password" name="password" id="loginPassword" class="form-control"
                                placeholder="Your secure password" autocomplete="current-password" required />
                         <button type="button" class="toggle-pass" aria-label="Show password">
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>
-                    <div class="help-line">
+                    <div class="help-line" aria-hidden="true">
                         <i class="bi bi-key"></i><span>Passwords are case-sensitive.</span>
                     </div>
                 </div>
@@ -461,49 +444,63 @@
                     <span class="btn-spinner" style="display:none;"><i class="bi bi-arrow-repeat bi-spin"></i></span>
                 </button>
 
-                <div class="meta-links">
+                <div class="meta-links" role="navigation" aria-label="Auth links">
                     <a href="/Auth/ForgotPassword">Forgot Password?</a>
                     <div>Don’t have an account? <a href="/Auth/Register">Register</a></div>
                 </div>
 
-                <div class="hr"></div>
+                <div class="hr" aria-hidden="true"></div>
 
-                <button id="googleSigninBtn" class="btn-google" type="button">
-                    <i class="bi bi-google"></i> Sign in with Google
-                </button>
+                @* Uncomment if you re-enable Google sign-in: <button id="googleSigninBtn" ...> *@
             </form>
         </div>
 
         <!-- RIGHT: BRAND -->
-        <aside class="brand-panel">
-            <div class="brand-figure"></div>
+        <aside class="brand-panel" aria-hidden="true">
+            <div class="brand-figure" role="img" aria-label="Site logo"></div>
         </aside>
-
     </div>
 </div>
 
 @section Scripts {
-    <script type="module">
-        const passInput = document.getElementById('loginPassword');
-        const toggleBtn = document.querySelector('.toggle-pass');
+    <script>
+        // Reveal wrapper and any alerts using class toggles (no keyframes, no media queries)
+        (function () {
+            // reveal main wrapper
+            document.addEventListener('DOMContentLoaded', () => {
+                const wrapper = document.getElementById('mainWrapper');
+                if (wrapper) requestAnimationFrame(() => wrapper.classList.add('visible'));
 
-        toggleBtn?.addEventListener('click', () => {
-          if (!passInput) return;
-          const isHidden = passInput.type === 'password';
-          passInput.type = isHidden ? 'text' : 'password';
-          toggleBtn.innerHTML = isHidden ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
-        });
+                // reveal alerts if present
+                const success = document.getElementById('successAlert');
+                const error = document.getElementById('errorAlert');
+                [success, error].forEach(a => {
+                    if (a) requestAnimationFrame(() => a.classList.add('show'));
+                });
+            });
 
-        const submitBtn = document.getElementById('loginSubmit');
-        const form = document.querySelector('form[asp-action="Login"]');
-        form?.addEventListener('submit', () => {
-          if (!submitBtn) return;
-          submitBtn.disabled = true;
-          const text = submitBtn.querySelector('.btn-text');
-          const spinner = submitBtn.querySelector('.btn-spinner');
-          if (text) text.style.display = 'none';
-          if (spinner) spinner.style.display = 'inline-flex';
-        });
+            // password toggle
+            const passInput = document.getElementById('loginPassword');
+            const toggleBtn = document.querySelector('.toggle-pass');
+            toggleBtn?.addEventListener('click', () => {
+                if (!passInput) return;
+                const isHidden = passInput.type === 'password';
+                passInput.type = isHidden ? 'text' : 'password';
+                toggleBtn.innerHTML = isHidden ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+            });
+
+            // submit button behaviour (disable + spinner)
+            const submitBtn = document.getElementById('loginSubmit');
+            const form = document.querySelector('form[asp-action="Login"]');
+            form?.addEventListener('submit', () => {
+                if (!submitBtn) return;
+                submitBtn.disabled = true;
+                const text = submitBtn.querySelector('.btn-text');
+                const spinner = submitBtn.querySelector('.btn-spinner');
+                if (text) text.style.display = 'none';
+                if (spinner) spinner.style.display = 'inline-flex';
+            });
+        })();
     </script>
 
     <script type="module">
@@ -544,4 +541,3 @@
         });
     </script>
 }
-
