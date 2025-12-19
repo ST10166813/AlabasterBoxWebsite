@@ -32,19 +32,23 @@
     }
 
         /* wallpaper layer */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: -3;
-            pointer-events: none;
-            background-image: url('@Url.Content("~/Images/4.jpg")');
-            background-position: center -10%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            filter: saturate(1.02) brightness(0.86);
-            will-change: transform;
+    b /* remote background image (uses the Vecteezy URL you gave) */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        /* direct absolute URL — no Razor processing needed */
+        background-image: url('https://static.vecteezy.com/system/resources/thumbnails/074/134/155/small_2x/sunlight-shines-through-stained-glass-windows-in-a-church-photo.jpg');
+        background-position: center -10%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        -webkit-transform: translateZ(0);
+        filter: saturate(1.03) brightness(0.86);
+    }
+
         }
 
         /* subtle dim overlay for contrast */
