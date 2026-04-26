@@ -33,40 +33,32 @@
             font-family: "Poppins",system-ui,sans-serif;
             color: #fff;
             position: relative;
-            /* keep body transparent — background handled by pseudo-elements below */
         }
 
-            /* ===== Page background (image + subtle dim) =====
-                       Using Razor Url.Content so the tilde path resolves correctly in the .cshtml layout.
-                       body::before = the image, body::after = dim overlay for contrast with the UI.
-                    */
-            /* remote background image (uses the Vecteezy URL you gave) */
-            body::before {
-                content: "";
-                position: fixed;
-                inset: 0;
-                z-index: -2;
-                pointer-events: none;
-                /* direct absolute URL — no Razor processing needed */
-                background-image: url('https://static.vecteezy.com/system/resources/thumbnails/074/134/155/small_2x/sunlight-shines-through-stained-glass-windows-in-a-church-photo.jpg');
-                background-position: center -10%;
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-                -webkit-transform: translateZ(0);
-                filter: saturate(1.03) brightness(0.86);
-            }
+        /* Fixed stray bracket here */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background-image: url('https://static.vecteezy.com/system/resources/thumbnails/074/134/155/small_2x/sunlight-shines-through-stained-glass-windows-in-a-church-photo.jpg');
+            background-position: center -10%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            -webkit-transform: translateZ(0);
+            filter: saturate(1.03) brightness(0.86);
+        }
 
-            }
-
-            body::after {
-                content: "";
-                position: fixed;
-                inset: 0;
-                z-index: -1;
-                background: linear-gradient(180deg, rgba(6,6,8,0.40), rgba(12,12,14,0.20) 40%, rgba(12,12,14,0.18));
-                pointer-events: none;
-            }
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(180deg, rgba(6,6,8,0.40), rgba(12,12,14,0.20) 40%, rgba(12,12,14,0.18));
+            pointer-events: none;
+        }
 
         /* ===== Particles ===== */
         #particles {
@@ -87,27 +79,15 @@
         }
 
         @@keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-10vh) translateX(50vw) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-10vh) translateX(50vw) rotate(360deg); opacity: 0; }
         }
 
-        /* ===== Black-glass header rail ===== */
+        /* ===== Nav Guard ===== */
         .nav-guard {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: var(--nav-h);
             z-index: 1000;
             background: linear-gradient(180deg, rgba(8,8,10,.78), rgba(16,16,20,.62) 60%, rgba(16,16,20,0));
@@ -115,17 +95,16 @@
             backdrop-filter: blur(14px) saturate(140%);
             -webkit-backdrop-filter: blur(14px) saturate(140%);
             box-shadow: 0 10px 30px rgba(0,0,0,.35);
-            transition: height .25s ease, background .25s ease, box-shadow .25s ease;
+            transition: all .25s ease;
             pointer-events: none;
         }
 
         body.scrolled .nav-guard {
             height: calc(var(--nav-h) - 16px);
             background: linear-gradient(180deg, rgba(8,8,10,.86), rgba(16,16,20,.72) 60%, rgba(16,16,20,0));
-            box-shadow: 0 14px 36px rgba(0,0,0,.45);
         }
 
-        /* ===== Top nav links ===== */
+        /* ===== Navigation Links & Auth ===== */
         .top-words {
             position: fixed;
             left: 50%;
@@ -137,26 +116,14 @@
             font-weight: 600;
             text-transform: uppercase;
             white-space: nowrap;
-            transition: top .25s ease;
+            transition: all .25s ease;
         }
 
-        body.scrolled .top-words {
-            top: calc( (var(--nav-h) - 16px - 28px) / 2 );
-        }
+        body.scrolled .top-words { top: calc( (var(--nav-h) - 16px - 28px) / 2 ); }
 
-        .top-words a {
-            color: #f1f1f1;
-            text-decoration: none;
-            transition: opacity .2s, transform .15s;
-            opacity: .9;
-        }
+        .top-words a { color: #f1f1f1; text-decoration: none; opacity: .9; transition: all .2s; }
+        .top-words a:hover { opacity: 1; transform: translateY(-1px); }
 
-            .top-words a:hover {
-                opacity: 1;
-                transform: translateY(-1px);
-            }
-
-        /* ===== Right auth area ===== */
         .auth-links {
             position: fixed;
             right: 20px;
@@ -165,255 +132,113 @@
             display: flex;
             gap: 16px;
             align-items: center;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            transition: top .25s ease;
+            transition: all .25s ease;
         }
 
-        body.scrolled .auth-links {
-            top: calc( (var(--nav-h) - 16px - 32px) / 2 );
-        }
+        body.scrolled .auth-links { top: calc( (var(--nav-h) - 16px - 32px) / 2 ); }
 
-        .auth-links a, .auth-links span {
-            color: #f1f1f1;
-            text-decoration: none;
-            transition: opacity .2s;
-            opacity: .9;
-        }
-
-            .auth-links a:hover {
-                opacity: 1;
-            }
-
-        /* ===== Drawer ===== */
+        /* ===== Hamburger & Drawer ===== */
         .hamburger-icon {
             position: fixed;
-            top: 18px;
-            left: 18px;
+            top: 18px; left: 18px;
             z-index: 1055;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 56px;
-            height: 56px;
+            width: 56px; height: 56px;
             border-radius: 14px;
             cursor: pointer;
-            user-select: none;
             background: linear-gradient(180deg, rgba(10,10,12,.82), rgba(18,18,22,.72));
             border: 1px solid rgba(255,255,255,.12);
-            -webkit-backdrop-filter: blur(14px) saturate(140%);
-            backdrop-filter: blur(14px) saturate(140%);
-            box-shadow: 0 10px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
-            color: #f5f5f5;
-            font-size: 0;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 10px 28px rgba(0,0,0,.45);
         }
 
-            .hamburger-icon::before, .hamburger-icon::after {
-                content: "";
-                position: absolute;
-                width: 26px;
-                height: 2px;
-                border-radius: 2px;
-                background: rgba(255,255,255,.92);
-                box-shadow: 0 7px 0 0 rgba(255,255,255,.92), 0 -7px 0 0 rgba(255,255,255,.92);
-            }
+        .hamburger-icon::before {
+            content: "";
+            position: absolute;
+            width: 26px; height: 2px;
+            background: #fff;
+            box-shadow: 0 7px 0 #fff, 0 -7px 0 #fff;
+        }
 
         .side-drawer {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             height: 100dvh;
             width: 0;
             z-index: 1100;
             overflow: hidden;
             transition: width .35s ease;
-            background: linear-gradient(180deg, rgba(10,10,12,.86), rgba(16,16,20,.78) 40%, rgba(10,10,12,.86));
-            -webkit-backdrop-filter: blur(18px) saturate(150%);
-            backdrop-filter: blur(18px) saturate(150%);
+            background: linear-gradient(180deg, rgba(10,10,12,.95), rgba(16,16,20,.90));
+            backdrop-filter: blur(18px);
             border-right: 1px solid rgba(255,255,255,.12);
-            box-shadow: 6px 0 42px rgba(0,0,0,.45);
-            border-radius: 0 16px 16px 0;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
         }
 
         .side-drawer-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-            border-bottom: 1px solid rgba(255,255,255,.12);
-            color: #f1f1f1;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,.12);
             font-weight: 800;
         }
 
-        .close-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            cursor: pointer;
-            background: rgba(255,255,255,.08);
-            color: #f1f1f1;
-            border: 1px solid rgba(255,255,255,.14);
-        }
-
-        .menu-links {
-            overflow-y: auto;
-            padding: 10px 10px 16px;
-        }
-
-        .drawer-section {
-            padding: 8px 12px;
-            margin: 6px 6px 2px;
-            font-size: .8rem;
-            letter-spacing: .5px;
-            color: rgba(255,255,255,.72);
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
         .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 14px;
-            margin: 6px 6px;
-            border-radius: 12px;
-            color: #f1f1f1;
-            text-decoration: none;
-            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-            border: 1px solid rgba(255,255,255,.1);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-            transition: transform .15s, background .2s, border-color .2s, box-shadow .2s, color .2s;
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 14px; margin: 6px;
+            border-radius: 12px; color: #f1f1f1; text-decoration: none;
+            background: rgba(255,255,255,.05);
+            transition: 0.2s;
         }
 
-            .menu-item:hover {
-                transform: translateX(4px);
-                background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-                border-color: rgba(255,255,255,.18);
-                box-shadow: 0 10px 26px rgba(0,0,0,.35);
-                color: #fff;
-            }
+        .menu-item:hover { transform: translateX(4px); background: rgba(255,255,255,.12); }
 
-        .drawer-logo {
-            padding: 16px;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,.12);
-            background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-        }
+        /* ===== RESPONSIVE FIXES ===== */
+/* Use DOUBLE @@ here */
+@@media (max-width: 1024px) {
+    .top-words { display: none; }
+    .auth-links { right: 15px; font-size: 0.8rem; }
+}
 
-            .drawer-logo img {
-                display: block;
-                margin: 0 auto;
-                max-width: 72%;
-                border-radius: 12px;
-            }
+/* Use DOUBLE @@ here */
+@@media (max-width: 480px) {
+    .auth-links span { display: none; }
+    .hamburger-icon { left: 12px; top: 12px; width: 48px; height: 48px; }
+    #sideDrawer { max-width: 85vw; }
+}
 
-        .overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 1090;
-            display: none;
-            background: rgba(0,0,0,.45);
-            -webkit-backdrop-filter: blur(2px);
-            backdrop-filter: blur(2px);
-        }
-
-        /* ===== Content spacing ===== */
         .page-wrapper {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            min-height: 100vh;
+            position: relative; z-index: 1;
             padding-top: calc(var(--nav-h) + 16px);
             padding-bottom: calc(var(--footer-h) + 24px);
         }
 
-        :is(h1,h2,h3,h4,h5,h6,[id]) {
-            scroll-margin-top: calc(var(--nav-h) + 24px);
-        }
-
-        /* ===== Footer (identical look everywhere) ===== */
         footer.site-footer {
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: fixed; left: 0; right: 0; bottom: 0;
             height: var(--footer-h);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(0deg, rgba(8,8,10,.78), rgba(16,16,20,.62) 60%, rgba(16,16,20,0));
-            border-top: 1px solid rgba(255,255,255,.12);
-            -webkit-backdrop-filter: blur(14px) saturate(140%);
-            backdrop-filter: blur(14px) saturate(140%);
-            color: #f1f1f1;
-            text-align: center;
-            z-index: 2000;
-            box-shadow: 0 -10px 30px rgba(0,0,0,.35);
-            font-size: .92rem;
-            padding: 0 12px;
+            background: rgba(8,8,10,.85);
+            backdrop-filter: blur(14px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; font-size: .92rem;
         }
 
-            footer.site-footer a {
-                color: #ffffff;
-                text-decoration: none;
-                transition: color .2s;
-            }
-
-                footer.site-footer a:hover {
-                    color: #fff;
-                }
-
-        /* ===== Top fade ===== */
-        .top-fade {
-            position: fixed;
-            inset: 0 0 auto 0;
-            height: 110px;
-            z-index: 1;
-            pointer-events: none;
-            background: linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.55) 40%, rgba(0,0,0,0) 100%);
-        }
-
-        @@media (max-width:640px) {
-            .hamburger-icon {
-                width: 52px;
-                height: 52px;
-            }
-
-            .top-words {
-                gap: 20px;
-                font-size: .92rem;
-            }
-
-            footer.site-footer {
-                font-size: .88rem;
-            }
+        .overlay {
+            position: fixed; inset: 0; z-index: 1090;
+            display: none; background: rgba(0,0,0,.45);
+            backdrop-filter: blur(2px);
         }
     </style>
+@await RenderSectionAsync("Styles", required: false)
 
-    @RenderSection("Styles", required: false)
 </head>
 <body>
-    <!-- Header glass rail -->
     <div class="nav-guard" aria-hidden="true"></div>
-
-    <!-- Particles & top fade -->
     <div id="particles" aria-hidden="true"></div>
-    <div class="top-fade" aria-hidden="true"></div>
-
-    <!-- Drawer button -->
     <button class="hamburger-icon" aria-label="Open menu" onclick="openDrawer()"></button>
 
-    <!-- Center nav -->
-    @{
-        var isAdmin = Context.Session.GetString("IsAdmin") == "true";
-    }
-    <nav class="top-words" aria-label="Primary">
+    @{ var isAdmin = Context.Session.GetString("IsAdmin") == "true"; }
+
+    <nav class="top-words">
         <a href="/">Home</a>
         <a href="/AboutUs">About Us</a>
         <a href="/Events">Events</a>
@@ -422,12 +247,10 @@
         <a href="/Testimonies">Testimonies</a>
     </nav>
 
-    <!-- Auth links -->
     <div class="auth-links">
         @if (Context.Session.GetString("FirebaseToken") != null)
         {
-            var displayName = Context.Session.GetString("UserName") ?? "User";
-            <span>@displayName</span>
+            <span>@(Context.Session.GetString("UserName") ?? "User")</span>
             <a asp-controller="Auth" asp-action="Logout">Logout</a>
         }
         else
@@ -437,106 +260,61 @@
         }
     </div>
 
-    <!-- Drawer -->
-    <div id="sideDrawer" class="side-drawer" aria-hidden="true" aria-label="App menu">
+    <div id="sideDrawer" class="side-drawer">
         <div class="side-drawer-header">
-            <span>Menu</span>
-            <button class="close-btn" aria-label="Close menu" onclick="closeDrawer()"><i class="bi bi-x-lg"></i></button>
+            <span>MENU</span>
+            <button class="close-btn" onclick="closeDrawer()"><i class="bi bi-x-lg"></i></button>
         </div>
-
         <div class="menu-links">
-            @if (isAdmin)
-            {
+            @if (isAdmin) {
                 <div class="drawer-section">Admin</div>
                 <a class="menu-item" asp-controller="Prayer" asp-action="AdminView"><i class="bi bi-journal-bookmark-fill"></i> Prayer Requests</a>
-                <a class="menu-item" asp-controller="Events" asp-action="AddEvent"><i class="bi bi-calendar-plus"></i> Add Events</a>
                 <a class="menu-item" asp-controller="Testimonies" asp-action="Admin"><i class="bi bi-chat-heart-fill"></i> Manage Testimonies</a>
-                <a class="menu-item" asp-controller="Events" asp-action="ManageVolunteers"><i class="bi bi-people-fill"></i> Manage Volunteers</a>
-                <div class="drawer-section">Main</div>
             }
-            <a class="menu-item" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Home</a>
-            <a class="menu-item" asp-controller="AboutUs" asp-action="Index"><i class="bi bi-info-circle"></i> About Us</a>
-            <a class="menu-item" asp-controller="Events" asp-action="Index"><i class="bi bi-calendar-event"></i> Events</a>
-            <a class="menu-item" asp-controller="Events" asp-action="Volunteer"><i class="bi bi-people"></i> Volunteer</a>
-            <a class="menu-item" asp-controller="Testimonies" asp-action="Index"><i class="bi bi-chat-quote"></i> Testimonies</a>
-            <a class="menu-item" asp-controller="Prayer" asp-action="Index"><i class="bi bi-journal"></i> Prayer</a>
-            <a class="menu-item" asp-controller="Donate" asp-action="Index"><i class="bi bi-heart"></i> Donate</a>
-            <a class="menu-item" asp-controller="Home" asp-action="Privacy"><i class="bi bi-shield-lock"></i> Privacy</a>
+            <div class="drawer-section">Main</div>
+            <a class="menu-item" href="/"><i class="bi bi-house"></i> Home</a>
+            <a class="menu-item" href="/AboutUs"><i class="bi bi-info-circle"></i> About Us</a>
+            <a class="menu-item" href="/Gallery"><i class="bi bi-images"></i> Gallery</a>
+            <a class="menu-item" href="/Events"><i class="bi bi-calendar-event"></i> Events</a>
+            <a class="menu-item" href="/Testimonies"><i class="bi bi-chat-quote"></i> Testimonies</a>
+            <a class="menu-item" href="/Events/Volunteer"><i class="bi bi-person-lines-fill"></i> Volunteer</a>
+            <a class="menu-item" href="/Prayer/Index"><i class="bi bi-journal-bookmark-fill"></i> Prayer Requests</a>
+            <a class="menu-item" href="/Donate"><i class="bi bi-heart"></i> Donate</a>
         </div>
-
-        <div class="drawer-logo"><img src="~/Images/whitelogo.png" alt="Ministry Logo" /></div>
     </div>
 
     <div id="menuOverlay" class="overlay" onclick="closeDrawer()"></div>
 
-    <!-- Page Content -->
     <div class="page-wrapper">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <main role="main">@RenderBody()</main>
     </div>
 
-    <!-- Footer (same across all pages) -->
-    <footer class="site-footer" role="contentinfo" id="appFooter">
-        <div class="footer-content">
-            <p>
-                <span id="year"></span> © Made by <strong>404 Found</strong> &nbsp;|&nbsp;
-                <a href="/Home/Privacy">Privacy Policy</a>
-            </p>
-        </div>
+    <footer class="site-footer">
+        <p><span id="year"></span> © Alabaster Ministry &bull; Built by <strong>404 Found</strong></p>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-    <script type="module" src="~/js/firebase-init.js"></script>
-
     <script>
-        // Drawer controls
         function openDrawer(){
-          const d=document.getElementById('sideDrawer');
-          const o=document.getElementById('menuOverlay');
-          d.style.width='340px'; o.style.display='block'; d.setAttribute('aria-hidden','false');
+            const d = document.getElementById('sideDrawer');
+            const o = document.getElementById('menuOverlay');
+            d.style.width = window.innerWidth < 500 ? '85vw' : '340px'; 
+            o.style.display = 'block';
         }
         function closeDrawer(){
-          const d=document.getElementById('sideDrawer');
-          const o=document.getElementById('menuOverlay');
-          d.style.width='0'; o.style.display='none'; d.setAttribute('aria-hidden','true');
+            document.getElementById('sideDrawer').style.width = '0';
+            document.getElementById('menuOverlay').style.display = 'none';
         }
 
-        // Particles
-        (function () {
-          if (window.__particlesInit) return;
-          window.__particlesInit = true;
-          let container = document.getElementById('particles');
-          if (!container) { container = document.createElement('div'); container.id = 'particles'; container.setAttribute('aria-hidden','true'); document.body.prepend(container); }
-          const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          if (prefersReduced) return;
-          function createParticle() {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            const size = Math.random() * 6 + 2;
-            p.style.width = size + 'px';
-            p.style.height = size + 'px';
-            p.style.left = Math.random() * window.innerWidth + 'px';
-            p.style.animationDuration = (5 + Math.random() * 10) + 's';
-            p.style.background = 'rgba(255,215,0,' + (Math.random() * 0.6 + 0.3).toFixed(2) + ')';
-            container.appendChild(p);
-            setTimeout(() => p.remove(), 15000);
-          }
-          window.__particlesInterval = setInterval(createParticle, 150);
-          window.addEventListener('pagehide', () => clearInterval(window.__particlesInterval));
-        })();
-
-        // Shrink header
         (function(){
-          function onScroll(){ document.body.classList.toggle('scrolled', window.scrollY > 8); }
-          onScroll(); window.addEventListener('scroll', onScroll, { passive:true });
+            function onScroll(){ document.body.classList.toggle('scrolled', window.scrollY > 10); }
+            window.addEventListener('scroll', onScroll);
+            document.getElementById('year').textContent = new Date().getFullYear();
         })();
-
-        // Auto year
-        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

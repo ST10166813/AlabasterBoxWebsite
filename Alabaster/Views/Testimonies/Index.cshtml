@@ -19,206 +19,147 @@
             --shadow: 0 25px 70px rgba(0,0,0,.55);
         }
 
-        /* Base & wallpaper */
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: 'Poppins','Segoe UI',sans-serif;
-            color: var(--ink);
-            background: transparent; /* wallpaper is handled by pseudo-element */
-            overflow-x: hidden;
-            position: relative;
-        }
-
-            /* wallpaper layer — use Url.Content so "~" resolves in Razor */
-            body::before {
-                content: "";
-                position: fixed;
-                inset: 0;
-                z-index: -3;
-                pointer-events: none;
-                background-image: url('@Url.Content("~/Images/4.jpg")');
-                background-position: center -10%;
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-                /* subtle correction for brightness/contrast so text stays readable */
-                filter: saturate(1.02) brightness(0.86);
-                will-change: transform;
-            }
-
-            /* dim overlay so text and UI remain legible */
-            body::after {
-                content: "";
-                position: fixed;
-                inset: 0;
-                z-index: -2;
-                pointer-events: none;
-                background: rgba(0,0,0,0.22);
-            }
-
-        /* ensure nav/header appear above wallpaper */
-        header, nav, .page-content {
-            position: relative;
-            z-index: 5;
-        }
+        /* REMOVED: html, body, and body::before overrides. 
+           This allows the Layout's orange theme and 1.jpg to show.
+        */
 
         /* page container */
         .page-content {
+            position: relative;
+            z-index: 10;
             max-width: 1400px;
-            margin: 3.5rem auto;
-            padding: clamp(1rem, 3vw, 2.4rem);
+            margin: 0 auto;
+            /* Extra top padding so it doesn't hide under the Nav Bar */
+            padding: 120px 1.5rem 60px; 
         }
 
-        /* heading */
+        /* CTA Button Styling */
+        .hero-cta {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 0.8rem 2rem;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: .5px;
+            border-radius: 999px;
+            text-decoration: none;
+            background: linear-gradient(135deg, #FF7F00, #FFD700);
+            color: #111;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: all .3s ease;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255,127,0,0.4);
+            color: #000;
+        }
+
         .page-head {
             text-align: center;
-            margin-bottom: 1.2rem;
+            margin-bottom: 2rem;
         }
 
-            .page-head h1 {
-                font-size: clamp(2.2rem, 4.8vw, 3.8rem);
-                font-weight: 900;
-                margin: 0;
-                color: #fff;
-                text-shadow: 0 2px 6px rgba(0,0,0,.55);
-            }
+        .page-head h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
 
-            .page-head .tagline {
-                color: rgba(255,255,255,.92);
-            }
-
-        /* section title */
         .section-title {
-            display: inline-block;
-            padding: .7rem 1.1rem;
-            border-radius: 14px;
-            background: linear-gradient(180deg, rgba(255,215,0,.12), rgba(255,255,255,.02));
+            display: block;
+            text-align: center;
+            margin: 40px 0 20px;
             color: var(--gold);
             font-weight: 900;
             text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        /* testimony grid & cards */
         .testimony-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: clamp(1rem, 2vw, 1.6rem);
-            margin-top: 1rem;
+            gap: 2rem;
         }
+.testimony-card {
+    background: rgba(45, 20, 5, 0.6); 
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 24px;
+    padding: 2.5rem 1.5rem; /* More padding on top/bottom */
+    text-align: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    
+    /* Stack content vertically */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
 
-        .testimony-card {
-            background: rgba(18,18,18,.65);
-            border: 1px solid var(--glass-brd);
-            border-radius: 16px;
-            padding: 1.4rem;
-            text-align: center;
-            box-shadow: var(--shadow);
-            color: var(--ink);
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity .6s ease, transform .6s cubic-bezier(.2,.9,.25,1);
+/* Make sure the text looks clean under the square */
+.testimony-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: #f1f1f1;
+    max-width: 90%; /* Keeps text from hitting the edges */
+}
+
+        .testimony-card.show {
+            opacity: 1;
+            transform: translateY(0);
         }
+.testimony-card img {
+    /* Create a perfect square */
+    width: 250px; 
+    height: 250px;
+    
+    /* This prevents the squishing/stretching */
+    object-fit: cover; 
+    object-position: center;
+    
+    /* Visual styling */
+    border-radius: 15px; /* Rounded corners */
+    margin: 0 auto 1.5rem; /* Center horizontally and add bottom spacing */
+    display: block;
+    border: 2px solid var(--gold);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
 
-            .testimony-card.show {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            /* FIX: prevent cropping — keep same non-cropping rules you had before */
-            .testimony-card img {
-                width: 75%; /* not full width — keeps aspect and avoids squish/crop */
-                max-height: 200px; /* limits height */
-                object-fit: contain; /* show the whole image (no cropping) */
-                border-radius: 12px;
-                margin: 0 auto 0.9rem; /* center it and keep spacing */
-                display: block;
-            }
-
-            .testimony-card h4 {
-                color: var(--gold);
-                font-weight: 800;
-                margin-bottom: .4rem;
-            }
-
-            .testimony-card p {
-                color: #eee;
-                line-height: 1.6;
-                margin-bottom: .6rem;
-            }
+        .testimony-card h4 {
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
 
         .no-testimonies {
             grid-column: 1 / -1;
             text-align: center;
             color: var(--gold);
-        }
-
-        /* sparkle elements (animated by JS, not keyframes) */
-        .sparkle {
-            position: fixed;
-            width: 3px;
-            height: 3px;
-            background: rgba(255,215,0,0.9);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0;
-            transform: translateY(0) scale(.6);
-            transition: transform 900ms ease, opacity 900ms ease;
+            font-size: 1.2rem;
         }
     </style>
 }
 
-@section Scripts {
-    <script>
-        // Reveal cards when they enter viewport
-        (function(){
-          const io = new IntersectionObserver((entries, obs) => {
-            entries.forEach(e => {
-              if (e.isIntersecting) {
-                e.target.classList.add('show');
-                obs.unobserve(e.target);
-              }
-            });
-          }, { threshold: 0.18 });
-
-          document.querySelectorAll('.testimony-card').forEach(c => io.observe(c));
-        })();
-
-        // subtle sparkle via JS transitions (no keyframes)
-        (function(){
-          function make(){
-            const s = document.createElement('div');
-            s.className = 'sparkle';
-            const size = Math.random()*3 + 2;
-            s.style.width = s.style.height = size + 'px';
-            s.style.left = Math.random()*window.innerWidth + 'px';
-            s.style.top = Math.random()*window.innerHeight + 'px';
-            document.body.appendChild(s);
-            void s.offsetWidth;
-            s.style.opacity = '1';
-            s.style.transform = 'translateY(-30px) scale(1)';
-            const life = 3500 + Math.random()*4000;
-            setTimeout(()=> {
-              s.style.opacity = '0';
-              s.style.transform = 'translateY(-60px) scale(.6)';
-              setTimeout(()=> s.remove(), 900);
-            }, life);
-          }
-          setInterval(make, 900);
-        })();
-    </script>
-}
-
 <div class="page-content">
-    <header class="page-head" aria-labelledby="t-head">
-        <h1 id="t-head">Testimonies</h1>
-        <div class="tagline">Experience • Declaration • Hope • Testament</div>
+    <header class="page-head">
+        <h1>Testimonies</h1>
+        <p class="tagline">Experience • Declaration • Hope • Testament</p>
+        
+        @* --- THE MISSING BUTTON --- *@
+        <div style="text-align:center;">
+            <a asp-controller="Testimonies" asp-action="Create" class="hero-cta">
+                <i class="bi bi-plus-circle"></i> Share Your Story
+            </a>
+        </div>
+        @* -------------------------- *@
     </header>
 
     <h2 class="section-title">Voices From Our Community</h2>
 
-    <div class="testimony-grid" role="list">
+    <div class="testimony-grid">
         @if (!testimonies.Any())
         {
             <div class="no-testimonies">✨ No testimonies yet. Be the first to inspire others! ✨</div>
@@ -231,19 +172,35 @@
                 var desc = item?.Description ?? "";
                 var author = string.IsNullOrWhiteSpace(item?.CreatedBy) ? "Anonymous" : item!.CreatedBy;
                 var createdAt = item?.CreatedAt ?? "";
-                var imgSrc = !string.IsNullOrWhiteSpace(item?.ImageBase64) ? $"data:image/jpeg;base64,{item.ImageBase64}" : Url.Content("~/Images/whitelogo.png");
+                var imgSrc = !string.IsNullOrWhiteSpace(item?.ImageBase64) ? $"data:image/jpeg;base64,{item.ImageBase64}" : Url.Content("~/images/whitelogo.png");
 
-                <div class="testimony-card" role="listitem" aria-labelledby="t-@item?.Id">
+                <div class="testimony-card">
                     <img src="@imgSrc" alt="Image for @title" loading="lazy" />
-                    <h4 id="t-@item?.Id">@title</h4>
+                    <h4>@title</h4>
                     <p>@desc</p>
-                    <small>By: @author</small>
+                    <small style="color:var(--gold)">By: @author</small>
                     @if (!string.IsNullOrWhiteSpace(createdAt))
                     {
-                        <small> • @createdAt</small>
+                        <br /><small style="opacity:0.7">@createdAt</small>
                     }
                 </div>
             }
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        (function(){
+          const io = new IntersectionObserver((entries, obs) => {
+            entries.forEach(e => {
+              if (e.isIntersecting) {
+                e.target.classList.add('show');
+                obs.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          document.querySelectorAll('.testimony-card').forEach(c => io.observe(c));
+        })();
+    </script>
+}

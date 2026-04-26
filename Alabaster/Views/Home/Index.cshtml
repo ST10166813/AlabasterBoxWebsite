@@ -29,11 +29,10 @@ section .content{max-width:620px;}
 h1,h2{font-weight:800;text-transform:uppercase;letter-spacing:.8px;background:none!important;-webkit-background-clip:initial;background-clip:initial;color:#fff!important;text-shadow:var(--shadow-ink-strong);margin:0 0 .6rem;}
 h2{font-size:clamp(1.6rem,3.6vw,2.2rem);}
 
-/* Page title: elegant, balanced, never > ~3 lines */
 .page-title{
   font-size:clamp(2.2rem,4.8vw,3.2rem);
   text-align:center;width:100%;
-  max-width:26ch;           /* trims line length */
+  max-width:26ch;           
   margin-inline:auto;
   text-wrap:balance;
   line-height:1.15;
@@ -42,7 +41,31 @@ h2{font-size:clamp(1.6rem,3.6vw,2.2rem);}
   text-align:center;max-width:70ch;margin:8px auto 0;opacity:.95;
 }
 
-/* ===== Under-note accents (for Mission & Vision) ===== */
+/* ===== QUICK INFO (NEW) ===== */
+.quick-info {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+.info-tag {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  padding: 14px 22px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+.info-tag i { color: var(--gold); font-size: 1.4rem; }
+.info-tag strong { display: block; font-size: 0.7rem; text-transform: uppercase; color: var(--gold); letter-spacing: 1px; margin-bottom: 2px; }
+.info-tag span { font-size: 0.95rem; font-weight: 500; }
+
+/* ===== Under-note accents ===== */
 .under-note{margin-top:12px;}
 .accent{height:10px;display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 10px;}
 .accent::before,.accent::after{
@@ -67,22 +90,11 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
 /* ===== BUTTON ===== */
 .btn{display:inline-block;margin-top:8px;padding:10px 26px;font-weight:600;border-radius:42px;text-decoration:none;color:#111;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 8px 22px rgba(0,0,0,.45);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;}
 .btn:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,0,0,.55);filter:brightness(1.05);}
-
-/* ===== MINI STRIP ===== */
-.strip{display:grid;grid-template-columns:repeat(2,minmax(160px,1fr));gap:12px;width:100%;max-width:1100px;}
-.strip .item{display:grid;place-items:center;gap:6px;text-align:center;padding:10px 8px;border-radius:12px;border:1px solid rgb(255,255,255);background:var(--glass);transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease;}
-.strip .item:hover{transform:translateY(-2px);border-color:rgba(255,215,0,.45);box-shadow:0 12px 32px rgba(0,0,0,.5);}
-.strip i{font-size:1.2rem;opacity:.95;}
-
-/* ===== QUOTES ===== */
-.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:1100px;}
-.quote{border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:16px 14px;background:var(--glass);box-shadow:0 10px 28px rgba(0,0,0,.5);}
-.quote p{margin:0;font-size:.98rem;}
-.quote .name{margin-top:8px;font-size:.9rem;opacity:.95;}
+.btn-outline { background: rgba(255,255,255,0.05); color: #fff!important; border: 1px solid rgba(255,255,255,0.3); margin-left: 10px; }
 
 /* ===== FAQ ===== */
 .faq{width:100%;max-width:900px;}
-.faq details{border:1px solid rgba(255,217,0,.212);border-radius:15px;background:linear-gradient(180deg, rgba(8,8,8,.067), rgba(22,22,22,.149));padding:14px 16px;margin-bottom:12px;box-shadow:0 12px 28px rgba(0,0,0,.55);transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;}
+.faq details{border:1px solid rgba(255,217,0,.212);border-radius:15px;background:linear-gradient(180deg, rgba(8,8,8,.067), rgba(22,22,22,.149));padding:14px 16px;margin-bottom:12px;box-shadow:0 12px 28px rgba(0,0,0,.55);transition:all .2s ease;}
 .faq details[open]{border-color:#fff;box-shadow:0 16px 36px rgba(121,121,121,.33);background:linear-gradient(180deg, rgba(162,162,162,.297), rgba(26,26,26,.39));}
 .faq summary{cursor:pointer;font-weight:300;font-size:1.08rem;padding-right:32px;list-style:none;outline:none;position:relative;}
 .faq summary::after{content:"›";position:absolute;right:6px;top:50%;transform:translateY(-50%) rotate(90deg);font-size:1.4rem;line-height:1;opacity:.95;transition:transform .2s ease;}
@@ -101,34 +113,49 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
 .fade-left.show,.fade-right.show{transform:none;opacity:1;}
 
 /* ===== RESPONSIVE ===== */
-@@media (max-width:1024px){
-  section img{width:48vw;height:38vw;max-width:520px;max-height:420px;}
-}
 @@media (max-width:900px){
   section{flex-direction:column!important;text-align:center;gap:22px;}
-  section .content{text-align:center;}
   section img{width:92%;height:280px;}
-  .quotes{grid-template-columns:1fr;}
-  .strip{grid-template-columns:repeat(2,1fr);}
-  .page-title{max-width:28ch;}
+  .quick-info { flex-direction: column; align-items: center; }
+  .info-tag { width: 100%; max-width: 320px; }
+  .btn-outline { margin-left: 0; margin-top: 10px; }
 }
 </style>
 }
 
 <div class="page-overlay">
 
-  <!-- HERO -->
-  <section class="compact" style="flex-direction:column; text-align:center;">
+  <section class="compact" style="flex-direction:column; text-align:center; min-height: 70vh; justify-content: center;">
     <div class="content reveal">
       <h1 class="page-title">Welcome to Alabaster Box Anointing Ministries</h1>
       <p class="page-kicker">Discover a sacred space of faith, hope, and love. Our ministry exists to uplift and guide you to live out God’s word every day.</p>
-      <a href="/Donate" class="btn">Support Our Ministry</a>
+      
+      <div class="quick-info">
+        <div class="info-tag">
+          <i class="bi bi-geo-alt-fill"></i>
+          <div>
+            <strong>Our Location</strong>
+            <span>New Germany Primary School</span>
+          </div>
+        </div>
+        <div class="info-tag">
+          <i class="bi bi-clock-fill"></i>
+          <div>
+            <strong>Service Time</strong>
+            <span>Sundays @@ 14:30pm</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 35px;">
+        <a href="/Donate" class="btn">Support Our Ministry</a>
+        <a href="/Events" class="btn btn-outline">View Upcoming Services</a>
+      </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
   <section>
-    <img src="~/Images/imgthree.jpg" alt="About Alabaster Box" class="fade-left reveal">
+    <img src="~/images/imgthree.jpg" alt="About Alabaster Box" class="fade-left reveal">
     <div class="content fade-right reveal">
       <h2>About Alabaster Box</h2>
       <p>Alabaster Box Anointing Ministries is built on compassion and purpose. We provide opportunities for worship, teaching, outreach, and personal growth through the Word of God. Our heart is to serve and equip every believer to walk boldly in their calling.</p>
@@ -136,14 +163,11 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
     </div>
   </section>
 
-  <!-- MISSION -->
   <section>
-    <img src="~/Images/imgtwo.jpeg" alt="Our Mission" class="fade-right reveal">
+    <img src="~/images/imgtwo.jpeg" alt="Our Mission" class="fade-right reveal">
     <div class="content fade-left reveal">
       <h2>Our Mission</h2>
       <p>To share the gospel of Christ through worship, discipleship, and acts of love, bringing hope to every heart. Every service, outreach, and prayer moment aims to glorify God and uplift His people.</p>
-
-      <!-- NEW: subtle accent + chips -->
       <div class="under-note">
         <div class="accent"><i></i></div>
         <div class="chips">
@@ -155,14 +179,11 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
     </div>
   </section>
 
-  <!-- VISION -->
   <section>
-    <img src="~/Images/imgone.jpg" alt="Our Vision" class="fade-left reveal">
+    <img src="~/images/imgone.jpg" alt="Our Vision" class="fade-left reveal">
     <div class="content fade-right reveal">
       <h2>Our Vision</h2>
       <p>We envision a faith-filled community where lives are transformed through the power of God’s Word, empowered to impact families, cities, and nations for His glory.</p>
-
-      <!-- NEW: subtle accent + chips -->
       <div class="under-note">
         <div class="accent"><i></i></div>
         <div class="chips">
@@ -174,9 +195,8 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
     </div>
   </section>
 
-  <!-- OUTREACH -->
   <section>
-    <img src="~/Images/imgfour.jpg" alt="Community Outreach" class="fade-right reveal">
+    <img src="~/images/imgfour.jpg" alt="Community Outreach" class="fade-right reveal">
     <div class="content fade-left reveal">
       <h2>Community & Outreach</h2>
       <p>Faith in action — that’s our call. Through feeding programs, youth mentorship, and acts of kindness, we live out God’s love daily. Be part of the change that brings hope to our communities.</p>
@@ -184,47 +204,20 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
     </div>
   </section>
 
-  <!-- TEACHINGS -->
-  <section>
-    <img src="~/Images/imgfive.jpeg" alt="Worship and Teaching" class="fade-left reveal">
-    <div class="content fade-right reveal">
-      <h2>Teachings & Worship</h2>
-      <p>Our gatherings are filled with God’s presence. Every sermon, song, and prayer seeks to strengthen your faith and fill you with His peace. Join us weekly for powerful teachings and worship sessions.</p>
-    <a href="/Events" class="btn">View Upcoming Services</a>
-    </div>
-  </section>
-
-  <!-- YOUTUBE -->
   <section class="compact" style="flex-direction:column; text-align:center;">
     <div class="content reveal">
       <h2>Watch Our Latest Sermon</h2>
-      <p>Can’t make it in person? Connect with us online. Subscribe to our YouTube channel to watch live and archived sermons that will inspire your journey with Christ.</p>
+      <p>Can’t make it in person? Connect with us online via our YouTube channel to watch live and archived sermons.</p>
     </div>
     <div class="video-container reveal">
-      @if (!string.IsNullOrEmpty((string?)ViewBag.YouTubeVideoId))
-      {
-        <iframe 
-          title="Latest sermon video"
-          src="https://www.youtube.com/embed/@(ViewBag.YouTubeVideoId)?rel=0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen></iframe>
-      }
-      else
-      {
-        <iframe 
-          title="Latest sermon video"
-          src="https://www.youtube.com/embed/UCFqkqWkSvJ_hm0m2whwGZWQ?rel=0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen></iframe>
-      }
+      <iframe title="Latest sermon video" src="https://www.youtube.com/embed/UCFqkqWkSvJ_hm0m2whwGZWQ?rel=0" allowfullscreen></iframe>
     </div>
   </section>
 
-  <!-- TESTIMONY HIGHLIGHTS -->
   <section class="compact" style="flex-direction:column; text-align:center;">
     <div class="content reveal" style="max-width:900px;">
       <h2>Testimony Highlights</h2>
-      <p>Stories of healing, restoration, and hope — be encouraged by what God is doing in our community.</p>
+      <p>Stories of healing, restoration, and hope from our community.</p>
     </div>
     <div class="quotes reveal">
       <div class="quote">
@@ -243,22 +236,21 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
     <a href="/Testimonies" class="btn" style="margin-top:12px;">Read More Testimonies</a>
   </section>
 
-  <!-- FAQ -->
   <section class="compact" style="flex-direction:column; text-align:left;">
     <div class="content reveal" style="max-width:900px; margin:0 auto;">
       <h2 style="text-align:center;">Frequently Asked Questions</h2>
       <div class="faq">
         <details class="reveal">
-          <summary>What time are services?</summary>
-          <p>Please see our Events page for the latest service and teaching times.</p>
+          <summary>Where and what time are services?</summary>
+          <p>We gather every <strong>Sunday at 14:30pm</strong> at <strong>New Germany Primary School</strong>. Everyone is welcome!</p>
         </details>
         <details class="reveal">
           <summary>How do I volunteer?</summary>
-          <p>Head to the Volunteer page, choose an event, and submit the quick form — our team will contact you.</p>
+          <p>Head to the Volunteer page, choose an event, and submit the quick form.</p>
         </details>
         <details class="reveal">
           <summary>How can I give?</summary>
-          <p>Use the Donate page for once-off or recurring giving. Thank you for partnering with us!</p>
+          <p>Use the Donate page for EFT details or info on physical donations. Thank you!</p>
         </details>
       </div>
     </div>
@@ -267,7 +259,6 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
 
 @section Scripts {
 <script>
-  /* Retriggering scroll animations */
   const reveals = document.querySelectorAll('.reveal, .fade-left, .fade-right');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
@@ -275,6 +266,6 @@ p{font-size:1.03rem;line-height:1.7;margin:0 0 .8rem;}
       else{ entry.target.classList.remove('show'); }
     });
   },{ threshold: 0.18 });
-  (function init(){ reveals.forEach(el=>io.observe(el)); })();
+  reveals.forEach(el=>io.observe(el));
 </script>
 }

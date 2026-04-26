@@ -18,27 +18,28 @@
             --gold: #FFD700;
         }
 
+       /* 1. Make sure the background isn't being blocked by a solid color */
         html, body {
             font-family: 'Poppins', 'Segoe UI', sans-serif;
             color: #fff;
             min-height: 100vh;
-            overflow-x: hidden;
-            background-color: #000; /* fallback */
+            background-color: transparent !important; /* Changed from #000 */
         }
 
-            /* Background image (use Url.Content so ~ resolves correctly inside Razor) */
-            body::before {
-                content: "";
-                position: fixed;
-                inset: 0;
-                z-index: -2;
-                background-image: url('@Url.Content("~/Images/4.jpg")');
-                background-position: center -10%;
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-                filter: saturate(1.03) brightness(0.86);
-            }
+        /* 2. Attach the specific Donate background to the wrapper instead of the body */
+        .page-wrapper::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1; /* This puts it exactly between the layout and your text */
+            pointer-events: none;
+            background-image: url('@Url.Content("~/images/4.jpg")');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            filter: saturate(1.05) brightness(0.7); /* Slightly darker for better text contrast */
+        }
             /* subtle overlay for contrast */
             body::after {
                 content: "";
