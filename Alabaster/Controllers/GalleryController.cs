@@ -28,11 +28,14 @@ namespace Alabaster.Controllers
                 new GalleryImage { Id = 16, Title = "Prayer Meeting", ImageUrl = "/images/farm5.jpeg" },
                 new GalleryImage { Id = 17, Title = "Prayer Meeting", ImageUrl = "/images/farm6.jpeg" },
                 new GalleryImage { Id = 18, Title = "Prayer Meeting", ImageUrl = "/images/farm7.jpeg" },
+                new GalleryImage { Id = 19, Title = "Prayer Meeting", ImageUrl = "/images/farm8.jpeg" },
+                new GalleryImage { Id = 20, Title = "Prayer Meeting", ImageUrl = "/images/farm9.jpeg" },
                 new GalleryImage { Id = 19, Title = "Prayer Meeting", ImageUrl = "/images/open1.jpeg" },
                 new GalleryImage { Id = 20, Title = "Prayer Meeting", ImageUrl = "/images/open2.jpeg" },
                 new GalleryImage { Id = 21, Title = "Prayer Meeting", ImageUrl = "/images/open3.jpeg" },
                 new GalleryImage { Id = 22, Title = "Prayer Meeting", ImageUrl = "/images/open4.jpeg" },
                 new GalleryImage { Id = 23, Title = "Prayer Meeting", ImageUrl = "/images/open5.jpeg" },
+                new GalleryImage { Id = 24, Title = "Prayer Meeting", ImageUrl = "/images/open7.jpeg" },
             };
 
             return View(images);
